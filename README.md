@@ -18,4 +18,3 @@ https://user-images.githubusercontent.com/14083051/164719811-31b86dec-afb1-4672-
 
 # 今後の改善
 * NSMenuItemの使用にこだわらずにPopOverでViewを出す方法であれば、コードもきれいになって安定する。
-* 
