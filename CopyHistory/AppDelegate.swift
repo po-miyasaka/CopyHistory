@@ -55,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     func makeMenuItems(from copiedItems: [CopiedItem] ) -> [NSMenuItem] {
         copiedItems.map {
-            let name = String(($0.name ?? "no name").prefix(30))
+            let name = String(($0.name ?? "💾 data").prefix(30))
             let menuItem = NSMenuItem(title: name, action: #selector(didItemSelected), keyEquivalent: "")
             menuItem.representedObject = $0
             return menuItem
@@ -75,6 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         statusBarItem.menu?.addItem(NSMenuItem.separator())
         statusBarItem.menu?.addItem(withTitle: "clear all items", action: #selector(clearAllItems), keyEquivalent: "")
+        statusBarItem.menu?.addItem(withTitle: "quit", action: #selector(quit), keyEquivalent: "")
     }
     
     
@@ -105,6 +106,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         return container
     }()
+    
+    @objc func quit() {
+        abort()
+    }
 }
 
 extension AppDelegate: NSMenuDelegate {
