@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		CE6C518C2811D880009E6559 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6C518B2811D880009E6559 /* AppDelegate.swift */; };
-		CE6C51902811D881009E6559 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6C518F2811D881009E6559 /* Assets.xcassets */; };
 		CE6C51932811D881009E6559 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6C51912811D881009E6559 /* Main.storyboard */; };
 		CE741ABC2811F57D005138F2 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE741ABA2811F57D005138F2 /* Model.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -16,10 +15,10 @@
 /* Begin PBXFileReference section */
 		CE6C51882811D880009E6559 /* CopyHistory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopyHistory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6C518B2811D880009E6559 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CE6C518F2811D881009E6559 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE6C51922811D881009E6559 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CE6C51942811D881009E6559 /* CopyHistory.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopyHistory.entitlements; sourceTree = "<group>"; };
 		CE741ABB2811F57D005138F2 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		CE741ABD28129126005138F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,9 +51,9 @@
 		CE6C518A2811D880009E6559 /* CopyHistory */ = {
 			isa = PBXGroup;
 			children = (
+				CE741ABD28129126005138F2 /* Info.plist */,
 				CE6C518B2811D880009E6559 /* AppDelegate.swift */,
 				CE741ABA2811F57D005138F2 /* Model.xcdatamodeld */,
-				CE6C518F2811D881009E6559 /* Assets.xcassets */,
 				CE6C51912811D881009E6559 /* Main.storyboard */,
 				CE6C51942811D881009E6559 /* CopyHistory.entitlements */,
 			);
@@ -119,7 +118,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE6C51902811D881009E6559 /* Assets.xcassets in Resources */,
 				CE6C51932811D881009E6559 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,13 +264,14 @@
 		CE6C51982811D881009E6559 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CopyHistory/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -280,8 +279,9 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.copyhistory.CopyHistory";
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.copyhistory";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -291,13 +291,14 @@
 		CE6C51992811D881009E6559 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CopyHistory/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -305,8 +306,9 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.copyhistory.CopyHistory";
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.copyhistory";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
