@@ -7,7 +7,7 @@ https://user-images.githubusercontent.com/14083051/164719811-31b86dec-afb1-4672-
 * 検索
 * 文字列以外のコピペ
 * 新しいアイテムや、利用したアイテムを最上部にソート
-* データの永続化(CoreData)
+* データの永続化、削除(CoreData)
 
 
 # 課題
