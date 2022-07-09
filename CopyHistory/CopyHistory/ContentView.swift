@@ -76,7 +76,7 @@ struct ContentView: View {
             isPresented: $isAlertPresented,
             content: {
                 Alert(
-                    title: Text("お気に入り以外のコピー履歴を削除しますか？"),
+                    title: Text("お気に入り以外の\nコピー履歴を削除します"),
                     primaryButton: Alert.Button.destructive(
                         Text("削除する"),
                         action: {
