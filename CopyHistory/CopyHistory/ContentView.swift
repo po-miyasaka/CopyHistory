@@ -27,7 +27,7 @@ struct ContentView: View {
                                 Text(item.name ?? "")
                                     .font(.body)
                                     .multilineTextAlignment(.leading)
-                                    .lineLimit(3)
+//                                    .lineLimit(3)
                                     .padding()
                                 Spacer()
                                 Button(action: {

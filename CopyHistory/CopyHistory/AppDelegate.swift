@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController<ContentView>!
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        statusBar = StatusBarController(
+        statusBar = .init(
             ContentView(),
             width: 500,
             height: 600,
@@ -39,22 +39,11 @@ private final class StatusBarController<Content: View> {
     private var statusBarItem: NSStatusItem!
     
     init(_ view: Content, width: Int, height: Int, image: NSImage) {
-
-        let nib = NSNib(nibNamed: "MainMenu", bundle: Bundle.main)!
-        var topLevelArray: NSArray?
-        nib.instantiate(withOwner: nil, topLevelObjects: &topLevelArray)
-        let results = topLevelArray as! [Any]
-        let item = results.last { $0 is NSMenu }
-        mainMenu = item as? NSMenu
-        
-        // Create the popover
         let popover = NSPopover()
         popover.contentSize = NSSize(width: width, height: height)
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: ContentView())
         self.popover = popover
-        
-        // Create the status item
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         
         if let button = statusBarItem.button {
