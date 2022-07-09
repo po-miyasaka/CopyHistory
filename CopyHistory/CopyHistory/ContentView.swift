@@ -26,8 +26,6 @@ struct ContentView: View {
                         HStack {
                             Text(item.name ?? "")
                                 .font(.body)
-                                .multilineTextAlignment(.leading)
-//                                    .lineLimit(3)
                                 .padding()
                             Spacer()
                             Button(action: {
@@ -52,10 +50,6 @@ struct ContentView: View {
             isFocus = true
         }
         .keyboardShortcut(.return, modifiers: [.command])
-//            .searchable(text: $pasteboardService.searchText, prompt: "")
-//            .onChange(of: pasteboardService.searchText, perform: { text in
-//                pasteboardService.search()
-//            })
     }
 }
 

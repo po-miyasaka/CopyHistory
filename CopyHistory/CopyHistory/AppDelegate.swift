@@ -20,23 +20,23 @@ struct MainApp: App {
     }
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController<ContentView>!
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = .init(
             ContentView(),
             width: 500,
-            height: 600,
+            height: 700,
             image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history")!
         )
     }
 }
 
 private final class StatusBarController<Content: View> {
-    private var mainMenu: NSMenu!
-    private var popover: NSPopover!
-    private var statusBarItem: NSStatusItem!
+    var mainMenu: NSMenu!
+    var popover: NSPopover!
+    var statusBarItem: NSStatusItem!
 
     init(_: Content, width: Int, height: Int, image: NSImage) {
         let popover = NSPopover()
