@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ContentView(),
             width: 500,
             height: 600,
-            image: NSImage(named: "scroll")!
+            image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history")!
         )
     }
 }
