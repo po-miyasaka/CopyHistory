@@ -84,6 +84,11 @@ final class PasteboardService: ObservableObject {
     func search() {
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
     }
+
+    func clearAll() {
+        persistenceController.clearAllItems()
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+    }
 }
 
 private class PersistenceController: ObservableObject {
