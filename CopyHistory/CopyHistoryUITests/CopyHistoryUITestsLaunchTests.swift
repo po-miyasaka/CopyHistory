@@ -8,7 +8,6 @@
 import XCTest
 
 class CopyHistoryUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

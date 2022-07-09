@@ -10,20 +10,20 @@ import SwiftUI
 
 @main
 struct MainApp: App {
-#if os(macOS)
-@NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-#endif
+    #if os(macOS)
+        @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    #endif
     var body: some Scene {
         WindowGroup {
-            VStack{}
+            VStack {}
         }
     }
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController<ContentView>!
-    
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+
+    func applicationDidFinishLaunching(_: Notification) {
         statusBar = .init(
             ContentView(),
             width: 500,
@@ -37,22 +37,22 @@ private final class StatusBarController<Content: View> {
     private var mainMenu: NSMenu!
     private var popover: NSPopover!
     private var statusBarItem: NSStatusItem!
-    
-    init(_ view: Content, width: Int, height: Int, image: NSImage) {
+
+    init(_: Content, width: Int, height: Int, image: NSImage) {
         let popover = NSPopover()
         popover.contentSize = NSSize(width: width, height: height)
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: ContentView())
         self.popover = popover
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
-        
+
         if let button = statusBarItem.button {
             button.image = image
             button.action = #selector(togglePopover(_:))
             button.target = self
         }
     }
-    
+
     @objc func togglePopover(_ sender: AnyObject?) {
         if let button = statusBarItem.button {
             if popover.isShown {
@@ -63,6 +63,3 @@ private final class StatusBarController<Content: View> {
         }
     }
 }
-
-
-
