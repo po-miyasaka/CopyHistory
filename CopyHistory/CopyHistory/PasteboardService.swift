@@ -13,6 +13,7 @@ import SwiftUI
 final class PasteboardService: ObservableObject {
     @Published var searchText: String = ""
     @Published var copiedItems: [CopiedItem] = []
+    @Published var isShowingOnlyFavorite: Bool = false
 
     private let persistenceController = PersistenceController()
     private var pasteBoard: NSPasteboard { NSPasteboard.general }
@@ -21,7 +22,7 @@ final class PasteboardService: ObservableObject {
 
     static func build() -> PasteboardService {
         let p = PasteboardService()
-        p.initialize()
+        p.setup()
         return p
     }
 
@@ -50,17 +51,22 @@ final class PasteboardService: ObservableObject {
         }
 
         persistenceController.persists()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
 
-    private func initialize() {
+    private func setup() {
         timer.fire()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
 
     func deleteButtonDidTap(_ copiedItem: CopiedItem) {
         persistenceController.delete(copiedItem)
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+    }
+    
+    func favoriteFilterButtonDidtap() {
+        isShowingOnlyFavorite.toggle()
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
 
     func didSelected(_ copiedItem: CopiedItem) {
@@ -78,16 +84,22 @@ final class PasteboardService: ObservableObject {
 
         copiedItem.updateDate = Date()
         persistenceController.persists()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+    }
+    
+    func favoriteButtonDidTap(for copiedItem: CopiedItem) {
+        copiedItem.favorite.toggle()
+        persistenceController.persists()
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
 
     func search() {
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
 
     func clearAll() {
         persistenceController.clearAllItems()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
 }
 
@@ -109,16 +121,19 @@ private class PersistenceController: ObservableObject {
         .init(context: container.viewContext)
     }
 
-    func getSavedCopiedItems(with name: String? = nil) -> [CopiedItem] {
+    func getSavedCopiedItems(with name: String? = nil, isShowingOnlyFavorite: Bool = false) -> [CopiedItem] {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
         var updateDateSort = SortDescriptor<CopiedItem>(\.updateDate)
-
-        if let name = name, !name.isEmpty {
-            let predicate = NSPredicate(format: "name Contains[c] %@", arguments: getVaList([name]))
-
-            fetchRequest.predicate = predicate
+        var predicate: NSPredicate?
+        if isShowingOnlyFavorite {
+            predicate = NSPredicate(format: "favorite == YES")
         }
-
+        
+        if let name = name, !name.isEmpty {
+            let searchTextPredicate = NSPredicate(format: "name Contains[c] %@", arguments: getVaList([name]))
+            predicate = predicate.flatMap{NSCompoundPredicate(andPredicateWithSubpredicates: [searchTextPredicate, $0])} ?? searchTextPredicate
+        }
+        fetchRequest.predicate = predicate
         updateDateSort.order = .reverse
         fetchRequest.sortDescriptors = [NSSortDescriptor(updateDateSort)]
         return (try? container.viewContext.fetch(fetchRequest)) ?? []
@@ -134,7 +149,7 @@ private class PersistenceController: ObservableObject {
 
     func clearAllItems() {
         let items = getSavedCopiedItems()
-        items.forEach {
+        items.filter{ !$0.favorite }.forEach {
             container.viewContext.delete($0)
         }
         persists()

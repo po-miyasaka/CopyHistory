@@ -21,7 +21,19 @@ struct ContentView: View {
                 .focused($isFocus)
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: pasteboardService.searchText, perform: { _ in pasteboardService.search() })
+            HStack {
+                Text("\(pasteboardService.copiedItems.count)")
+                    .font(.caption)
+                    .foregroundColor(Color.gray)
+                Spacer()
 
+                Button(action: {
+                    pasteboardService.favoriteFilterButtonDidtap()
+                }, label: {
+                    Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
+                })
+            }
+            .padding(.horizontal)
             List {
                 ForEach(pasteboardService.copiedItems) { item in
                     Button(action: {
@@ -33,6 +45,12 @@ struct ContentView: View {
                                     .font(.body)
                                     .padding()
                                 Spacer()
+                                Button(action: {
+                                    pasteboardService.favoriteButtonDidTap(for: item)
+                                }, label: {
+                                    Image(systemName: item.favorite ? "star.fill" : "star")
+                                })
+                                    .buttonStyle(PlainButtonStyle())
                                 Button(action: {
                                     pasteboardService.deleteButtonDidTap(item)
                                 }, label: {
@@ -56,9 +74,6 @@ struct ContentView: View {
             }
             .keyboardShortcut(.return, modifiers: [.command])
             HStack {
-                Text("\(pasteboardService.copiedItems.count)")
-                    .font(.caption)
-                    .foregroundColor(Color.gray)
                 Spacer()
 
                 Button(action: {
