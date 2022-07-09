@@ -15,7 +15,7 @@ struct MainApp: App {
 #endif
     var body: some Scene {
         WindowGroup {
-            EmptyView().frame(width: .zero, height: .zero)
+            VStack{}
         }
     }
 }
