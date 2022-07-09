@@ -10,15 +10,18 @@ import CoreData
 
 struct ContentView: View {
     @StateObject var pasteboardService: PasteboardService = .build()
-    
+    @FocusState var isFocus
     var body: some View {
-        NavigationView{
+        TextField("search text ", text: $pasteboardService.searchText)
+            .padding()
+            .focused($isFocus)
+            .textFieldStyle(.roundedBorder)
+            .onChange(of:  pasteboardService.searchText, perform: { _ in pasteboardService.search()})
             List {
                 ForEach(pasteboardService.copiedItems) { item in
                     Button(action: {
                         pasteboardService.didSelected(item)
                     },label: {
-                        
                         VStack {
                             HStack {
                                 Text(item.name ?? "")
@@ -45,12 +48,16 @@ struct ContentView: View {
                     
                 }
             }
+            
             .listStyle(.inset(alternatesRowBackgrounds: false))
-            .searchable(text: $pasteboardService.searchText, prompt: "")
-            .onChange(of: pasteboardService.searchText, perform: { text in
-                pasteboardService.search()
-            })
-        }.navigationViewStyle(.columns)
+            .onAppear{
+                isFocus = true
+            }
+            .keyboardShortcut(.return, modifiers: [.command])
+//            .searchable(text: $pasteboardService.searchText, prompt: "")
+//            .onChange(of: pasteboardService.searchText, perform: { text in
+//                pasteboardService.search()
+//            })
     }
 }
 
