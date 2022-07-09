@@ -11,12 +11,23 @@ import CryptoKit
 import SwiftUI
 
 final class PasteboardService: ObservableObject {
-    private let persistenceController = PersistenceController()
+    
     @Published var searchText: String = ""
     @Published var copiedItems: [CopiedItem] = []
+    
+    private let persistenceController = PersistenceController()
     private var pasteBoard: NSPasteboard { NSPasteboard.general }
     private var latestChangeCount = 0
-    private lazy var timer: Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerLoop), userInfo: nil, repeats: true)
+    private lazy var timer: Timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timerLoop), userInfo: nil, repeats: true)
+    
+    static func build() -> PasteboardService {
+        let p = PasteboardService()
+        p.initialize()
+        return p
+    }
+    
+    private init() {}
+    
     @objc func timerLoop() {
         if pasteBoard.changeCount == latestChangeCount { return } // 変更がなければなにもしない
         latestChangeCount = pasteBoard.changeCount
@@ -43,7 +54,7 @@ final class PasteboardService: ObservableObject {
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
     }
     
-    fileprivate func initialize() {
+    private func initialize() {
         timer.fire()
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
     }
@@ -74,22 +85,13 @@ final class PasteboardService: ObservableObject {
     func search() {
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText)
     }
-    
-    static func build() -> PasteboardService {
-        let p = PasteboardService()
-        p.initialize()
-        return p
-    }
 }
 
 private class PersistenceController: ObservableObject {
     
     let container: NSPersistentContainer
-    init(inMemory: Bool = false) {
+    init() {
         container = NSPersistentContainer(name: "Model")
-        if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -100,7 +102,6 @@ private class PersistenceController: ObservableObject {
     
     // MARK: - CRUD
     
-    
     func createCopiedItem() -> CopiedItem {
         .init(context: container.viewContext)
     }
@@ -110,7 +111,8 @@ private class PersistenceController: ObservableObject {
         var updateDateSort = SortDescriptor<CopiedItem>(\.updateDate)
         
         if let name = name, !name.isEmpty {
-            let predicate = NSPredicate(format: "name CONTAINS %@", arguments: getVaList([name]))
+            let predicate = NSPredicate(format: "name Contains[c] %@", arguments: getVaList([name]))
+
             fetchRequest.predicate = predicate
         }
         
