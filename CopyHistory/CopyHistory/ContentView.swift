@@ -96,10 +96,17 @@ struct Row: View  {
                 Button(action: {
                     didSelected(item)
                 }, label: {
-                    Text(item.name ?? "")
-                        .font(.body)
-                    Spacer()
+                    VStack {
+                        HStack {
+                            Text(item.name ?? "")
+                                .font(.body)
+                            Spacer()
+                        }
+                    }
+                    .frame(minHeight: 44)
+                    .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
+                
                 Button(action: {
                     favoriteButtonDidTap(item)
                 }, label: {
@@ -116,7 +123,6 @@ struct Row: View  {
             .frame(height: 30)
             Divider().padding(EdgeInsets())
         }
-        .background(Color.white.opacity(0.1))
         .buttonStyle(PlainButtonStyle())
     }
 
