@@ -35,9 +35,9 @@ struct ContentView: View {
             .padding(.horizontal)
             List(pasteboardService.copiedItems) { item in
                 Row(item: item,
-                    didSelected: { item in pasteboardService.didSelected(item) },
-                    favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
-                    deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) })
+                    didSelected: pasteboardService.didSelected,
+                    favoriteButtonDidTap: pasteboardService.favoriteButtonDidTap,
+                    deleteButtonDidTap: pasteboardService.deleteButtonDidTap)
             }
             .border(.separator, width: 1.0)
             .listStyle(.inset(alternatesRowBackgrounds: false))
