@@ -25,7 +25,7 @@ struct ContentView: View {
                     .font(.caption)
                     .foregroundColor(Color.gray)
                 Spacer()
-                
+
                 Button(action: {
                     pasteboardService.favoriteFilterButtonDidTap()
                 }, label: {
@@ -33,12 +33,11 @@ struct ContentView: View {
                 })
             }
             .padding(.horizontal)
-            List(pasteboardService.copiedItems){ item in
+            List(pasteboardService.copiedItems) { item in
                 Row(item: item,
-                    didSelected: { item in pasteboardService.didSelected(item)},
+                    didSelected: { item in pasteboardService.didSelected(item) },
                     favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
-                    deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) }
-                )
+                    deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) })
             }
             .border(.separator, width: 1.0)
             .listStyle(.inset(alternatesRowBackgrounds: false))
@@ -46,14 +45,13 @@ struct ContentView: View {
                 isFocus = true
             }
             HStack {
-                
                 Button(action: {
                     NSApplication.shared.terminate(nil)
                 }, label: {
                     Image(systemName: "xmark.circle")
                 })
                 Spacer()
-                
+
                 Button(action: {
                     isAlertPresented = true
                 }, label: {
@@ -83,11 +81,11 @@ struct ContentView: View {
     }
 }
 
-struct Row: View  {
+struct Row: View {
     let item: CopiedItem
-    let didSelected: ((CopiedItem) -> Void)
-    let favoriteButtonDidTap: ((CopiedItem) -> Void)
-    let deleteButtonDidTap: ((CopiedItem) -> Void)
+    let didSelected: (CopiedItem) -> Void
+    let favoriteButtonDidTap: (CopiedItem) -> Void
+    let deleteButtonDidTap: (CopiedItem) -> Void
 
     var body: some View {
         VStack {
@@ -105,7 +103,7 @@ struct Row: View  {
                     .frame(minHeight: 44)
                     .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
-                
+
                 Button(action: {
                     favoriteButtonDidTap(item)
                 }, label: {
@@ -113,20 +111,19 @@ struct Row: View  {
                         .frame(minHeight: 44)
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
-                .buttonStyle(PlainButtonStyle())
+                    .buttonStyle(PlainButtonStyle())
                 Button(action: {
                     deleteButtonDidTap(item)
                 }, label: {
                     Image(systemName: "trash.fill")
                 })
-                .buttonStyle(PlainButtonStyle())
+                    .buttonStyle(PlainButtonStyle())
             }
             .frame(height: 30)
             Divider().padding(EdgeInsets())
         }
         .buttonStyle(PlainButtonStyle())
     }
-
 }
 
 struct ContentView_Previews: PreviewProvider {

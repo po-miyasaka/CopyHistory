@@ -27,7 +27,7 @@ final class PasteboardService: ObservableObject {
     }
 
     private init() {}
-    
+
     func updateCopiedItems() {
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
@@ -66,7 +66,7 @@ final class PasteboardService: ObservableObject {
     func search() {
         updateCopiedItems()
     }
-    
+
     func favoriteFilterButtonDidTap() {
         isShowingOnlyFavorite.toggle()
         updateCopiedItems()
@@ -89,13 +89,13 @@ final class PasteboardService: ObservableObject {
         persistenceController.persists()
         updateCopiedItems()
     }
-    
+
     func favoriteButtonDidTap(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
         persistenceController.persists()
         updateCopiedItems()
     }
-    
+
     func deleteButtonDidTap(_ copiedItem: CopiedItem) {
         persistenceController.delete(copiedItem)
         updateCopiedItems()
@@ -132,10 +132,10 @@ private class PersistenceController: ObservableObject {
         if isShowingOnlyFavorite {
             predicate = NSPredicate(format: "favorite == YES")
         }
-        
+
         if let name = name, !name.isEmpty {
             let searchTextPredicate = NSPredicate(format: "name Contains[c] %@", arguments: getVaList([name]))
-            predicate = predicate.flatMap{NSCompoundPredicate(andPredicateWithSubpredicates: [searchTextPredicate, $0])} ?? searchTextPredicate
+            predicate = predicate.flatMap { NSCompoundPredicate(andPredicateWithSubpredicates: [searchTextPredicate, $0]) } ?? searchTextPredicate
         }
         fetchRequest.predicate = predicate
         updateDateSort.order = .reverse
@@ -153,7 +153,7 @@ private class PersistenceController: ObservableObject {
 
     func clearAllItems() {
         let items = getSavedCopiedItems()
-        items.filter{ !$0.favorite }.forEach {
+        items.filter { !$0.favorite }.forEach {
             container.viewContext.delete($0)
         }
         persists()
