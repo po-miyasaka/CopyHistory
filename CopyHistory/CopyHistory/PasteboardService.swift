@@ -64,7 +64,7 @@ final class PasteboardService: ObservableObject {
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
     
-    func favoriteFilterButtonDidtap() {
+    func favoriteFilterButtonDidTap() {
         isShowingOnlyFavorite.toggle()
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
@@ -87,7 +87,7 @@ final class PasteboardService: ObservableObject {
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
     }
     
-    func favoriteButtonDidTap(for copiedItem: CopiedItem) {
+    func favoriteButtonDidTap(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
         persistenceController.persists()
         copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
