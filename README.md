@@ -1,6 +1,8 @@
+<img src="https://user-images.githubusercontent.com/14083051/178161772-68e98eb2-039a-422c-9cdc-c54ccd9e2f3b.gif" width="500">
+
 # Overview　　
 * Accessing copy histories from menubar easily.
-<img src="https://user-images.githubusercontent.com/14083051/178161772-68e98eb2-039a-422c-9cdc-c54ccd9e2f3b.gif" width="500">
+
 
 # Functions
 * Searching with texts
