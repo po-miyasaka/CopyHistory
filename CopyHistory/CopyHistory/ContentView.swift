@@ -13,7 +13,7 @@ struct ContentView: View {
     @State var isAlertPresented: Bool = false
     var body: some View {
         Group {
-            TextField("search text ", text: $pasteboardService.searchText)
+            TextField("search", text: $pasteboardService.searchText)
                 .padding(.horizontal)
                 .padding(.top, 16)
                 .padding(.bottom, 8)
