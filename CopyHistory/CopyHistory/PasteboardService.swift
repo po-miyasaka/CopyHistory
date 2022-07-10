@@ -27,6 +27,10 @@ final class PasteboardService: ObservableObject {
     }
 
     private init() {}
+    
+    func updateCopiedItems() {
+        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+    }
 
     @objc func timerLoop() {
         if pasteBoard.changeCount == latestChangeCount { return } // 変更がなければなにもしない
@@ -51,22 +55,21 @@ final class PasteboardService: ObservableObject {
         }
 
         persistenceController.persists()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        updateCopiedItems()
     }
 
     private func setup() {
         timer.fire()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        updateCopiedItems()
     }
 
-    func deleteButtonDidTap(_ copiedItem: CopiedItem) {
-        persistenceController.delete(copiedItem)
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+    func search() {
+        updateCopiedItems()
     }
     
     func favoriteFilterButtonDidTap() {
         isShowingOnlyFavorite.toggle()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        updateCopiedItems()
     }
 
     func didSelected(_ copiedItem: CopiedItem) {
@@ -84,22 +87,23 @@ final class PasteboardService: ObservableObject {
 
         copiedItem.updateDate = Date()
         persistenceController.persists()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        updateCopiedItems()
     }
     
     func favoriteButtonDidTap(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
         persistenceController.persists()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        updateCopiedItems()
     }
-
-    func search() {
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+    
+    func deleteButtonDidTap(_ copiedItem: CopiedItem) {
+        persistenceController.delete(copiedItem)
+        updateCopiedItems()
     }
 
     func clearAll() {
         persistenceController.clearAllItems()
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        updateCopiedItems()
     }
 }
 
