@@ -97,7 +97,7 @@ struct Row: View  {
                 }, label: {
                     VStack {
                         HStack {
-                            Text(item.name ?? "")
+                            Text(item.name ?? "No Name")
                                 .font(.body)
                             Spacer()
                         }
