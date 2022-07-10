@@ -49,7 +49,7 @@ struct ContentView: View {
             HStack {
                 
                 Button(action: {
-                    NSApplication().terminate(nil)
+                    NSApplication.shared.terminate(nil)
                 }, label: {
                     Image(systemName: "xmark.circle")
                 })
