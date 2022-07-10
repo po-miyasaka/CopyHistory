@@ -51,6 +51,7 @@ private final class StatusBarController<Content: View> {
             button.action = #selector(togglePopover(_:))
             button.target = self
         }
+        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach{ $0.close() }
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {
