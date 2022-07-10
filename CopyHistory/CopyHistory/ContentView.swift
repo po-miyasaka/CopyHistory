@@ -111,6 +111,8 @@ struct Row: View  {
                     favoriteButtonDidTap(item)
                 }, label: {
                     Image(systemName: item.favorite ? "star.fill" : "star")
+                        .frame(minHeight: 44)
+                        .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
                 .buttonStyle(PlainButtonStyle())
                 Button(action: {
