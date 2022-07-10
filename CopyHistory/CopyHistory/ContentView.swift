@@ -69,14 +69,14 @@ struct ContentView: View {
             isPresented: $isAlertPresented,
             content: {
                 Alert(
-                    title: Text("お気に入り以外の\nコピー履歴を削除します"),
+                    title: Text("Deleting all history except for favorited items"),
                     primaryButton: Alert.Button.destructive(
-                        Text("削除する"),
+                        Text("Delete"),
                         action: {
                             pasteboardService.clearAll()
                         }
                     ),
-                    secondaryButton: Alert.Button.cancel(Text("やめる"), action: {})
+                    secondaryButton: Alert.Button.cancel(Text("Cancel"), action: {})
                 )
             }
         )
