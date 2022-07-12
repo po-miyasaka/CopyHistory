@@ -37,8 +37,8 @@ final class PasteboardService: ObservableObject {
         latestChangeCount = pasteBoard.changeCount
 
         guard let newItem = pasteBoard.pasteboardItems?.first,
-            let type = newItem.availableType(from: newItem.types),
-            let data = newItem.data(forType: type) else { return }
+              let type = newItem.availableType(from: newItem.types),
+              let data = newItem.data(forType: type) else { return }
         let dataHash = CryptoKit.SHA256.hash(data: data).description
 
         if let alreadySavedItem = persistenceController.getCopiedItem(from: dataHash) {
@@ -74,7 +74,7 @@ final class PasteboardService: ObservableObject {
 
     func didSelected(_ copiedItem: CopiedItem) {
         guard let contentTypeString = copiedItem.contentTypeString,
-            let contentData = copiedItem.content
+              let contentData = copiedItem.content
         else { return }
         let type = NSPasteboard.PasteboardType(contentTypeString)
         let item = NSPasteboardItem()
