@@ -45,11 +45,6 @@ struct ContentView: View {
                 isFocus = true
             }
             HStack {
-                Button(action: {
-                    NSApplication.shared.terminate(nil)
-                }, label: {
-                    Image(systemName: "xmark.circle")
-                })
                 Spacer()
 
                 Button(action: {
