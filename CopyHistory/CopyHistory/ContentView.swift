@@ -45,11 +45,6 @@ struct ContentView: View {
                 isFocus = true
             }
             HStack {
-                Button(action: {
-                    NSApplication.shared.terminate(nil)
-                }, label: {
-                    Image(systemName: "xmark.circle")
-                })
                 Spacer()
 
                 Button(action: {
@@ -62,7 +57,7 @@ struct ContentView: View {
             .padding(.top, 8)
             .padding(.bottom, 16)
         }
-        .background(Color.white)
+        .background(Color.mainViewBackground)
         .alert(
             isPresented: $isAlertPresented,
             content: {
@@ -111,13 +106,13 @@ struct Row: View {
                         .frame(minHeight: 44)
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
-                    .buttonStyle(PlainButtonStyle())
+                .buttonStyle(PlainButtonStyle())
                 Button(action: {
                     deleteButtonDidTap(item)
                 }, label: {
                     Image(systemName: "trash.fill")
                 })
-                    .buttonStyle(PlainButtonStyle())
+                .buttonStyle(PlainButtonStyle())
             }
             .frame(height: 30)
             Divider().padding(EdgeInsets())
@@ -130,4 +125,8 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(PasteboardService.build())
     }
+}
+
+extension Color {
+    static var mainViewBackground = Color("mainViewBackground")
 }

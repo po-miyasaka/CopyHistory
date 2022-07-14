@@ -22,6 +22,7 @@
 		CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardService.swift; sourceTree = "<group>"; };
 		CEA8AD132874C8E3003B6035 /* CopyHistory.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopyHistory.entitlements; sourceTree = "<group>"; };
 		CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		D5EDFC3C287BA72300B4507F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,12 +55,13 @@
 		CEA8AD042874C8E1003B6035 /* CopyHistory */ = {
 			isa = PBXGroup;
 			children = (
+				D5EDFC3C287BA72300B4507F /* Info.plist */,
+				CE11282328774314008144F8 /* AppDelegate.swift */,
+				CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */,
 				CEA8AD072874C8E1003B6035 /* ContentView.swift */,
 				CEA8AD092874C8E3003B6035 /* Assets.xcassets */,
-				CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */,
 				CEA8AD132874C8E3003B6035 /* CopyHistory.entitlements */,
 				CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */,
-				CE11282328774314008144F8 /* AppDelegate.swift */,
 			);
 			path = CopyHistory;
 			sourceTree = "<group>";
@@ -264,12 +266,13 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CopyHistory;
+				INFOPLIST_FILE = CopyHistory/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Copy History Mark Ⅱ";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -293,12 +296,13 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CopyHistory;
+				INFOPLIST_FILE = CopyHistory/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Copy History Mark Ⅱ";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
