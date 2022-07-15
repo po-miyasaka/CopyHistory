@@ -95,12 +95,12 @@ struct Row: View {
                             Spacer()
                         }
                     }
-//                    .frame(minHeight: 44)
+                    .frame(minHeight: 44)
                     .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
 
                 VStack(alignment: .trailing) {
-                    Text(Array((item.contentTypeString ?? "").split(separator: ".")).last ?? "").font(.caption)
+                    Text(item.contentTypeString ?? "").font(.caption)
                 Text("\(item.binarySizeString)").font(.caption)
                         
                 }
@@ -119,7 +119,7 @@ struct Row: View {
                 })
                 .buttonStyle(PlainButtonStyle())
             }
-//            .frame(height: 30)
+            .frame(height: 30)
             Divider().padding(EdgeInsets())
         }
         .buttonStyle(PlainButtonStyle())

@@ -47,15 +47,13 @@ final class PasteboardService: ObservableObject {
         } else {
             // 新しい
             let copiedItem = persistenceController.create(type: CopiedItem.self)
-            let content = persistenceController.create(type: Content.self)
             let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "No Name"
-            content.rawString = str
-            content.rawData = data
+            copiedItem.rawString = str
+            copiedItem.rawData = data
             
             copiedItem.name = String(str.prefix(100))
             copiedItem.binarySize = Int64(data.count)
-            copiedItem.content = content
-            copiedItem.contentTypeString = type.rawValue
+            copiedItem.contentTypeString = String(Array((type.rawValue).split(separator: ".")).last ?? "")
             copiedItem.updateDate = Date()
             copiedItem.dataHash = dataHash
         }
@@ -80,12 +78,12 @@ final class PasteboardService: ObservableObject {
     
     func didSelected(_ copiedItem: CopiedItem) {
         guard let contentTypeString = copiedItem.contentTypeString,
-              let data = copiedItem.content?.rawData
+              let data = copiedItem.rawData
         else { return }
         let type = NSPasteboard.PasteboardType(contentTypeString)
         let item = NSPasteboardItem()
         item.setData(data, forType: type)
-        if let rawString = copiedItem.content?.rawString {
+        if let rawString = copiedItem.rawString {
             item.setString(rawString, forType: .string)
         }
         pasteBoard.declareTypes([type, .string], owner: nil)
@@ -141,7 +139,7 @@ private class PersistenceController: ObservableObject {
         }
         
         if let text = text, !text.isEmpty {
-            let searchTextPredicate = NSPredicate(format: "content.rawString Contains[c] %@", arguments: getVaList([text]))
+            let searchTextPredicate = NSPredicate(format: "rawString Contains[c] %@", arguments: getVaList([text]))
             let typeStringPredicate = NSPredicate(format: "contentTypeString Contains[c] %@", arguments: getVaList([text]))
             let textPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [searchTextPredicate, typeStringPredicate])
             predicate = predicate.flatMap { NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, $0]) } ?? textPredicate
