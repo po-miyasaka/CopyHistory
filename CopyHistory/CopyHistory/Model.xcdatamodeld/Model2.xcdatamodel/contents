@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Content" representedClassName="Content" syncable="YES" codeGenerationType="class">
+        <attribute name="rawData" attributeType="Binary"/>
+        <attribute name="rawString" optional="YES" attributeType="String"/>
+        <relationship name="copiedItem" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CopiedItem" inverseName="content" inverseEntity="CopiedItem"/>
+    </entity>
+    <entity name="CopiedItem" representedClassName="CopiedItem" syncable="YES" codeGenerationType="class">
+        <attribute name="binarySize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="contentTypeString" attributeType="String"/>
+        <attribute name="dataHash" optional="YES" attributeType="String"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="updateDate" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="content" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Content" inverseName="copiedItem" inverseEntity="Content"/>
+    </entity>
+    <elements>
+        <element name="Content" positionX="189" positionY="261" width="128" height="74"/>
+        <element name="CopiedItem" positionX="160" positionY="192" width="128" height="134"/>
+    </elements>
+</model>
