@@ -49,11 +49,11 @@ final class PasteboardService: ObservableObject {
             let copiedItem = persistenceController.create(type: CopiedItem.self)
             let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "No Name"
             copiedItem.rawString = str
-            copiedItem.rawData = data
+            copiedItem.content = data
             
             copiedItem.name = String(str.prefix(100))
             copiedItem.binarySize = Int64(data.count)
-            copiedItem.contentTypeString = String(Array((type.rawValue).split(separator: ".")).last ?? "")
+            copiedItem.contentTypeString = type.rawValue
             copiedItem.updateDate = Date()
             copiedItem.dataHash = dataHash
         }
@@ -78,7 +78,7 @@ final class PasteboardService: ObservableObject {
     
     func didSelected(_ copiedItem: CopiedItem) {
         guard let contentTypeString = copiedItem.contentTypeString,
-              let data = copiedItem.rawData
+              let data = copiedItem.content
         else { return }
         let type = NSPasteboard.PasteboardType(contentTypeString)
         let item = NSPasteboardItem()
