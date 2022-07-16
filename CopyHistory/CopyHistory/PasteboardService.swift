@@ -47,11 +47,11 @@ final class PasteboardService: ObservableObject {
         } else {
             // New
             let copiedItem = persistenceController.create(type: CopiedItem.self)
-            let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "No Name"
+            let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines)
             copiedItem.rawString = str
             copiedItem.content = data
             
-            copiedItem.name = String(str.prefix(100))
+            copiedItem.name = String((str ?? "No Name").prefix(100))
             copiedItem.binarySize = Int64(data.count)
             copiedItem.contentTypeString = type.rawValue
             copiedItem.updateDate = Date()
