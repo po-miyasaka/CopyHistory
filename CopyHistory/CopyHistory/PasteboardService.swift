@@ -182,7 +182,8 @@ extension CopiedItem {
     }()
     
     var binarySizeString: String {
-        Self.formatter.string(fromByteCount: binarySize)
+        if binarySize == 0 { return "-"}
+        return Self.formatter.string(fromByteCount: binarySize)
     }
 }
 
