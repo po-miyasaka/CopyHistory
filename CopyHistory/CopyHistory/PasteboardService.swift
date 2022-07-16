@@ -139,10 +139,7 @@ private class PersistenceController: ObservableObject {
         }
         
         if let text = text, !text.isEmpty {
-            let namePredicate = NSPredicate(format: "name Contains[c] %@", arguments: getVaList([text]))
-            let searchTextPredicate = NSPredicate(format: "rawString Contains[c] %@", arguments: getVaList([text]))
-            let typeStringPredicate = NSPredicate(format: "contentTypeString Contains[c] %@", arguments: getVaList([text]))
-            let textPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [searchTextPredicate, typeStringPredicate, namePredicate])
+            let textPredicate = NSPredicate(format: "contentTypeString Contains[c] %@ OR contentTypeString Contains[c] %@ OR name Contains[c] %@", arguments: getVaList([text, text, text]))
             predicate = predicate.flatMap { NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, $0]) } ?? textPredicate
         }
         fetchRequest.predicate = predicate
