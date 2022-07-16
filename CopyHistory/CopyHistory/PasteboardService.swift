@@ -42,10 +42,10 @@ final class PasteboardService: ObservableObject {
         let dataHash = CryptoKit.SHA256.hash(data: data).description
         
         if let alreadySavedItem = persistenceController.getCopiedItem(from: dataHash) {
-            // すでに存在している
+            // Existing
             alreadySavedItem.updateDate = Date()
         } else {
-            // 新しい
+            // New
             let copiedItem = persistenceController.create(type: CopiedItem.self)
             let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "No Name"
             copiedItem.rawString = str
