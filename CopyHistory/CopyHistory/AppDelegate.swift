@@ -27,16 +27,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = .init(
             ContentView(),
             width: 500,
-            height: 700,
-            image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history")!
+            height: 800,
+            image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history") ?? NSImage()
         )
     }
 }
 
 private final class StatusBarController<Content: View> {
-    var mainMenu: NSMenu!
-    var popover: NSPopover!
-    var statusBarItem: NSStatusItem!
+    var mainMenu: NSMenu?
+    var popover: NSPopover?
+    var statusBarItem: NSStatusItem?
 
     init(_: Content, width: Int, height: Int, image: NSImage) {
         let popover = NSPopover()
@@ -46,7 +46,7 @@ private final class StatusBarController<Content: View> {
         self.popover = popover
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
 
-        if let button = statusBarItem.button {
+        if let button = statusBarItem?.button {
             button.image = image
             button.action = #selector(togglePopover(_:))
             button.target = self
@@ -55,12 +55,12 @@ private final class StatusBarController<Content: View> {
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {
-        if let button = statusBarItem.button {
-            if popover.isShown {
-                popover.performClose(sender)
+        if let button = statusBarItem?.button {
+            if popover?.isShown == true {
+                popover?.performClose(sender)
             } else {
                 NSApp.activate(ignoringOtherApps: true)
-                popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+                popover?.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             }
         }
     }
