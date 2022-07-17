@@ -99,6 +99,11 @@ struct Row: View {
                     .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
 
+                VStack(alignment: .trailing) {
+                    Text(item.contentTypeString ?? "").font(.caption)
+                Text("\(item.binarySizeString)").font(.caption)
+                        
+                }
                 Button(action: {
                     favoriteButtonDidTap(item)
                 }, label: {

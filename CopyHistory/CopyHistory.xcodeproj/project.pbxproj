@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CE11282428774314008144F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE11282328774314008144F8 /* AppDelegate.swift */; };
+		CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */; };
 		CEA8AD082874C8E1003B6035 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD072874C8E1003B6035 /* ContentView.swift */; };
 		CEA8AD0A2874C8E3003B6035 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA8AD092874C8E3003B6035 /* Assets.xcassets */; };
 		CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */; };
@@ -16,6 +17,8 @@
 
 /* Begin PBXFileReference section */
 		CE11282328774314008144F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model1-2.xcmappingmodel"; sourceTree = "<group>"; };
+		CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model2.xcdatamodel; sourceTree = "<group>"; };
 		CEA8AD022874C8E1003B6035 /* CopyHistory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopyHistory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA8AD072874C8E1003B6035 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CEA8AD092874C8E3003B6035 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -61,6 +64,7 @@
 				CEA8AD072874C8E1003B6035 /* ContentView.swift */,
 				CEA8AD092874C8E3003B6035 /* Assets.xcassets */,
 				CEA8AD132874C8E3003B6035 /* CopyHistory.entitlements */,
+				CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */,
 				CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */,
 			);
 			path = CopyHistory;
@@ -139,6 +143,7 @@
 				CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */,
 				CEA8AD082874C8E1003B6035 /* ContentView.swift in Sources */,
 				CE11282428774314008144F8 /* AppDelegate.swift in Sources */,
+				CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +271,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -280,7 +285,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.CopyHistory";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -296,7 +301,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -310,7 +315,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.CopyHistory";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -345,9 +350,10 @@
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */,
 				CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */,
 			);
-			currentVersion = CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */;
+			currentVersion = CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

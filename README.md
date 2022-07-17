@@ -16,3 +16,8 @@ You can build this app with only Xcode.
 # Download
 You can download this app from [Releases](https://github.com/po-miyasaka/CopyHistory/releases/tag/1.0.1) directly
 but I recommend to read and build codes for security.
+
+
+---  
+
+using a icon of [ICOON MONO](https://icooon-mono.com/) for AppIcon
