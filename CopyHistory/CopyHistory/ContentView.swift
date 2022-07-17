@@ -55,6 +55,16 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             .padding(.top, 8)
+            .padding(.bottom, 8)
+
+            VStack {
+                Button(action: {
+                    NSApplication.shared.terminate(nil)
+                }, label: {
+                    Text("Quit CopyHistory")
+                })
+            }
+            .padding(.horizontal)
             .padding(.bottom, 16)
         }
         .background(Color.mainViewBackground)
@@ -101,8 +111,7 @@ struct Row: View {
 
                 VStack(alignment: .trailing) {
                     Text(item.contentTypeString ?? "").font(.caption)
-                Text("\(item.binarySizeString)").font(.caption)
-                        
+                    Text("\(item.binarySizeString)").font(.caption)
                 }
                 Button(action: {
                     favoriteButtonDidTap(item)

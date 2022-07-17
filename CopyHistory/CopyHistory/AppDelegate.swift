@@ -27,7 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = .init(
             ContentView(),
             width: 500,
-            height: 800,
+            height: 600,
             image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history") ?? NSImage()
         )
     }
@@ -59,7 +59,6 @@ private final class StatusBarController<Content: View> {
             if popover?.isShown == true {
                 popover?.performClose(sender)
             } else {
-                NSApp.activate(ignoringOtherApps: true)
                 popover?.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             }
         }
