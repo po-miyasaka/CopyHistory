@@ -19,7 +19,13 @@ struct ContentView: View {
                 .padding(.bottom, 8)
                 .focused($isFocus)
                 .textFieldStyle(.roundedBorder)
-                .onChange(of: pasteboardService.searchText, perform: { _ in pasteboardService.search() })
+                .onChange(of: pasteboardService.searchText, perform: { _ in
+                    withAnimation {
+                        pasteboardService.search()
+                    }
+                })
+                .foregroundColor(.primary)
+
             HStack {
                 Text("\(pasteboardService.copiedItems.count)")
                     .font(.caption)
@@ -27,10 +33,15 @@ struct ContentView: View {
                 Spacer()
 
                 Button(action: {
-                    pasteboardService.favoriteFilterButtonDidTap()
+                    withAnimation {
+                        pasteboardService.favoriteFilterButtonDidTap()
+                    }
+
                 }, label: {
                     Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
+                        .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
                 })
+                .keyboardShortcut("s", modifiers: .command)
             }
             .padding(.horizontal)
             List(pasteboardService.copiedItems) { item in
@@ -48,8 +59,8 @@ struct ContentView: View {
                 Button(action: {
                     isFocus = true
                 }, label: {})
-                    .opacity(.leastNonzeroMagnitude)
-                    .keyboardShortcut("f", modifiers: .command)
+                .opacity(.leastNonzeroMagnitude)
+                .keyboardShortcut("f", modifiers: .command)
                 Spacer()
 
                 Button(action: {
@@ -121,6 +132,7 @@ struct Row: View {
                     favoriteButtonDidTap(item)
                 }, label: {
                     Image(systemName: item.favorite ? "star.fill" : "star")
+                        .foregroundColor(item.favorite ? Color.mainAccent : Color.primary)
                         .frame(minHeight: 44)
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
@@ -128,7 +140,7 @@ struct Row: View {
                 Button(action: {
                     deleteButtonDidTap(item)
                 }, label: {
-                    Image(systemName: "trash.fill")
+                    Image(systemName: "trash.fill").foregroundColor(.secondary)
                 })
                 .buttonStyle(PlainButtonStyle())
             }
@@ -147,4 +159,5 @@ struct ContentView_Previews: PreviewProvider {
 
 extension Color {
     static var mainViewBackground = Color("mainViewBackground")
+    static var mainAccent = Color("mainAccent")
 }
