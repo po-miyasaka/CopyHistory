@@ -33,12 +33,12 @@ struct ContentView: View {
 
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    Text("     Up: ⌘ + ↑ ")
+                    Text("     Up: ⌘ + ↑ or k")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
 
-                    Text(" Down: ⌘ + ↓ ")
+                    Text(" Down: ⌘ + ↓ or j")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
