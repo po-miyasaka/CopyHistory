@@ -66,7 +66,7 @@ struct ContentView: View {
                 Button(action: {
                     isAlertPresented = true
                 }, label: {
-                    Image(systemName: "trash.circle.fill")
+                    Image(systemName: "trash")
                 })
             }
             .padding(.horizontal)
@@ -111,7 +111,10 @@ struct Row: View {
         VStack {
             HStack {
                 Button(action: {
-                    didSelected(item)
+                    withAnimation {
+                        didSelected(item)
+                    }
+
                 }, label: {
                     VStack {
                         HStack {
