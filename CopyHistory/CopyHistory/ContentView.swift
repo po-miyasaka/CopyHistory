@@ -15,7 +15,7 @@ struct ContentView: View {
     var body: some View {
         Group {
             HStack(alignment: .center, spacing: 10) {
-                TextField("search (⌘ + f)", text: $pasteboardService.searchText)
+                TextField("Search: ⌘ + f", text: $pasteboardService.searchText)
 
                     .focused($isFocus)
                     .textFieldStyle(.roundedBorder)
@@ -32,18 +32,18 @@ struct ContentView: View {
             }.padding()
 
             HStack(alignment: .bottom) {
-                VStack(alignment: .trailing) {
-                    Text("up: ⌘ + ↑ ")
+                VStack(alignment: .leading) {
+                    Text("     Up: ⌘ + ↑ or k")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
 
-                    Text("down: ⌘ + ↓ ")
+                    Text(" Down: ⌘ + ↓ or j")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
 
-                    Text("select: ⌘ + ↩")
+                    Text("Select: ⌘ + ↩")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
