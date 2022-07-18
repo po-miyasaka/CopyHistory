@@ -27,25 +27,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = .init(
             ContentView(),
             width: 500,
-            height: 600,
+            height: 700,
             image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history") ?? NSImage()
         )
     }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        statusBar.togglePopover(nil)
+    }
 }
 
-private final class StatusBarController<Content: View> {
+private final class StatusBarController<Content: View>:NSObject, NSPopoverDelegate {
     var mainMenu: NSMenu?
     var popover: NSPopover?
     var statusBarItem: NSStatusItem?
 
     init(_: Content, width: Int, height: Int, image: NSImage) {
+        super.init()
         let popover = NSPopover()
         popover.contentSize = NSSize(width: width, height: height)
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: ContentView())
         self.popover = popover
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
-
+        popover.delegate = self
         if let button = statusBarItem?.button {
             button.image = image
             button.action = #selector(togglePopover(_:))
@@ -58,9 +63,18 @@ private final class StatusBarController<Content: View> {
         if let button = statusBarItem?.button {
             if popover?.isShown == true {
                 popover?.performClose(sender)
+
             } else {
                 popover?.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             }
         }
+    }
+
+    func popoverWillShow(_ notification: Notification) {
+        NSApplication.shared.unhide(nil)
+    }
+
+    func popoverDidClose(_ notification: Notification) {
+        NSApplication.shared.hide(nil) // this code make previous app activate back.
     }
 }

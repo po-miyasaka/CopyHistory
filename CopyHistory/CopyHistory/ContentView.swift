@@ -33,12 +33,12 @@ struct ContentView: View {
 
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    Text("     Up: ⌘ + ↑ or k")
+                    Text("     Up: ⌘ + ↑ ")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
 
-                    Text(" Down: ⌘ + ↓ or j")
+                    Text(" Down: ⌘ + ↓ ")
                         .font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
@@ -76,6 +76,7 @@ struct ContentView: View {
                     didSelected: { item in
                     focusedItemIndex = nil
                     pasteboardService.didSelected(item)
+                    NSApplication.shared.deactivate()
                 },
                     favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
                     deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
@@ -182,6 +183,7 @@ struct ContentView: View {
                 if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
                     pasteboardService.didSelected(pasteboardService.copiedItems[i])
                     focusedItemIndex = nil
+                    NSApplication.shared.deactivate()
                 }
             }, label: {})
             .opacity(.leastNonzeroMagnitude)
