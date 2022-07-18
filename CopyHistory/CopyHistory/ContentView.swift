@@ -13,7 +13,7 @@ struct ContentView: View {
     @State var isAlertPresented: Bool = false
     var body: some View {
         Group {
-            TextField("search", text: $pasteboardService.searchText)
+            TextField("search (⌘ + f)", text: $pasteboardService.searchText)
                 .padding(.horizontal)
                 .padding(.top, 16)
                 .padding(.bottom, 8)
@@ -45,6 +45,11 @@ struct ContentView: View {
                 isFocus = true
             }
             HStack {
+                Button(action: {
+                    isFocus = true
+                }, label: {})
+                    .opacity(.leastNonzeroMagnitude)
+                    .keyboardShortcut("f", modifiers: .command)
                 Spacer()
 
                 Button(action: {
@@ -56,7 +61,6 @@ struct ContentView: View {
             .padding(.horizontal)
             .padding(.top, 8)
             .padding(.bottom, 8)
-
             VStack {
                 Button(action: {
                     NSApplication.shared.terminate(nil)
