@@ -6,112 +6,27 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct ContentView: View {
     @StateObject var pasteboardService: PasteboardService = .build()
+    @AppStorage("isShowingKeyboardShortcuts") var isShowingKeyboardShortcuts = true
     @FocusState var isFocus
     @State var isAlertPresented: Bool = false
     @State var focusedItemIndex: Int?
+
+    let versionString: String = {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        return "\(version ?? "") (\(build ?? ""))"
+    }()
+
     var body: some View {
         Group {
-            HStack(alignment: .center, spacing: 10) {
-                TextField("Search: ⌘ + f", text: $pasteboardService.searchText)
-
-                    .focused($isFocus)
-                    .textFieldStyle(.roundedBorder)
-                    .onChange(of: pasteboardService.searchText, perform: { _ in
-                        focusedItemIndex = nil
-                        withAnimation {
-                            pasteboardService.search()
-                        }
-                    })
-                    .foregroundColor(.primary)
-                Text("\(pasteboardService.copiedItems.count)")
-                    .font(.caption)
-                    .foregroundColor(Color.gray)
-            }.padding()
-
-            HStack(alignment: .bottom) {
-                VStack(alignment: .leading) {
-                    Text("     Up: ⌘ + ↑ or k")
-                        .font(.caption)
-                        .foregroundColor(Color.gray)
-                        .padding(.bottom, 1)
-
-                    Text(" Down: ⌘ + ↓ or j")
-                        .font(.caption)
-                        .foregroundColor(Color.gray)
-                        .padding(.bottom, 1)
-
-                    Text("Select: ⌘ + ↩")
-                        .font(.caption)
-                        .foregroundColor(Color.gray)
-                        .padding(.bottom, 1)
-
-                }
-
-                Spacer()
-
-                VStack(spacing:0) {
-                    Button(action: {
-                        withAnimation {
-                            pasteboardService.favoriteFilterButtonDidTap()
-                        }
-
-                    }, label: {
-
-                        Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
-                            .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
-                    })
-                    .keyboardShortcut("s", modifiers: .command)
-
-                    Text("⌘ + s").font(.caption).foregroundColor(.secondary).padding(.top, 2)
-                }
-
-
-            }
-            .padding(.horizontal)
-            List(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
-                Row(item: item,
-                    didSelected: { item in
-                    focusedItemIndex = nil
-                    pasteboardService.didSelected(item)
-                    NSApplication.shared.deactivate()
-                },
-                    favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
-                    deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
-                    isFocused: index == focusedItemIndex
-                )
-
-
-            }
-            .border(.separator, width: 1.0)
-            .listStyle(.inset(alternatesRowBackgrounds: false))
-            .onAppear {
-                isFocus = true
-            }
-            HStack {
-                KeyboardShortcutCommands()
-                Spacer()
-
-                Button(action: {
-                    isAlertPresented = true
-                }, label: {
-                    Image(systemName: "trash")
-                })
-            }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 8)
-            VStack {
-                Button(action: {
-                    NSApplication.shared.terminate(nil)
-                }, label: {
-                    Text("Quit CopyHistory")
-                })
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 16)
+            Header()
+            MainView()
+            Footer()
+            KeyboardShortcutCommands()
         }
         .background(Color.mainViewBackground)
         .alert(
@@ -146,9 +61,11 @@ struct ContentView: View {
             focusedItemIndex = pasteboardService.copiedItems.endIndex
         }
     }
+
+
     @ViewBuilder
     func KeyboardShortcutCommands() -> some View {
-        Group{
+        HStack{
             Button(action: {
                 isFocus = true
             }, label: {})
@@ -188,6 +105,163 @@ struct ContentView: View {
             }, label: {})
             .opacity(.leastNonzeroMagnitude)
             .keyboardShortcut(.return, modifiers: .command)
+        }
+        .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
+    }
+
+
+    @ViewBuilder
+    func Header() -> some View {
+        Group {
+            HStack(alignment: .center, spacing: 10) {
+                TextField(isShowingKeyboardShortcuts ? "Search: ⌘ + f" : "Search", text: $pasteboardService.searchText)
+
+                    .focused($isFocus)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: pasteboardService.searchText, perform: { _ in
+                        focusedItemIndex = nil
+                        withAnimation {
+                            pasteboardService.search()
+                        }
+                    })
+                    .foregroundColor(.primary)
+                Text("\(pasteboardService.copiedItems.count)")
+                    .font(.caption)
+                    .foregroundColor(Color.gray)
+            }.padding()
+
+            HStack(alignment: .bottom) {
+                if isShowingKeyboardShortcuts {
+                    VStack(alignment: .leading) {
+                        Text("     Up: ⌘ + ↑ or k")
+                            .font(.caption)
+                            .foregroundColor(Color.gray)
+                            .padding(.bottom, 1)
+
+                        Text(" Down: ⌘ + ↓ or j")
+                            .font(.caption)
+                            .foregroundColor(Color.gray)
+                            .padding(.bottom, 1)
+
+                        Text("Select: ⌘ + ↩")
+                            .font(.caption)
+                            .foregroundColor(Color.gray)
+                            .padding(.bottom, 1)
+
+                    }
+                }
+
+                Spacer()
+
+                VStack(spacing:0) {
+                    Button(action: {
+                        withAnimation {
+                            pasteboardService.favoriteFilterButtonDidTap()
+                        }
+
+                    }, label: {
+
+                        Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
+                            .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
+                    })
+                    .keyboardShortcut("s", modifiers: .command)
+
+                    if isShowingKeyboardShortcuts {
+                        Text("⌘ + s").font(.caption).foregroundColor(.secondary).padding(.top, 2)
+                    }
+                }
+
+
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    @ViewBuilder
+    func MainView() -> some View {
+        Group {
+            List(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
+                Row(item: item,
+                    didSelected: { item in
+                    focusedItemIndex = nil
+                    pasteboardService.didSelected(item)
+                    NSApplication.shared.deactivate()
+                },
+                    favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
+                    deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
+                    isFocused: index == focusedItemIndex
+                )
+
+
+            }
+            .border(.separator, width: 1.0)
+            .listStyle(.inset(alternatesRowBackgrounds: false))
+            .onAppear {
+                isFocus = true
+            }
+        }
+    }
+
+    @ViewBuilder
+    func Footer() -> some View {
+        Group {
+            HStack {
+                Menu {
+                    Button(action: {
+                        isShowingKeyboardShortcuts.toggle()
+                    }, label: {
+                        Text( isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts")
+                    })
+                    Divider()
+                    Button(action:{
+                        if let url = URL(string: "https://miyashi.app") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }, label: {
+                        Text("About launching with a keyboard shortcut (open the Website)")
+                    })
+                    Divider()
+                    Button(action: {
+                        if let url = URL(string: "https://miyashi.app") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }, label: {
+                        Text("About CopyHistory (open the Website)")
+                    })
+                    Divider()
+                    Button(action: {
+                        SKStoreReviewController.requestReview()
+                    }, label: {
+                        Text( "Rate CopyHistory✨")
+                    })
+                    Divider()
+                    Text(versionString)
+                } label: {
+                    Image(systemName: "latch.2.case")
+                        .font(.title)
+                }
+                .frame(width: 50)
+                .accentColor(.white)
+
+                Spacer()
+                Button(action: {
+                    isAlertPresented = true
+                }, label: {
+                    Image(systemName: "trash")
+                })
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 8)
+            VStack {
+                Button(action: {
+                    NSApplication.shared.terminate(nil)
+                }, label: {
+                    Text("Quit CopyHistory")
+                })
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 16)
         }
     }
 }
@@ -254,5 +328,5 @@ struct ContentView_Previews: PreviewProvider {
 
 extension Color {
     static var mainViewBackground = Color("mainViewBackground")
-    static var mainAccent = Color("mainAccent")
+    static var mainAccent = Color("AccentColor")
 }
