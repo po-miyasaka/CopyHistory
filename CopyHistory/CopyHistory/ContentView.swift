@@ -98,27 +98,23 @@ struct ContentView: View {
 
             HStack(alignment: .bottom) {
                 if isShowingKeyboardShortcuts {
-                    VStack(alignment: .leading) {
-                        Text("     Up: ⌘ + ↑ or k")
-                            .font(.caption)
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 1)
+                    HStack {
+                        VStack(alignment: .trailing, spacing: 5) {
+                            Text("Up:")
+                            Text("Down:")
+                            Text("Select:")
+                            Text("Star:")
+                        }
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("⌘ + ↑ or k")
+                            Text("⌘ + ↓ or j")
+                            Text("⌘ + ↩")
+                            Text("⌘ + o")
+                        }
+                    }.font(.caption)
+                        .foregroundColor(Color.gray)
+                        .padding(.bottom, 1)
 
-                        Text(" Down: ⌘ + ↓ or j")
-                            .font(.caption)
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 1)
-
-                        Text("Select: ⌘ + ↩")
-                            .font(.caption)
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 1)
-
-                        Text("    Star: ⌘ + o")
-                            .font(.caption)
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 1)
-                    }
                 }
 
                 Spacer()
