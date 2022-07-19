@@ -214,7 +214,7 @@ struct ContentView: View {
                     })
                     Divider()
                     Button(action:{
-                        if let url = URL(string: "https://miyashi.app") {
+                        if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
                             NSWorkspace.shared.open(url)
                         }
                     }, label: {
@@ -222,7 +222,7 @@ struct ContentView: View {
                     })
                     Divider()
                     Button(action: {
-                        if let url = URL(string: "https://miyashi.app") {
+                        if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
                             NSWorkspace.shared.open(url)
                         }
                     }, label: {
