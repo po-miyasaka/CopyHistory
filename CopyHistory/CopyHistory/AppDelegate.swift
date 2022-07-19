@@ -28,7 +28,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             ContentView(),
             width: 500,
             height: 700,
-            image: NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "clipboard history") ?? NSImage()
+            image: NSImage(imageLiteralResourceName: "logo.svg")
         )
     }
 
@@ -51,6 +51,8 @@ private final class StatusBarController<Content: View>:NSObject, NSPopoverDelega
         self.popover = popover
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         popover.delegate = self
+        image.size = CGSize.init(width: 20, height: 20)
+        image.backgroundColor = .white
         if let button = statusBarItem?.button {
             button.image = image
             button.action = #selector(togglePopover(_:))
