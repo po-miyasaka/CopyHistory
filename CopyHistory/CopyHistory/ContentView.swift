@@ -113,6 +113,11 @@ struct ContentView: View {
                             .font(.caption)
                             .foregroundColor(Color.gray)
                             .padding(.bottom, 1)
+
+                        Text("    Star: ⌘ + o")
+                            .font(.caption)
+                            .foregroundColor(Color.gray)
+                            .padding(.bottom, 1)
                     }
                 }
 
@@ -171,6 +176,13 @@ struct ContentView: View {
                         }
 
                     }, keys: [.init(main: .return, sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
+                            pasteboardService.favoriteButtonDidTap(pasteboardService.copiedItems[i])
+                        }
+
+                    }, keys: [.init(main: "o", sub: .command)])
                 }
                 .opacity(0)
                 .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
