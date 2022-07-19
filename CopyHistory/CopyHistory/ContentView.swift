@@ -5,8 +5,8 @@
 //  Created by miyasaka on 2022/07/06.
 //
 
-import SwiftUI
 import StoreKit
+import SwiftUI
 
 struct ContentView: View {
     @StateObject var pasteboardService: PasteboardService = .build()
@@ -24,9 +24,10 @@ struct ContentView: View {
     var body: some View {
         Group {
             Header()
+            Divider()
             MainView()
+            Divider()
             Footer()
-            KeyboardShortcutCommands()
         }
         .background(Color.mainViewBackground)
         .alert(
@@ -46,69 +47,34 @@ struct ContentView: View {
         )
     }
 
-    func selectDown() {
-        if let i = focusedItemIndex, pasteboardService.copiedItems.count > i {
-            focusedItemIndex = i + 1
-        } else {
-            focusedItemIndex = 0
-        }
+    enum Direction {
+        case up
+        case down
     }
 
-    func selectUp() {
-        if let i = focusedItemIndex, i >= 0 {
-            focusedItemIndex = i - 1
-        } else {
-            focusedItemIndex = pasteboardService.copiedItems.endIndex
+    func scroll(proxy: ScrollViewProxy, direction: Direction) {
+        if pasteboardService.copiedItems.isEmpty {
+            return
         }
-    }
+        let _focusedItemIndex: Int
+        switch direction {
+        case .down:
+            if let i = focusedItemIndex, pasteboardService.copiedItems.count - 1 > i {
+                _focusedItemIndex = i + 1
+            } else {
+                _focusedItemIndex = 0
+            }
 
-
-    @ViewBuilder
-    func KeyboardShortcutCommands() -> some View {
-        HStack{
-            Button(action: {
-                isFocus = true
-            }, label: {})
-            .opacity(.leastNonzeroMagnitude)
-            .keyboardShortcut("f", modifiers: .command)
-
-            Button(action: {
-                selectDown()
-            }, label: {})
-            .opacity(.leastNonzeroMagnitude)
-            .keyboardShortcut(.downArrow, modifiers: .command)
-
-            Button(action: {
-                selectDown()
-            }, label: {})
-            .opacity(.leastNonzeroMagnitude)
-            .keyboardShortcut("j", modifiers: .command)
-
-            Button(action: {
-                selectUp()
-            }, label: {})
-            .opacity(.leastNonzeroMagnitude)
-            .keyboardShortcut(.upArrow, modifiers: .command)
-
-            Button(action: {
-                selectUp()
-            }, label: {})
-            .opacity(.leastNonzeroMagnitude)
-            .keyboardShortcut("k", modifiers: .command)
-
-            Button(action: {
-                if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
-                    pasteboardService.didSelected(pasteboardService.copiedItems[i])
-                    focusedItemIndex = nil
-                    NSApplication.shared.deactivate()
-                }
-            }, label: {})
-            .opacity(.leastNonzeroMagnitude)
-            .keyboardShortcut(.return, modifiers: .command)
+        case .up:
+            if let i = focusedItemIndex, i > 0 {
+                _focusedItemIndex = i - 1
+            } else {
+                _focusedItemIndex = pasteboardService.copiedItems.count - 1
+            }
         }
-        .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
+        focusedItemIndex = _focusedItemIndex
+        proxy.scrollTo(pasteboardService.copiedItems[_focusedItemIndex].dataHash)
     }
-
 
     @ViewBuilder
     func Header() -> some View {
@@ -147,20 +113,18 @@ struct ContentView: View {
                             .font(.caption)
                             .foregroundColor(Color.gray)
                             .padding(.bottom, 1)
-
                     }
                 }
 
                 Spacer()
 
-                VStack(spacing:0) {
+                VStack(spacing: 0) {
                     Button(action: {
                         withAnimation {
                             pasteboardService.favoriteFilterButtonDidTap()
                         }
 
                     }, label: {
-
                         Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
                             .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
                     })
@@ -170,8 +134,6 @@ struct ContentView: View {
                         Text("⌘ + s").font(.caption).foregroundColor(.secondary).padding(.top, 2)
                     }
                 }
-
-
             }
             .padding(.horizontal)
         }
@@ -179,26 +141,42 @@ struct ContentView: View {
 
     @ViewBuilder
     func MainView() -> some View {
-        Group {
-            List(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
-                Row(item: item,
-                    didSelected: { item in
-                    focusedItemIndex = nil
-                    pasteboardService.didSelected(item)
-                    NSApplication.shared.deactivate()
-                },
-                    favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
-                    deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
-                    isFocused: index == focusedItemIndex
-                )
+        ScrollView {
+            ScrollViewReader { proxy in
+                ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
+                    Row(item: item,
+                        didSelected: { item in
+                            focusedItemIndex = nil
+                            pasteboardService.didSelected(item)
+                            NSApplication.shared.deactivate()
+                        },
+                        favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
+                        deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
+                        isFocused: index == focusedItemIndex).id(item.dataHash)
+                }
+                HStack {
+                    KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .down) }, keys:
+                        [.init(main: .downArrow, sub: .command), .init(main: "j", sub: .command)])
 
+                    KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .up) }, keys:
+                        [.init(main: .upArrow, sub: .command), .init(main: "k", sub: .command)])
+
+                    KeyboardCommandButtons(action: { isFocus = true }, keys: [.init(main: "f", sub: .command), .init(main: "/", sub: .command)])
+                    KeyboardCommandButtons(action: {
+                        if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
+                            pasteboardService.didSelected(pasteboardService.copiedItems[i])
+                            focusedItemIndex = nil
+                            NSApplication.shared.deactivate()
+                        }
+
+                    }, keys: [.init(main: .return, sub: .command)])
+                }
+                .opacity(0)
+                .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
             }
-            .border(.separator, width: 1.0)
+            .padding(.horizontal)
             .listStyle(.inset(alternatesRowBackgrounds: false))
-            .onAppear {
-                isFocus = true
-            }
         }
     }
 
@@ -210,10 +188,10 @@ struct ContentView: View {
                     Button(action: {
                         isShowingKeyboardShortcuts.toggle()
                     }, label: {
-                        Text( isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts")
+                        Text(isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts")
                     })
                     Divider()
-                    Button(action:{
+                    Button(action: {
                         if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
                             NSWorkspace.shared.open(url)
                         }
@@ -232,7 +210,7 @@ struct ContentView: View {
                     Button(action: {
                         SKStoreReviewController.requestReview()
                     }, label: {
-                        Text( "Rate CopyHistory✨")
+                        Text("Rate CopyHistory✨")
                     })
                     Divider()
                     Text(versionString)
@@ -263,6 +241,28 @@ struct ContentView: View {
             .padding(.horizontal)
             .padding(.bottom, 16)
         }
+    }
+}
+
+struct KeyboardCommandButtons: View {
+    struct Key: Identifiable {
+        let id: UUID = .init()
+        let main: KeyEquivalent
+        let sub: EventModifiers
+    }
+
+    let action: () -> Void
+    let keys: [Key]
+    var body: some View {
+        Group {
+            ForEach(keys) { key in
+                Button(action: {
+                    action()
+                }, label: {}).keyboardShortcut(key.main, modifiers: key.sub)
+            }
+        }
+        .frame(width: .zero, height: .zero)
+        .opacity(0)
     }
 }
 

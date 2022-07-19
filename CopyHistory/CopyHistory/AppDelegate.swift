@@ -32,12 +32,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
     }
 
-    func applicationDidBecomeActive(_ notification: Notification) {
+    func applicationDidBecomeActive(_: Notification) {
         statusBar.togglePopover(nil)
     }
 }
 
-private final class StatusBarController<Content: View>:NSObject, NSPopoverDelegate {
+private final class StatusBarController<Content: View>: NSObject, NSPopoverDelegate {
     var mainMenu: NSMenu?
     var popover: NSPopover?
     var statusBarItem: NSStatusItem?
@@ -51,7 +51,7 @@ private final class StatusBarController<Content: View>:NSObject, NSPopoverDelega
         self.popover = popover
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         popover.delegate = self
-        image.size = CGSize.init(width: 20, height: 20)
+        image.size = CGSize(width: 18, height: 18)
         image.backgroundColor = .white
         if let button = statusBarItem?.button {
             button.image = image
@@ -72,11 +72,11 @@ private final class StatusBarController<Content: View>:NSObject, NSPopoverDelega
         }
     }
 
-    func popoverWillShow(_ notification: Notification) {
+    func popoverWillShow(_: Notification) {
         NSApplication.shared.unhide(nil)
     }
 
-    func popoverDidClose(_ notification: Notification) {
+    func popoverDidClose(_: Notification) {
         NSApplication.shared.hide(nil) // this code make previous app activate back.
     }
 }
