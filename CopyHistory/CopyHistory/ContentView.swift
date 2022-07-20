@@ -16,8 +16,8 @@ struct ContentView: View {
     @State var isAlertPresented: Bool = false
     @State var focusedItemIndex: Int?
     @AppStorage("isExpanded") var isExpanded: Bool = true
-    @AppStorage("isShowingRTF") var isShowingRTF: Bool = true
-    @AppStorage("isShowingHTML") var isShowingHTML: Bool = true
+    @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
+    @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
 
     let versionString: String = {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -107,18 +107,18 @@ struct ContentView: View {
                             Text("Up:")
                             Text("Down:")
                             Text("Select:")
-                            Text("Star:")
                             Text("Delete:")
-                            Text("Expand:")
-                            Text("Show RTF:")
-                            Text("Show HTML:")
+                            Text("Switch Star:")
+                            Text(isExpanded ? "Minify cells:" : "Expand cells:")
+                            Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):" )
+                            Text(isShowingHTML ? "Stop Showing as HTML:" : "Show as HTML (slow):")
                         }
                         VStack(alignment: .leading, spacing: 5) {
                             Text("⌘ + ↑ or k")
                             Text("⌘ + ↓ or j")
                             Text("⌘ + ↩")
-                            Text("⌘ + o")
                             Text("⌘ + ⇧ + d")
+                            Text("⌘ + o")
                             Text("⌘ + e")
                             Text("⌘ + r")
                             Text("⌘ + a")
@@ -238,10 +238,10 @@ struct ContentView: View {
                         .init(text: isExpanded ? "Minify cells" : "Expand cells", action: {
                             isExpanded.toggle()
                         }),
-                        .init(text: isShowingRTF ? "Stop Showing RTF texts (Rich Text Format)" : "Show RTF texts (Rich Text Format)", action: {
+                        .init(text: isShowingRTF ? "Stop Showing as RTF" : "Show as RTF (slow)", action: {
                             isShowingRTF.toggle()
                         }),
-                        .init(text: isShowingHTML ? "Stop Showing HTML texts" : "Show HTML texts", action: {
+                        .init(text: isShowingHTML ? "Stop Showing as HTML" : "Show as HTML (slow)", action: {
                             isShowingKeyboardShortcuts.toggle()
                         }),
                         .init(text: "About launching with a keyboard shortcut (open the Website)", action: {
