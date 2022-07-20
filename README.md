@@ -1,4 +1,4 @@
-<img src="https://user-images.githubusercontent.com/14083051/178161772-68e98eb2-039a-422c-9cdc-c54ccd9e2f3b.gif" width="500">
+https://user-images.githubusercontent.com/14083051/180088279-c6855815-f802-4c55-93a8-c38980a5da83.mov
 
 # Overview　　
 * Accessing copy histories from menubar easily.
