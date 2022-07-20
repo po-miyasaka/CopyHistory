@@ -291,10 +291,16 @@ struct Row: View {
                 }, label: {
                     VStack {
                         HStack {
-                            Text(item.name ?? "No Name")
-                                .font(.callout)
-                                .foregroundColor(isFocused ? .mainAccent : .primary)
+                            if let content = item.content, let image = NSImage(data: content) {
+//                                image.size = CGSize(width: 44, height: 30)
+                                Image(nsImage: image).resizable().scaledToFit().border(isFocused ? Color.mainAccent : .clear, width: 2)
+                            } else {
+                                Text(item.name ?? "No Name")
+                                    .font(.callout)
+                                    .foregroundColor(isFocused ? .mainAccent : .primary)
+                            }
                             Spacer()
+
                         }
                     }
                     .frame(minHeight: 44)
