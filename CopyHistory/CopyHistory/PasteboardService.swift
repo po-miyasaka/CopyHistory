@@ -185,4 +185,10 @@ extension CopiedItem {
         if binarySize == 0 { return "-" }
         return Self.formatter.string(fromByteCount: binarySize)
     }
+
+    var attributeString: NSAttributedString? {
+        guard let content = content else { return nil }
+        let attributeString = try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.rtf], documentAttributes: nil)
+        return attributeString
+    }
 }

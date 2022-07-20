@@ -14,6 +14,8 @@ struct ContentView: View {
     @FocusState var isFocus
     @State var isAlertPresented: Bool = false
     @State var focusedItemIndex: Int?
+    @AppStorage("isExpanded") var isExpanded: Bool = true
+    @AppStorage("isShowingRTF") var isShowingRTF: Bool = true
 
     let versionString: String = {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -104,17 +106,22 @@ struct ContentView: View {
                             Text("Down:")
                             Text("Select:")
                             Text("Star:")
+                            Text("Delete:")
+                            Text("Expand:")
+                            Text("Show RTF:")
                         }
                         VStack(alignment: .leading, spacing: 5) {
                             Text("⌘ + ↑ or k")
                             Text("⌘ + ↓ or j")
                             Text("⌘ + ↩")
                             Text("⌘ + o")
+                            Text("⌘ + ⇧ + d")
+                            Text("⌘ + e")
+                            Text("⌘ + r")
                         }
                     }.font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
-
                 }
 
                 Spacer()
@@ -143,7 +150,9 @@ struct ContentView: View {
     @ViewBuilder
     func MainView() -> some View {
         ScrollView {
+            Spacer() // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             ScrollViewReader { proxy in
+
                 ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
                     Row(item: item,
@@ -154,7 +163,9 @@ struct ContentView: View {
                         },
                         favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
                         deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
-                        isFocused: index == focusedItemIndex).id(item.dataHash)
+                        isFocused: index == focusedItemIndex,
+                        isExpanded: $isExpanded,
+                        isShowingRTF: $isShowingRTF).id(item.dataHash)
                 }
                 HStack {
                     KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .down) }, keys:
@@ -175,16 +186,32 @@ struct ContentView: View {
 
                     KeyboardCommandButtons(action: {
                         if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
+                            pasteboardService.deleteButtonDidTap(pasteboardService.copiedItems[i])
+                        }
+
+                    }, keys: [.init(main: "d", sub: .command.union(.shift))]).transaction { transaction in
+                        transaction.animation = nil
+                    }
+
+                    KeyboardCommandButtons(action: {
+                        if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
                             pasteboardService.favoriteButtonDidTap(pasteboardService.copiedItems[i])
                         }
 
                     }, keys: [.init(main: "o", sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        isExpanded.toggle()
+                    }, keys: [.init(main: "e", sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        isShowingRTF.toggle()
+                    }, keys: [.init(main: "r", sub: .command)])
                 }
+
                 .opacity(0)
                 .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
-            }
-            .padding(.horizontal)
-            .listStyle(.inset(alternatesRowBackgrounds: false))
+            }.padding(.horizontal)
         }
     }
 
@@ -193,35 +220,34 @@ struct ContentView: View {
         Group {
             HStack {
                 Menu {
-                    Button(action: {
-                        isShowingKeyboardShortcuts.toggle()
-                    }, label: {
-                        Text(isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts")
-                    })
-                    Divider()
-                    Button(action: {
-                        if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }, label: {
-                        Text("About launching with a keyboard shortcut (open the Website)")
-                    })
-                    Divider()
-                    Button(action: {
-                        if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }, label: {
-                        Text("About CopyHistory (open the Website)")
-                    })
-                    Divider()
-                    Button(action: {
-                        SKStoreReviewController.requestReview()
-                    }, label: {
-                        Text("Rate CopyHistory✨")
-                    })
-                    Divider()
+                    MenuItems(contents: [
+                        .init(text: isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts", action: {
+                            isShowingKeyboardShortcuts.toggle()
+                        }),
+                        .init(text: isExpanded ? "Minify cells" : "Expand cells", action: {
+                            isExpanded.toggle()
+                        }),
+                        .init(text: isShowingRTF ? "Stop Showing RTF texts (Rich Text Format)" : "Show RTF texts (Rich Text Format)" , action: {
+                            isShowingRTF.toggle()
+                        }),
+                        .init(text: "About launching with a keyboard shortcut (open the Website)", action: {
+                            if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }),
+                        .init(text: "About CopyHistory (open the Website)", action: {
+                            if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }),
+                        .init(text: "Rate CopyHistory✨", action: {
+                            SKStoreReviewController.requestReview()
+                        }),
+
+                    ])
+
                     Text(versionString)
+
                 } label: {
                     Image(systemName: "latch.2.case")
                         .font(.title)
@@ -248,6 +274,26 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             .padding(.bottom, 16)
+        }
+    }
+}
+
+struct MenuItems: View {
+    struct Content: Identifiable {
+        var id: String { text }
+        let text: String
+        let action: () -> Void
+    }
+
+    let contents: [Content]
+    var body: some View {
+        ForEach(contents) { content in
+            Button(action: {
+                content.action()
+            }, label: {
+                Text(content.text)
+            })
+            Divider()
         }
     }
 }
@@ -279,7 +325,9 @@ struct Row: View {
     let didSelected: (CopiedItem) -> Void
     let favoriteButtonDidTap: (CopiedItem) -> Void
     let deleteButtonDidTap: (CopiedItem) -> Void
-    let isFocused: Bool
+    var isFocused: Bool
+    @Binding var isExpanded: Bool // to render realtime, using @Binding
+    @Binding var isShowingRTF: Bool
     var body: some View {
         VStack {
             HStack {
@@ -291,19 +339,23 @@ struct Row: View {
                 }, label: {
                     VStack {
                         HStack {
+                            if isFocused {
+                                Color.mainAccent.frame(width: 5, alignment: .leading)
+                            }
+
                             if let content = item.content, let image = NSImage(data: content) {
-//                                image.size = CGSize(width: 44, height: 30)
-                                Image(nsImage: image).resizable().scaledToFit().border(isFocused ? Color.mainAccent : .clear, width: 2)
+                                Image(nsImage: image).resizable().scaledToFit()
+                            } else if isShowingRTF, let attributedString = item.attributeString {
+                                Text(AttributedString(attributedString))
+
                             } else {
                                 Text(item.name ?? "No Name")
                                     .font(.callout)
-                                    .foregroundColor(isFocused ? .mainAccent : .primary)
                             }
                             Spacer()
-
                         }
                     }
-                    .frame(minHeight: 44)
+                    .modifier(ExpandModifier(isExpanded: isExpanded))
                     .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
 
@@ -316,7 +368,7 @@ struct Row: View {
                 }, label: {
                     Image(systemName: item.favorite ? "star.fill" : "star")
                         .foregroundColor(item.favorite ? Color.mainAccent : Color.primary)
-                        .frame(minHeight: 44)
+                        .modifier(ExpandModifier(isExpanded: isExpanded))
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
                 .buttonStyle(PlainButtonStyle())
@@ -327,10 +379,23 @@ struct Row: View {
                 })
                 .buttonStyle(PlainButtonStyle())
             }
-            .frame(height: 30)
+            .modifier(ExpandModifier(isExpanded: isExpanded))
             Divider().padding(EdgeInsets())
         }
         .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct ExpandModifier: ViewModifier {
+    let isExpanded: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if isExpanded {
+            content.frame(maxHeight: 500)
+        } else {
+            content.frame(height: 20)
+        }
     }
 }
 
