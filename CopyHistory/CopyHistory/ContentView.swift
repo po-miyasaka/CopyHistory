@@ -7,6 +7,7 @@
 
 import StoreKit
 import SwiftUI
+import WebKit
 
 struct ContentView: View {
     @StateObject var pasteboardService: PasteboardService = .build()
@@ -16,6 +17,7 @@ struct ContentView: View {
     @State var focusedItemIndex: Int?
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = true
+    @AppStorage("isShowingHTML") var isShowingHTML: Bool = true
 
     let versionString: String = {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -109,6 +111,7 @@ struct ContentView: View {
                             Text("Delete:")
                             Text("Expand:")
                             Text("Show RTF:")
+                            Text("Show HTML:")
                         }
                         VStack(alignment: .leading, spacing: 5) {
                             Text("⌘ + ↑ or k")
@@ -118,6 +121,7 @@ struct ContentView: View {
                             Text("⌘ + ⇧ + d")
                             Text("⌘ + e")
                             Text("⌘ + r")
+                            Text("⌘ + a")
                         }
                     }.font(.caption)
                         .foregroundColor(Color.gray)
@@ -165,7 +169,10 @@ struct ContentView: View {
                         deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
                         isFocused: index == focusedItemIndex,
                         isExpanded: $isExpanded,
-                        isShowingRTF: $isShowingRTF).id(item.dataHash)
+                        isShowingRTF: $isShowingRTF,
+                        isShowingHTML: $isShowingHTML
+                    )
+                    .id(item.dataHash)
                 }
                 HStack {
                     KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .down) }, keys:
@@ -207,6 +214,10 @@ struct ContentView: View {
                     KeyboardCommandButtons(action: {
                         isShowingRTF.toggle()
                     }, keys: [.init(main: "r", sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        isShowingHTML.toggle()
+                    }, keys: [.init(main: "a", sub: .command)])
                 }
 
                 .opacity(0)
@@ -227,8 +238,11 @@ struct ContentView: View {
                         .init(text: isExpanded ? "Minify cells" : "Expand cells", action: {
                             isExpanded.toggle()
                         }),
-                        .init(text: isShowingRTF ? "Stop Showing RTF texts (Rich Text Format)" : "Show RTF texts (Rich Text Format)" , action: {
+                        .init(text: isShowingRTF ? "Stop Showing RTF texts (Rich Text Format)" : "Show RTF texts (Rich Text Format)", action: {
                             isShowingRTF.toggle()
+                        }),
+                        .init(text: isShowingHTML ? "Stop Showing HTML texts" : "Show HTML texts", action: {
+                            isShowingKeyboardShortcuts.toggle()
                         }),
                         .init(text: "About launching with a keyboard shortcut (open the Website)", action: {
                             if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
@@ -328,6 +342,7 @@ struct Row: View {
     var isFocused: Bool
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
+    @Binding var isShowingHTML: Bool
     var body: some View {
         VStack {
             HStack {
@@ -345,13 +360,26 @@ struct Row: View {
 
                             if let content = item.content, let image = NSImage(data: content) {
                                 Image(nsImage: image).resizable().scaledToFit()
-                            } else if isShowingRTF, let attributedString = item.attributeString {
+                            } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
                                 Text(AttributedString(attributedString))
 
-                            } else {
+                            } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
+                                Text(AttributedString(attributedString))
+                            } else if let url = item.fileURL {
+
+                                // TODO: why images disappear after first
+//                                if let image = NSImage(contentsOf: url) {
+//                                    Image(nsImage: image).resizable().scaledToFit()
+//                                } else {
+                                Text("\(url.absoluteString)")
+                                        .font(.callout)
+//                                }
+                            }
+                            else {
                                 Text(item.name ?? "No Name")
                                     .font(.callout)
                             }
+
                             Spacer()
                         }
                     }
@@ -409,3 +437,35 @@ extension Color {
     static var mainViewBackground = Color("mainViewBackground")
     static var mainAccent = Color("AccentColor")
 }
+
+// wanna show big preview
+//struct WebViewer: NSViewRepresentable {
+//    let contentString: String
+//    let content: Data
+//
+//    init? (content: Data?) {
+//        guard let content = content, let contentString = String(data: content, encoding: .utf8) else { return nil }
+//        self.content = content
+//        self.contentString = contentString
+//    }
+//
+//    func makeNSView(context _: Context) -> WKWebView {
+//        let view =  WKWebView(frame: .zero)
+//
+//        let html = "<html contenteditable> <script>onbeforeunload = () => true</script> \(contentString)"
+//        let filePath =  NSHomeDirectory() + "/Library/hoge.html"
+//        FileManager.default.createFile(atPath: filePath, contents: html.data(using: .utf8))
+//
+//        let localurl = URL(fileURLWithPath: filePath )
+//        let allowAccess = URL(fileURLWithPath: NSHomeDirectory())
+//
+//        view.loadFileURL(localurl, allowingReadAccessTo:  allowAccess)
+//        return view
+//    }
+//
+//    func updateNSView(_ view: WKWebView, context _: Context) {
+//
+//    }
+//
+//    typealias NSViewType = WKWebView
+//}

@@ -8,6 +8,7 @@
 import Cocoa
 import SwiftUI
 
+
 @main
 struct MainApp: App {
     #if os(macOS)
@@ -27,8 +28,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = .init(
             ContentView(),
             width: 500,
-            height: 700,
-            image: NSImage(imageLiteralResourceName: "logo.svg")
+            height: NSScreen.main?.frame.height ?? 800.0,
+            image: NSImage(imageLiteralResourceName: "logo")
         )
     }
 
@@ -42,7 +43,7 @@ private final class StatusBarController<Content: View>: NSObject, NSPopoverDeleg
     var popover: NSPopover?
     var statusBarItem: NSStatusItem?
 
-    init(_: Content, width: Int, height: Int, image: NSImage) {
+    init(_: Content, width: CGFloat, height: CGFloat, image: NSImage) {
         super.init()
         let popover = NSPopover()
         popover.contentSize = NSSize(width: width, height: height)
