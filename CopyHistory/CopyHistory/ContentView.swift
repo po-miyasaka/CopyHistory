@@ -358,33 +358,43 @@ struct Row: View, Equatable {
                     }
 
                 }, label: {
-                    VStack {
-                        HStack {
-                            if let content = item.content, let image = NSImage(data: content) {
-                                Image(nsImage: image).resizable().scaledToFit()
-                            } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
-                                Text(AttributedString(attributedString))
+                    ZStack {
+                        Color.mainViewBackground
 
-                            } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
-                                Text(AttributedString(attributedString))
-                            } else if let url = item.fileURL {
-                                // TODO: why images disappear after first
-//                                if let image = NSImage(contentsOf: url) {
-//                                    Image(nsImage: image).resizable().scaledToFit()
-//                                } else {
-                                Text("\(url.absoluteString)")
-                                    .font(.callout)
-//                                }
-                            } else {
-                                Text(item.name ?? "No Name")
-                                    .font(.callout)
-                            }
+                        // spreading Button's Taparea was very difficult , but ZStack + Color make it
+                        // TODO: servey for alternative to Color
+                        //
+                        //
+                        // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
+                        // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-tappable-button
+
+                        HStack {
+                            Group {
+                                if let content = item.content, let image = NSImage(data: content) {
+                                    Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
+                                } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
+                                    Text(AttributedString(attributedString))
+
+                                } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
+                                    Text(AttributedString(attributedString))
+                                } else if let url = item.fileURL {
+                                    // TODO: why images disappear after first
+                                    //                                if let image = NSImage(contentsOf: url) {
+                                    //                                    Image(nsImage: image).resizable().scaledToFit()
+                                    //                                } else {
+                                    Text("\(url.absoluteString)")
+                                        .font(.callout)
+                                    //                                }
+                                } else {
+                                    Text(item.name ?? "No Name").font(.callout)
+                                }
+                            }.padding(.vertical, 8).lineLimit(isExpanded ? 20 : 1)
 
                             Spacer()
-                        }.background(Color.mainViewBackground)
+                        }
                     }
 
-                }).modifier(ExpandModifier(isExpanded: isExpanded, maxWidth: 1000)).padding(.vertical)
+                })
 
                 VStack(alignment: .trailing) {
                     Text(item.contentTypeString ?? "").font(.caption)
@@ -395,7 +405,7 @@ struct Row: View, Equatable {
                 }, label: {
                     Image(systemName: favorite ? "star.fill" : "star")
                         .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                        .modifier(ExpandModifier(isExpanded: isExpanded, maxWidth: 44))
+                        .frame(width: 44, height: 44)
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
                 .buttonStyle(PlainButtonStyle())
@@ -412,21 +422,9 @@ struct Row: View, Equatable {
     }
 
     static func == (lhs: Row, rhs: Row) -> Bool {
+        // This comparation make Row stop unneeded rendering.
         return lhs.isFocused == rhs.isFocused &&
             lhs.favorite == rhs.favorite
-    }
-}
-
-struct ExpandModifier: ViewModifier {
-    let isExpanded: Bool
-    let maxWidth: CGFloat
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        if isExpanded {
-            content.frame(maxWidth: maxWidth, maxHeight: 500)
-        } else {
-            content.frame(maxWidth: maxWidth, maxHeight: 30)
-        }
     }
 }
 
