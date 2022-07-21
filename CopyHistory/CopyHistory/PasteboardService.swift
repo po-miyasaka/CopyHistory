@@ -185,4 +185,26 @@ extension CopiedItem {
         if binarySize == 0 { return "-" }
         return Self.formatter.string(fromByteCount: binarySize)
     }
+
+    var attributeString: NSAttributedString? {
+        guard let content = content else { return nil }
+        let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.rtf], documentAttributes: nil))
+        return attributeString
+    }
+
+    var htmlString: NSAttributedString? {
+        guard let content = content else { return nil }
+        let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil))
+
+        return attributeString
+    }
+
+    var fileURL: URL? {
+        guard contentTypeString?.contains("file-url") == true,
+              let content = content,
+              let path = String(data: content, encoding: .utf8),
+              let url = URL(string: path) else { return nil }
+//            url.startAccessingSecurityScopedResource()
+        return url
+    }
 }

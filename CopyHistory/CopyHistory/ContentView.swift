@@ -7,6 +7,7 @@
 
 import StoreKit
 import SwiftUI
+import WebKit
 
 struct ContentView: View {
     @StateObject var pasteboardService: PasteboardService = .build()
@@ -14,6 +15,9 @@ struct ContentView: View {
     @FocusState var isFocus
     @State var isAlertPresented: Bool = false
     @State var focusedItemIndex: Int?
+    @AppStorage("isExpanded") var isExpanded: Bool = true
+    @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
+    @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
 
     let versionString: String = {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -103,18 +107,25 @@ struct ContentView: View {
                             Text("Up:")
                             Text("Down:")
                             Text("Select:")
+                            Text("Delete:")
                             Text("Star:")
+                            Text(isExpanded ? "Minify cells:" : "Expand cells:")
+                            Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):")
+                            Text(isShowingHTML ? "Stop Showing as HTML:" : "Show as HTML (slow):")
                         }
                         VStack(alignment: .leading, spacing: 5) {
                             Text("⌘ + ↑ or k")
                             Text("⌘ + ↓ or j")
                             Text("⌘ + ↩")
+                            Text("⌘ + ⇧ + d")
                             Text("⌘ + o")
+                            Text("⌘ + e")
+                            Text("⌘ + r")
+                            Text("⌘ + a")
                         }
                     }.font(.caption)
                         .foregroundColor(Color.gray)
                         .padding(.bottom, 1)
-
                 }
 
                 Spacer()
@@ -143,19 +154,28 @@ struct ContentView: View {
     @ViewBuilder
     func MainView() -> some View {
         ScrollView {
+            Spacer() // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             ScrollViewReader { proxy in
-                ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
+                VStack(spacing: 0) { // This doesn't make ScrollView + ForEach make additional padding
+                    ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
-                    Row(item: item,
-                        didSelected: { item in
-                            focusedItemIndex = nil
-                            pasteboardService.didSelected(item)
-                            NSApplication.shared.deactivate()
-                        },
-                        favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
-                        deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
-                        isFocused: index == focusedItemIndex).id(item.dataHash)
+                        Row(item: item,
+                            favorite: item.favorite,
+                            didSelected: { item in
+                                focusedItemIndex = nil
+                                pasteboardService.didSelected(item)
+                                NSApplication.shared.deactivate()
+                            },
+                            favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
+                            deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
+                            isFocused: index == focusedItemIndex,
+                            isExpanded: $isExpanded,
+                            isShowingRTF: $isShowingRTF,
+                            isShowingHTML: $isShowingHTML)
+                            .id(item.dataHash)
+                    }
                 }
+
                 HStack {
                     KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .down) }, keys:
                         [.init(main: .downArrow, sub: .command), .init(main: "j", sub: .command)])
@@ -175,16 +195,36 @@ struct ContentView: View {
 
                     KeyboardCommandButtons(action: {
                         if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
+                            pasteboardService.deleteButtonDidTap(pasteboardService.copiedItems[i])
+                        }
+
+                    }, keys: [.init(main: "d", sub: .command.union(.shift))]).transaction { transaction in
+                        transaction.animation = nil
+                    }
+
+                    KeyboardCommandButtons(action: {
+                        if let i = focusedItemIndex, pasteboardService.copiedItems.endIndex > i {
                             pasteboardService.favoriteButtonDidTap(pasteboardService.copiedItems[i])
                         }
 
                     }, keys: [.init(main: "o", sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        isExpanded.toggle()
+                    }, keys: [.init(main: "e", sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        isShowingRTF.toggle()
+                    }, keys: [.init(main: "r", sub: .command)])
+
+                    KeyboardCommandButtons(action: {
+                        isShowingHTML.toggle()
+                    }, keys: [.init(main: "a", sub: .command)])
                 }
+
                 .opacity(0)
                 .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
-            }
-            .padding(.horizontal)
-            .listStyle(.inset(alternatesRowBackgrounds: false))
+            }.padding(.horizontal)
         }
     }
 
@@ -193,35 +233,37 @@ struct ContentView: View {
         Group {
             HStack {
                 Menu {
-                    Button(action: {
-                        isShowingKeyboardShortcuts.toggle()
-                    }, label: {
-                        Text(isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts")
-                    })
-                    Divider()
-                    Button(action: {
-                        if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }, label: {
-                        Text("About launching with a keyboard shortcut (open the Website)")
-                    })
-                    Divider()
-                    Button(action: {
-                        if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }, label: {
-                        Text("About CopyHistory (open the Website)")
-                    })
-                    Divider()
-                    Button(action: {
-                        SKStoreReviewController.requestReview()
-                    }, label: {
-                        Text("Rate CopyHistory✨")
-                    })
-                    Divider()
+                    MenuItems(contents: [
+                        .init(text: isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts", action: {
+                            isShowingKeyboardShortcuts.toggle()
+                        }),
+                        .init(text: isExpanded ? "Minify cells" : "Expand cells", action: {
+                            isExpanded.toggle()
+                        }),
+                        .init(text: isShowingRTF ? "Stop Showing as RTF" : "Show as RTF (slow)", action: {
+                            isShowingRTF.toggle()
+                        }),
+                        .init(text: isShowingHTML ? "Stop Showing as HTML" : "Show as HTML (slow)", action: {
+                            isShowingKeyboardShortcuts.toggle()
+                        }),
+                        .init(text: "About launching with a keyboard shortcut (open the Website)", action: {
+                            if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }),
+                        .init(text: "About CopyHistory (open the Website)", action: {
+                            if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }),
+                        .init(text: "Rate CopyHistory✨", action: {
+                            SKStoreReviewController.requestReview()
+                        }),
+
+                    ])
+
                     Text(versionString)
+
                 } label: {
                     Image(systemName: "latch.2.case")
                         .font(.title)
@@ -252,6 +294,26 @@ struct ContentView: View {
     }
 }
 
+struct MenuItems: View {
+    struct Content: Identifiable {
+        var id: String { text }
+        let text: String
+        let action: () -> Void
+    }
+
+    let contents: [Content]
+    var body: some View {
+        ForEach(contents) { content in
+            Button(action: {
+                content.action()
+            }, label: {
+                Text(content.text)
+            })
+            Divider()
+        }
+    }
+}
+
 struct KeyboardCommandButtons: View {
     struct Key: Identifiable {
         let id: UUID = .init()
@@ -274,31 +336,64 @@ struct KeyboardCommandButtons: View {
     }
 }
 
-struct Row: View {
+struct Row: View, Equatable {
     let item: CopiedItem
+    let favorite: Bool
     let didSelected: (CopiedItem) -> Void
     let favoriteButtonDidTap: (CopiedItem) -> Void
     let deleteButtonDidTap: (CopiedItem) -> Void
-    let isFocused: Bool
+    var isFocused: Bool
+    @Binding var isExpanded: Bool // to render realtime, using @Binding
+    @Binding var isShowingRTF: Bool
+    @Binding var isShowingHTML: Bool
     var body: some View {
         VStack {
             HStack {
+                if isFocused {
+                    Color.mainAccent.frame(width: 5, alignment: .leading)
+                }
                 Button(action: {
                     withAnimation {
                         didSelected(item)
                     }
 
                 }, label: {
-                    VStack {
+                    ZStack {
+                        Color.mainViewBackground
+
+                        // spreading Button's Taparea was very difficult , but ZStack + Color make it
+                        // TODO: servey for alternative to Color
+                        //
+                        //
+                        // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
+                        // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-tappable-button
+
                         HStack {
-                            Text(item.name ?? "No Name")
-                                .font(.callout)
-                                .foregroundColor(isFocused ? .mainAccent : .primary)
+                            Group {
+                                if let content = item.content, let image = NSImage(data: content) {
+                                    Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
+                                } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
+                                    Text(AttributedString(attributedString))
+
+                                } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
+                                    Text(AttributedString(attributedString))
+                                } else if let url = item.fileURL {
+                                    // TODO: why images disappear after first
+                                    //                                if let image = NSImage(contentsOf: url) {
+                                    //                                    Image(nsImage: image).resizable().scaledToFit()
+                                    //                                } else {
+                                    Text("\(url.absoluteString)")
+                                        .font(.callout)
+                                    //                                }
+                                } else {
+                                    Text(item.name ?? "No Name").font(.callout)
+                                }
+                            }.padding(.vertical, 8).lineLimit(isExpanded ? 20 : 1)
+
                             Spacer()
                         }
                     }
-                    .frame(minHeight: 44)
-                    .contentShape(RoundedRectangle(cornerRadius: 20))
+
                 })
 
                 VStack(alignment: .trailing) {
@@ -308,9 +403,9 @@ struct Row: View {
                 Button(action: {
                     favoriteButtonDidTap(item)
                 }, label: {
-                    Image(systemName: item.favorite ? "star.fill" : "star")
-                        .foregroundColor(item.favorite ? Color.mainAccent : Color.primary)
-                        .frame(minHeight: 44)
+                    Image(systemName: favorite ? "star.fill" : "star")
+                        .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                        .frame(width: 44, height: 44)
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
                 .buttonStyle(PlainButtonStyle())
@@ -321,10 +416,15 @@ struct Row: View {
                 })
                 .buttonStyle(PlainButtonStyle())
             }
-            .frame(height: 30)
-            Divider().padding(EdgeInsets())
         }
         .buttonStyle(PlainButtonStyle())
+        Divider()
+    }
+
+    static func == (lhs: Row, rhs: Row) -> Bool {
+        // This comparation make Row stop unneeded rendering.
+        return lhs.isFocused == rhs.isFocused &&
+            lhs.favorite == rhs.favorite
     }
 }
 
@@ -338,3 +438,35 @@ extension Color {
     static var mainViewBackground = Color("mainViewBackground")
     static var mainAccent = Color("AccentColor")
 }
+
+// wanna show big preview
+// struct WebViewer: NSViewRepresentable {
+//    let contentString: String
+//    let content: Data
+//
+//    init? (content: Data?) {
+//        guard let content = content, let contentString = String(data: content, encoding: .utf8) else { return nil }
+//        self.content = content
+//        self.contentString = contentString
+//    }
+//
+//    func makeNSView(context _: Context) -> WKWebView {
+//        let view =  WKWebView(frame: .zero)
+//
+//        let html = "<html contenteditable> <script>onbeforeunload = () => true</script> \(contentString)"
+//        let filePath =  NSHomeDirectory() + "/Library/hoge.html"
+//        FileManager.default.createFile(atPath: filePath, contents: html.data(using: .utf8))
+//
+//        let localurl = URL(fileURLWithPath: filePath )
+//        let allowAccess = URL(fileURLWithPath: NSHomeDirectory())
+//
+//        view.loadFileURL(localurl, allowingReadAccessTo:  allowAccess)
+//        return view
+//    }
+//
+//    func updateNSView(_ view: WKWebView, context _: Context) {
+//
+//    }
+//
+//    typealias NSViewType = WKWebView
+// }
