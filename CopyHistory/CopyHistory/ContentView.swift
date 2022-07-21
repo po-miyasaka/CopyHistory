@@ -108,7 +108,7 @@ struct ContentView: View {
                             Text("Down:")
                             Text("Select:")
                             Text("Delete:")
-                            Text("Switch Star:")
+                            Text("Star:")
                             Text(isExpanded ? "Minify cells:" : "Expand cells:")
                             Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):" )
                             Text(isShowingHTML ? "Stop Showing as HTML:" : "Show as HTML (slow):")
@@ -160,6 +160,7 @@ struct ContentView: View {
                 ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
                     Row(item: item,
+                        favorite: item.favorite,
                         didSelected: { item in
                             focusedItemIndex = nil
                             pasteboardService.didSelected(item)
@@ -334,8 +335,9 @@ struct KeyboardCommandButtons: View {
     }
 }
 
-struct Row: View {
+struct Row: View, Equatable {
     let item: CopiedItem
+    let favorite: Bool
     let didSelected: (CopiedItem) -> Void
     let favoriteButtonDidTap: (CopiedItem) -> Void
     let deleteButtonDidTap: (CopiedItem) -> Void
@@ -384,7 +386,6 @@ struct Row: View {
                         }
                     }
                     .modifier(ExpandModifier(isExpanded: isExpanded))
-                    .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
 
                 VStack(alignment: .trailing) {
@@ -394,8 +395,8 @@ struct Row: View {
                 Button(action: {
                     favoriteButtonDidTap(item)
                 }, label: {
-                    Image(systemName: item.favorite ? "star.fill" : "star")
-                        .foregroundColor(item.favorite ? Color.mainAccent : Color.primary)
+                    Image(systemName: favorite ? "star.fill" : "star")
+                        .foregroundColor(favorite ? Color.mainAccent : Color.primary)
                         .modifier(ExpandModifier(isExpanded: isExpanded))
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
@@ -411,6 +412,11 @@ struct Row: View {
             Divider().padding(EdgeInsets())
         }
         .buttonStyle(PlainButtonStyle())
+    }
+
+    static func == (lhs: Row, rhs: Row) -> Bool {
+        return lhs.isFocused == rhs.isFocused &&
+        lhs.favorite == rhs.favorite
     }
 }
 
