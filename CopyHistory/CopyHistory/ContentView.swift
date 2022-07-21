@@ -153,10 +153,12 @@ struct ContentView: View {
 
     @ViewBuilder
     func MainView() -> some View {
+
         ScrollView {
+
             Spacer() // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             ScrollViewReader { proxy in
-
+                VStack(spacing: 0) { // This doesn't make ScrollView + ForEach make additional padding
                 ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
                     Row(item: item,
@@ -175,6 +177,8 @@ struct ContentView: View {
                     )
                     .id(item.dataHash)
                 }
+                }
+
                 HStack {
                     KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .down) }, keys:
                         [.init(main: .downArrow, sub: .command), .init(main: "j", sub: .command)])
@@ -224,6 +228,7 @@ struct ContentView: View {
                 .opacity(0)
                 .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
             }.padding(.horizontal)
+
         }
     }
 
@@ -348,6 +353,9 @@ struct Row: View, Equatable {
     var body: some View {
         VStack {
             HStack {
+                if isFocused {
+                    Color.mainAccent.frame(width: 5, alignment: .leading)
+                }
                 Button(action: {
                     withAnimation {
                         didSelected(item)
@@ -356,9 +364,7 @@ struct Row: View, Equatable {
                 }, label: {
                     VStack {
                         HStack {
-                            if isFocused {
-                                Color.mainAccent.frame(width: 5, alignment: .leading)
-                            }
+
 
                             if let content = item.content, let image = NSImage(data: content) {
                                 Image(nsImage: image).resizable().scaledToFit()
@@ -382,11 +388,13 @@ struct Row: View, Equatable {
                                     .font(.callout)
                             }
 
+
                             Spacer()
-                        }
+                        }.background(Color.mainViewBackground)
+                        
                     }
-                    .modifier(ExpandModifier(isExpanded: isExpanded))
-                })
+
+                }).modifier(ExpandModifier(isExpanded: isExpanded, maxWidth: 1000)).padding(.vertical)
 
                 VStack(alignment: .trailing) {
                     Text(item.contentTypeString ?? "").font(.caption)
@@ -397,7 +405,7 @@ struct Row: View, Equatable {
                 }, label: {
                     Image(systemName: favorite ? "star.fill" : "star")
                         .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                        .modifier(ExpandModifier(isExpanded: isExpanded))
+                        .modifier(ExpandModifier(isExpanded: isExpanded, maxWidth: 44))
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
                 .buttonStyle(PlainButtonStyle())
@@ -408,10 +416,9 @@ struct Row: View, Equatable {
                 })
                 .buttonStyle(PlainButtonStyle())
             }
-            .modifier(ExpandModifier(isExpanded: isExpanded))
-            Divider().padding(EdgeInsets())
         }
         .buttonStyle(PlainButtonStyle())
+        Divider()
     }
 
     static func == (lhs: Row, rhs: Row) -> Bool {
@@ -422,13 +429,13 @@ struct Row: View, Equatable {
 
 struct ExpandModifier: ViewModifier {
     let isExpanded: Bool
-
+    let maxWidth: CGFloat
     @ViewBuilder
     func body(content: Content) -> some View {
         if isExpanded {
-            content.frame(maxHeight: 500)
+            content.frame(maxWidth: maxWidth, maxHeight: 500)
         } else {
-            content.frame(height: 20)
+            content.frame(maxWidth: maxWidth, maxHeight: 30)
         }
     }
 }
