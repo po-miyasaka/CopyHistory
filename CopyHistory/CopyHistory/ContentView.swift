@@ -110,7 +110,7 @@ struct ContentView: View {
                             Text("Delete:")
                             Text("Star:")
                             Text(isExpanded ? "Minify cells:" : "Expand cells:")
-                            Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):" )
+                            Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):")
                             Text(isShowingHTML ? "Stop Showing as HTML:" : "Show as HTML (slow):")
                         }
                         VStack(alignment: .leading, spacing: 5) {
@@ -153,30 +153,27 @@ struct ContentView: View {
 
     @ViewBuilder
     func MainView() -> some View {
-
         ScrollView {
-
             Spacer() // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             ScrollViewReader { proxy in
                 VStack(spacing: 0) { // This doesn't make ScrollView + ForEach make additional padding
-                ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
+                    ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
-                    Row(item: item,
-                        favorite: item.favorite,
-                        didSelected: { item in
-                            focusedItemIndex = nil
-                            pasteboardService.didSelected(item)
-                            NSApplication.shared.deactivate()
-                        },
-                        favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
-                        deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
-                        isFocused: index == focusedItemIndex,
-                        isExpanded: $isExpanded,
-                        isShowingRTF: $isShowingRTF,
-                        isShowingHTML: $isShowingHTML
-                    )
-                    .id(item.dataHash)
-                }
+                        Row(item: item,
+                            favorite: item.favorite,
+                            didSelected: { item in
+                                focusedItemIndex = nil
+                                pasteboardService.didSelected(item)
+                                NSApplication.shared.deactivate()
+                            },
+                            favoriteButtonDidTap: { item in pasteboardService.favoriteButtonDidTap(item) },
+                            deleteButtonDidTap: { item in pasteboardService.deleteButtonDidTap(item) },
+                            isFocused: index == focusedItemIndex,
+                            isExpanded: $isExpanded,
+                            isShowingRTF: $isShowingRTF,
+                            isShowingHTML: $isShowingHTML)
+                            .id(item.dataHash)
+                    }
                 }
 
                 HStack {
@@ -228,7 +225,6 @@ struct ContentView: View {
                 .opacity(0)
                 .frame(width: .leastNonzeroMagnitude, height: .leastNonzeroMagnitude)
             }.padding(.horizontal)
-
         }
     }
 
@@ -364,8 +360,6 @@ struct Row: View, Equatable {
                 }, label: {
                     VStack {
                         HStack {
-
-
                             if let content = item.content, let image = NSImage(data: content) {
                                 Image(nsImage: image).resizable().scaledToFit()
                             } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
@@ -374,24 +368,20 @@ struct Row: View, Equatable {
                             } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
                                 Text(AttributedString(attributedString))
                             } else if let url = item.fileURL {
-
                                 // TODO: why images disappear after first
 //                                if let image = NSImage(contentsOf: url) {
 //                                    Image(nsImage: image).resizable().scaledToFit()
 //                                } else {
                                 Text("\(url.absoluteString)")
-                                        .font(.callout)
+                                    .font(.callout)
 //                                }
-                            }
-                            else {
+                            } else {
                                 Text(item.name ?? "No Name")
                                     .font(.callout)
                             }
 
-
                             Spacer()
                         }.background(Color.mainViewBackground)
-                        
                     }
 
                 }).modifier(ExpandModifier(isExpanded: isExpanded, maxWidth: 1000)).padding(.vertical)
@@ -423,7 +413,7 @@ struct Row: View, Equatable {
 
     static func == (lhs: Row, rhs: Row) -> Bool {
         return lhs.isFocused == rhs.isFocused &&
-        lhs.favorite == rhs.favorite
+            lhs.favorite == rhs.favorite
     }
 }
 
@@ -452,7 +442,7 @@ extension Color {
 }
 
 // wanna show big preview
-//struct WebViewer: NSViewRepresentable {
+// struct WebViewer: NSViewRepresentable {
 //    let contentString: String
 //    let content: Data
 //
@@ -481,4 +471,4 @@ extension Color {
 //    }
 //
 //    typealias NSViewType = WKWebView
-//}
+// }

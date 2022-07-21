@@ -8,7 +8,6 @@
 import Cocoa
 import SwiftUI
 
-
 @main
 struct MainApp: App {
     #if os(macOS)

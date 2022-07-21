@@ -201,11 +201,10 @@ extension CopiedItem {
 
     var fileURL: URL? {
         guard contentTypeString?.contains("file-url") == true,
-           let content = content,
-           let path = String(data: content,  encoding: .utf8),
+              let content = content,
+              let path = String(data: content, encoding: .utf8),
               let url = URL(string: path) else { return nil }
 //            url.startAccessingSecurityScopedResource()
-            return url
-
+        return url
     }
 }
