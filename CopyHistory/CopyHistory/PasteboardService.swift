@@ -190,7 +190,7 @@ extension CopiedItem {
         if let att = rtfStringCached {
             return att
         }
-        guard let content = content else { return nil }
+        guard contentTypeString?.contains("rtf") == true, let content = content else { return nil }
 
         let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.rtf], documentAttributes: nil))
         rtfStringCached = attributeString
@@ -201,7 +201,7 @@ extension CopiedItem {
         if let att = htmlStringCached {
             return att
         }
-        guard let content = content else { return nil }
+        guard contentTypeString?.contains("html") == true, let content = content else { return nil }
 
         let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil))
         htmlStringCached = attributeString

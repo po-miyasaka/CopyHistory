@@ -382,10 +382,10 @@ struct Row: View, Equatable {
                             Group {
                                 if let content = item.content, let image = NSImage(data: content) {
                                     Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
-                                } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
+                                } else if isShowingRTF, let attributedString = item.attributeString {
                                     Text(AttributedString(attributedString))
 
-                                } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
+                                } else if isShowingHTML, let attributedString = item.htmlString {
                                     Text(AttributedString(attributedString))
                                 } else if let url = item.fileURL {
                                     // TODO: why images disappear after first
