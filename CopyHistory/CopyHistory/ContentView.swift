@@ -157,7 +157,10 @@ struct ContentView: View {
             // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             Spacer()
             ScrollViewReader { proxy in
-                VStack(spacing: 0) { // This doesn't make ScrollView + ForEach make additional padding, https://www.reddit.com/r/SwiftUI/comments/e607z3/swiftui_scrollview_foreach_padding_weird/
+                LazyVStack(spacing: 0) {
+                    // ・This doesn't make ScrollView + ForEach make additional padding, https://www.reddit.com/r/SwiftUI/comments/e607z3/swiftui_scrollview_foreach_padding_weird/
+                    // ・Lazy improves performance the inclement search
+
                     ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
                         Row(item: item,

@@ -188,14 +188,21 @@ extension CopiedItem {
 
     var attributeString: NSAttributedString? {
         guard let content = content else { return nil }
+        if let att = attibutedStringCached {
+            return att
+        }
         let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.rtf], documentAttributes: nil))
+        attibutedStringCached = attributeString
         return attributeString
     }
 
     var htmlString: NSAttributedString? {
         guard let content = content else { return nil }
+        if let att = htmlStringCached {
+            return att
+        }
         let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil))
-
+        htmlStringCached = attributeString
         return attributeString
     }
 
