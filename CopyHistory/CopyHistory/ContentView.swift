@@ -11,10 +11,10 @@ import WebKit
 
 struct ContentView: View {
     @StateObject var pasteboardService: PasteboardService = .build()
-    @AppStorage("isShowingKeyboardShortcuts") var isShowingKeyboardShortcuts = true
     @FocusState var isFocus
     @State var isAlertPresented: Bool = false
     @State var focusedItemIndex: Int?
+    @AppStorage("isShowingKeyboardShortcuts") var isShowingKeyboardShortcuts = true
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
@@ -154,9 +154,13 @@ struct ContentView: View {
     @ViewBuilder
     func MainView() -> some View {
         ScrollView {
-            Spacer() // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
+            // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
+            Spacer()
             ScrollViewReader { proxy in
-                VStack(spacing: 0) { // This doesn't make ScrollView + ForEach make additional padding
+                LazyVStack(spacing: 0) {
+                    // ・This doesn't make ScrollView + ForEach make additional padding, https://www.reddit.com/r/SwiftUI/comments/e607z3/swiftui_scrollview_foreach_padding_weird/
+                    // ・Lazy improves performance the inclement search
+
                     ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
 
                         Row(item: item,
@@ -173,6 +177,12 @@ struct ContentView: View {
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML)
                             .id(item.dataHash)
+                            .onHover(perform: { hover in
+                                if hover {
+                                    focusedItemIndex = index
+                                }
+
+                            })
                     }
                 }
 
@@ -372,10 +382,10 @@ struct Row: View, Equatable {
                             Group {
                                 if let content = item.content, let image = NSImage(data: content) {
                                     Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
-                                } else if isShowingRTF, item.contentTypeString?.contains("rtf") == true, let attributedString = item.attributeString {
+                                } else if isShowingRTF, let attributedString = item.attributeString {
                                     Text(AttributedString(attributedString))
 
-                                } else if isShowingHTML, item.contentTypeString?.contains("html") == true, let attributedString = item.htmlString {
+                                } else if isShowingHTML, let attributedString = item.htmlString {
                                     Text(AttributedString(attributedString))
                                 } else if let url = item.fileURL {
                                     // TODO: why images disappear after first

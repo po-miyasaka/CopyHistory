@@ -6,11 +6,13 @@
         <attribute name="contentTypeString" attributeType="String"/>
         <attribute name="dataHash" optional="YES" attributeType="String"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="htmlStringCached" optional="YES" transient="YES" attributeType="Transformable" customClassName="NSAttributedString"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="rawString" optional="YES" attributeType="String"/>
+        <attribute name="rtfStringCached" optional="YES" transient="YES" attributeType="Transformable" customClassName=".NSAttributedString"/>
         <attribute name="updateDate" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <elements>
-        <element name="CopiedItem" positionX="160" positionY="192" width="128" height="149"/>
+        <element name="CopiedItem" positionX="160" positionY="192" width="128" height="179"/>
     </elements>
 </model>
