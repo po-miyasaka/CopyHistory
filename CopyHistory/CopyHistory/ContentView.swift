@@ -388,7 +388,9 @@ struct Row: View, Equatable {
                                 } else if isShowingHTML, let attributedString = item.htmlString {
                                     Text(AttributedString(attributedString))
                                 } else if let url = item.fileURL {
-                                    // TODO: why images disappear after first
+                                    // TODO:
+                                    // I want to show images from fileURL,
+                                    // but images disappear next time when it's shown
                                     //                                if let image = NSImage(contentsOf: url) {
                                     //                                    Image(nsImage: image).resizable().scaledToFit()
                                     //                                } else {
