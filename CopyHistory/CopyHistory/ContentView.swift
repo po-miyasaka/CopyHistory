@@ -177,12 +177,12 @@ struct ContentView: View {
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML)
                             .id(item.dataHash)
-                            .onHover(perform: { hover in
-                                if hover {
-                                    focusedItemIndex = index
-                                }
-
-                            })
+//                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
+//                            .onHover(perform: { hover in
+//                                if hover {
+//                                    focusedItemIndex = index
+//                                }
+//                            })
                     }
                 }
 
