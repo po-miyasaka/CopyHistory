@@ -268,7 +268,7 @@ struct ContentView: View {
                         }),
                         .init(text: "Rate CopyHistory✨", action: {
                             SKStoreReviewController.requestReview()
-                        }),
+                        })
 
                     ])
 
@@ -352,7 +352,7 @@ struct Row: View, Equatable {
     let didSelected: (CopiedItem) -> Void
     let favoriteButtonDidTap: (CopiedItem) -> Void
     let deleteButtonDidTap: (CopiedItem) -> Void
-    var isFocused: Bool
+    let isFocused: Bool
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
