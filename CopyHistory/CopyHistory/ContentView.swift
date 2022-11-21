@@ -372,7 +372,7 @@ struct Row: View, Equatable {
                         Color.mainViewBackground
 
                         // spreading Button's Taparea was very difficult , but ZStack + Color make it
-                        // TODO: servey for alternative to Color
+                        // TODO: survey for alternative to Color
                         //
                         //
                         // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
