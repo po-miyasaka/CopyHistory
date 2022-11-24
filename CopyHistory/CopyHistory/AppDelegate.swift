@@ -28,7 +28,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             ContentView(),
             width: 500,
             height: NSScreen.main?.frame.height ?? 800.0,
-            image: NSImage(imageLiteralResourceName: "logo")
+            image: NSImage(imageLiteralResourceName: "logo.svg")
         )
     }
 

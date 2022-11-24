@@ -177,12 +177,12 @@ struct ContentView: View {
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML)
                             .id(item.dataHash)
-                            .onHover(perform: { hover in
-                                if hover {
-                                    focusedItemIndex = index
-                                }
-
-                            })
+//                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
+//                            .onHover(perform: { hover in
+//                                if hover {
+//                                    focusedItemIndex = index
+//                                }
+//                            })
                     }
                 }
 
@@ -268,7 +268,7 @@ struct ContentView: View {
                         }),
                         .init(text: "Rate CopyHistory✨", action: {
                             SKStoreReviewController.requestReview()
-                        }),
+                        })
 
                     ])
 
@@ -352,7 +352,7 @@ struct Row: View, Equatable {
     let didSelected: (CopiedItem) -> Void
     let favoriteButtonDidTap: (CopiedItem) -> Void
     let deleteButtonDidTap: (CopiedItem) -> Void
-    var isFocused: Bool
+    let isFocused: Bool
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
@@ -372,7 +372,7 @@ struct Row: View, Equatable {
                         Color.mainViewBackground
 
                         // spreading Button's Taparea was very difficult , but ZStack + Color make it
-                        // TODO: servey for alternative to Color
+                        // TODO: survey for alternative to Color
                         //
                         //
                         // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
@@ -388,7 +388,9 @@ struct Row: View, Equatable {
                                 } else if isShowingHTML, let attributedString = item.htmlString {
                                     Text(AttributedString(attributedString))
                                 } else if let url = item.fileURL {
-                                    // TODO: why images disappear after first
+                                    // TODO:
+                                    // I want to show images from fileURL,
+                                    // but images disappear next time when it's shown
                                     //                                if let image = NSImage(contentsOf: url) {
                                     //                                    Image(nsImage: image).resizable().scaledToFit()
                                     //                                } else {

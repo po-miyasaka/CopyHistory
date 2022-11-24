@@ -10,6 +10,7 @@ import CoreData
 import CryptoKit
 import SwiftUI
 
+@MainActor
 final class PasteboardService: ObservableObject {
     @Published var searchText: String = ""
     @Published var copiedItems: [CopiedItem] = []
@@ -29,42 +30,52 @@ final class PasteboardService: ObservableObject {
     private init() {}
 
     func updateCopiedItems() {
-        copiedItems = persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+        // If Task is used, SwiftUI Animation won't work...
+        // Even if the method is nonisolated and synchronous, as long as it's in Task, the animation doesn't work
+        Task {
+            copiedItems = await persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
+
+        }
     }
 
     @objc func timerLoop() {
-        if pasteBoard.changeCount == latestChangeCount { return } // 変更がなければなにもしない
-        latestChangeCount = pasteBoard.changeCount
+        Task {
+            if pasteBoard.changeCount == latestChangeCount { return } // 変更がなければなにもしない
+            latestChangeCount = pasteBoard.changeCount
 
-        guard let newItem = pasteBoard.pasteboardItems?.first,
-              let type = newItem.availableType(from: newItem.types),
-              let data = newItem.data(forType: type) else { return }
-        let dataHash = CryptoKit.SHA256.hash(data: data).description
+            guard let newItem = pasteBoard.pasteboardItems?.first,
+                  let type = newItem.availableType(from: newItem.types),
+                  let data = newItem.data(forType: type) else { return }
+            let dataHash = CryptoKit.SHA256.hash(data: data).description
 
-        if let alreadySavedItem = persistenceController.getCopiedItem(from: dataHash) {
-            // Existing
-            alreadySavedItem.updateDate = Date()
-        } else {
-            // New
-            let copiedItem = persistenceController.create(type: CopiedItem.self)
-            let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines)
-            copiedItem.rawString = str
-            copiedItem.content = data
+            if let alreadySavedItem = await persistenceController.getCopiedItem(from: dataHash) {
+                // Existing
+                alreadySavedItem.updateDate = Date()
+            } else {
+                // New
+                let copiedItem = await persistenceController.create(type: CopiedItem.self)
+                let str = newItem.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines)
+                copiedItem.rawString = str
+                copiedItem.content = data
 
-            copiedItem.name = String((str ?? "No Name").prefix(100))
-            copiedItem.binarySize = Int64(data.count)
-            copiedItem.contentTypeString = type.rawValue
-            copiedItem.updateDate = Date()
-            copiedItem.dataHash = dataHash
+                copiedItem.name = String((str ?? "No Name").prefix(100))
+                copiedItem.binarySize = Int64(data.count)
+                copiedItem.contentTypeString = type.rawValue
+                copiedItem.updateDate = Date()
+                copiedItem.dataHash = dataHash
+            }
+
+            await persistenceController.persists()
+            updateCopiedItems()
         }
 
-        persistenceController.persists()
-        updateCopiedItems()
     }
 
     private func setup() {
         timer.fire()
+
         updateCopiedItems()
+
     }
 
     func search() {
@@ -90,28 +101,40 @@ final class PasteboardService: ObservableObject {
         pasteBoard.writeObjects([item])
 
         copiedItem.updateDate = Date()
-        persistenceController.persists()
-        updateCopiedItems()
+        Task {
+            await persistenceController.persists()
+            updateCopiedItems()
+        }
+
     }
 
     func favoriteButtonDidTap(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
-        persistenceController.persists()
-        updateCopiedItems()
+        Task {
+            await persistenceController.persists()
+            updateCopiedItems()
+        }
     }
 
     func deleteButtonDidTap(_ copiedItem: CopiedItem) {
-        persistenceController.delete(copiedItem)
-        updateCopiedItems()
+        Task {
+            await persistenceController.delete(copiedItem)
+            updateCopiedItems()
+        }
+
     }
 
     func clearAll() {
-        persistenceController.clearAllItems()
-        updateCopiedItems()
+
+        Task {
+            await  persistenceController.clearAllItems()
+            updateCopiedItems()
+        }
+
     }
 }
 
-private class PersistenceController: ObservableObject {
+private actor PersistenceController: ObservableObject {
     let container: NSPersistentContainer
     init() {
         container = NSPersistentContainer(name: "Model")
@@ -213,7 +236,7 @@ extension CopiedItem {
               let content = content,
               let path = String(data: content, encoding: .utf8),
               let url = URL(string: path) else { return nil }
-//            url.startAccessingSecurityScopedResource()
+        //            url.startAccessingSecurityScopedResource()
         return url
     }
 }
