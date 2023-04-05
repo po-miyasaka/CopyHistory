@@ -21,15 +21,10 @@ struct MainApp: App {
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private var statusBar: StatusBarController<ContentView>!
+    private var statusBar: StatusBarController!
 
     func applicationDidFinishLaunching(_: Notification) {
-        statusBar = .init(
-            ContentView(),
-            width: 500,
-            height: NSScreen.main?.frame.height ?? 800.0,
-            image: NSImage(imageLiteralResourceName: "logo.svg")
-        )
+        statusBar = .init()
     }
 
     func applicationDidBecomeActive(_: Notification) {
@@ -37,17 +32,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-private final class StatusBarController<Content: View>: NSObject, NSPopoverDelegate {
+private final class StatusBarController: NSObject, NSPopoverDelegate {
     var mainMenu: NSMenu?
     var popover: NSPopover?
     var statusBarItem: NSStatusItem?
 
-    init(_: Content, width: CGFloat, height: CGFloat, image: NSImage) {
+    override init() {
         super.init()
+        let image = NSImage(imageLiteralResourceName: "logo.svg")
         let popover = NSPopover()
-        popover.contentSize = NSSize(width: width, height: height)
+        popover.contentSize = windowSize
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: ContentView())
+        popover.contentViewController = NSHostingController(rootView: MainView { size in
+            save(windowSize: size)
+            popover.contentSize = size
+        })
         self.popover = popover
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         popover.delegate = self
@@ -80,3 +79,22 @@ private final class StatusBarController<Content: View>: NSObject, NSPopoverDeleg
         NSApplication.shared.hide(nil) // this code make previous app activate back.
     }
 }
+
+let widthKey = "windowSizeWidth"
+let heightKey = "windowSizeHeight"
+var windowSize: NSSize {
+    let height = CGFloat(UserDefaults.standard.object(forKey: heightKey) as? CGFloat ?? NSScreen.main?.frame.height ?? 800)
+    let width = CGFloat(UserDefaults.standard.object(forKey: widthKey) as? CGFloat ?? 500)
+    return NSSize(width: width, height: height)
+}
+
+func save(windowSize size: NSSize = NSSize(width: 500, height: NSScreen.main?.frame.height ?? 800)) {
+    UserDefaults.standard.set(size.height, forKey: heightKey)
+    UserDefaults.standard.set(size.width, forKey: widthKey)
+}
+
+let versionString: String = {
+    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+    return "\(version ?? "") (\(build ?? ""))"
+}()
