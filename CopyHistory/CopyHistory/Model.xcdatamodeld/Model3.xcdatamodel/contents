@@ -7,6 +7,7 @@
         <attribute name="dataHash" optional="YES" attributeType="String"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="htmlStringCached" optional="YES" transient="YES" attributeType="Transformable" customClassName="NSAttributedString"/>
+        <attribute name="memo" optional="YES" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="rawString" optional="YES" attributeType="String"/>
         <attribute name="rtfStringCached" optional="YES" transient="YES" attributeType="Transformable" customClassName=".NSAttributedString"/>

@@ -9,10 +9,15 @@
 /* Begin PBXBuildFile section */
 		CE11282428774314008144F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE11282328774314008144F8 /* AppDelegate.swift */; };
 		CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */; };
-		CEA8AD082874C8E1003B6035 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD072874C8E1003B6035 /* ContentView.swift */; };
+		CEA8AD082874C8E1003B6035 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD072874C8E1003B6035 /* MainView.swift */; };
 		CEA8AD0A2874C8E3003B6035 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA8AD092874C8E3003B6035 /* Assets.xcassets */; };
 		CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */; };
 		CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */; };
+		D5A5573929DC1C0200FF69C7 /* ContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573829DC1C0200FF69C7 /* ContentsView.swift */; };
+		D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */; };
+		D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573C29DC20A600FF69C7 /* FooterView.swift */; };
+		D5A5573F29DC2EA400FF69C7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573E29DC2EA400FF69C7 /* Extensions.swift */; };
+		D5A5574129DC343100FF69C7 /* ShortcutButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,11 +25,17 @@
 		CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model1-2.xcmappingmodel"; sourceTree = "<group>"; };
 		CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model2.xcdatamodel; sourceTree = "<group>"; };
 		CEA8AD022874C8E1003B6035 /* CopyHistory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopyHistory.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEA8AD072874C8E1003B6035 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CEA8AD072874C8E1003B6035 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		CEA8AD092874C8E3003B6035 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardService.swift; sourceTree = "<group>"; };
 		CEA8AD132874C8E3003B6035 /* CopyHistory.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopyHistory.entitlements; sourceTree = "<group>"; };
 		CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		D5A5573829DC1C0200FF69C7 /* ContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsView.swift; sourceTree = "<group>"; };
+		D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
+		D5A5573E29DC2EA400FF69C7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
+		D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model3.xcdatamodel; sourceTree = "<group>"; };
 		D5EDFC3C287BA72300B4507F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,13 +72,26 @@
 				D5EDFC3C287BA72300B4507F /* Info.plist */,
 				CE11282328774314008144F8 /* AppDelegate.swift */,
 				CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */,
-				CEA8AD072874C8E1003B6035 /* ContentView.swift */,
+				D5A5573E29DC2EA400FF69C7 /* Extensions.swift */,
+				D5A5573729DC1A4F00FF69C7 /* MainView */,
 				CEA8AD092874C8E3003B6035 /* Assets.xcassets */,
 				CEA8AD132874C8E3003B6035 /* CopyHistory.entitlements */,
 				CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */,
 				CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */,
 			);
 			path = CopyHistory;
+			sourceTree = "<group>";
+		};
+		D5A5573729DC1A4F00FF69C7 /* MainView */ = {
+			isa = PBXGroup;
+			children = (
+				CEA8AD072874C8E1003B6035 /* MainView.swift */,
+				D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */,
+				D5A5573829DC1C0200FF69C7 /* ContentsView.swift */,
+				D5A5573C29DC20A600FF69C7 /* FooterView.swift */,
+				D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */,
+			);
+			path = MainView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,11 +163,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5A5573929DC1C0200FF69C7 /* ContentsView.swift in Sources */,
+				D5A5573F29DC2EA400FF69C7 /* Extensions.swift in Sources */,
 				CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */,
+				D5A5574129DC343100FF69C7 /* ShortcutButtons.swift in Sources */,
 				CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */,
-				CEA8AD082874C8E1003B6035 /* ContentView.swift in Sources */,
+				CEA8AD082874C8E1003B6035 /* MainView.swift in Sources */,
 				CE11282428774314008144F8 /* AppDelegate.swift in Sources */,
+				D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */,
 				CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */,
+				D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,10 +379,11 @@
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */,
 				CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */,
 				CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */,
 			);
-			currentVersion = CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */;
+			currentVersion = D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

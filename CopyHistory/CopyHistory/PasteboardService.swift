@@ -15,6 +15,12 @@ final class PasteboardService: ObservableObject {
     @Published var searchText: String = ""
     @Published var copiedItems: [CopiedItem] = []
     @Published var isShowingOnlyFavorite: Bool = false
+    @Published var isShowingOnlyMemoed: Bool = false
+    @AppStorage("shouldShowAllSavedItems") var shouldShowAllSavedItems: Bool = false {
+        didSet {
+            updateCopiedItems()
+        }
+    }
 
     private let persistenceController = PersistenceController()
     private var pasteBoard: NSPasteboard { NSPasteboard.general }
@@ -33,8 +39,7 @@ final class PasteboardService: ObservableObject {
         // If Task is used, SwiftUI Animation won't work...
         // Even if the method is nonisolated and synchronous, as long as it's in Task, the animation doesn't work
         Task {
-            copiedItems = await persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite)
-
+            copiedItems = await persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, limit: shouldShowAllSavedItems ? nil : 100)
         }
     }
 
@@ -44,8 +49,8 @@ final class PasteboardService: ObservableObject {
             latestChangeCount = pasteBoard.changeCount
 
             guard let newItem = pasteBoard.pasteboardItems?.first,
-                  let type = newItem.availableType(from: newItem.types),
-                  let data = newItem.data(forType: type) else { return }
+                let type = newItem.availableType(from: newItem.types),
+                let data = newItem.data(forType: type) else { return }
             let dataHash = CryptoKit.SHA256.hash(data: data).description
 
             if let alreadySavedItem = await persistenceController.getCopiedItem(from: dataHash) {
@@ -68,28 +73,31 @@ final class PasteboardService: ObservableObject {
             await persistenceController.persists()
             updateCopiedItems()
         }
-
     }
 
     private func setup() {
         timer.fire()
 
         updateCopiedItems()
-
     }
 
     func search() {
         updateCopiedItems()
     }
 
-    func favoriteFilterButtonDidTap() {
+    func filterFavorited() {
         isShowingOnlyFavorite.toggle()
+        updateCopiedItems()
+    }
+
+    func filterMemoed() {
+        isShowingOnlyMemoed.toggle()
         updateCopiedItems()
     }
 
     func didSelected(_ copiedItem: CopiedItem) {
         guard let contentTypeString = copiedItem.contentTypeString,
-              let data = copiedItem.content
+            let data = copiedItem.content
         else { return }
         let type = NSPasteboard.PasteboardType(contentTypeString)
         let item = NSPasteboardItem()
@@ -105,10 +113,9 @@ final class PasteboardService: ObservableObject {
             await persistenceController.persists()
             updateCopiedItems()
         }
-
     }
 
-    func favoriteButtonDidTap(_ copiedItem: CopiedItem) {
+    func toggleFavorite(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
         Task {
             await persistenceController.persists()
@@ -116,21 +123,26 @@ final class PasteboardService: ObservableObject {
         }
     }
 
-    func deleteButtonDidTap(_ copiedItem: CopiedItem) {
+    func delete(_ copiedItem: CopiedItem) {
         Task {
             await persistenceController.delete(copiedItem)
             updateCopiedItems()
         }
+    }
 
+    func saveMemo(_ copiedItem: CopiedItem, memo: String) {
+        copiedItem.memo = memo
+        Task {
+            await persistenceController.persists()
+            updateCopiedItems()
+        }
     }
 
     func clearAll() {
-
         Task {
-            await  persistenceController.clearAllItems()
+            await persistenceController.clearAllItems()
             updateCopiedItems()
         }
-
     }
 }
 
@@ -152,20 +164,28 @@ private actor PersistenceController: ObservableObject {
         type.init(context: container.viewContext)
     }
 
-    func getSavedCopiedItems(with text: String? = nil, isShowingOnlyFavorite: Bool = false) -> [CopiedItem] {
+    func getSavedCopiedItems(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, limit: Int? = nil) -> [CopiedItem] {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
         fetchRequest.returnsObjectsAsFaults = true
         var updateDateSort = SortDescriptor<CopiedItem>(\.updateDate)
-        var predicate: NSPredicate?
+        var favoritePredicate: NSPredicate?
         if isShowingOnlyFavorite {
-            predicate = NSPredicate(format: "favorite == YES")
+            favoritePredicate = NSPredicate(format: "favorite == YES")
+        }
+        var memoedPredicate: NSPredicate?
+        if isShowingOnlyMemoed {
+            memoedPredicate = NSPredicate(format: "NOT (memo == %@ OR memo == nil OR memo == '')")
+        }
+        var textPredicate: NSPredicate?
+        if let text = text, !text.isEmpty {
+            textPredicate = NSPredicate(format: "contentTypeString Contains[c] %@ OR rawString Contains[c] %@ OR name Contains[c] %@ OR memo Contains[c] %@", arguments: getVaList([text, text, text, text]))
         }
 
-        if let text = text, !text.isEmpty {
-            let textPredicate = NSPredicate(format: "contentTypeString Contains[c] %@ OR rawString Contains[c] %@ OR name Contains[c] %@", arguments: getVaList([text, text, text]))
-            predicate = predicate.flatMap { NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, $0]) } ?? textPredicate
-        }
+        let predicate: NSPredicate? = NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, favoritePredicate, memoedPredicate].compactMap { $0 })
         fetchRequest.predicate = predicate
+        if let limit {
+            fetchRequest.fetchLimit = limit
+        }
         updateDateSort.order = .reverse
         fetchRequest.sortDescriptors = [NSSortDescriptor(updateDateSort)]
         return (try? container.viewContext.fetch(fetchRequest)) ?? []
@@ -233,9 +253,9 @@ extension CopiedItem {
 
     var fileURL: URL? {
         guard contentTypeString?.contains("file-url") == true,
-              let content = content,
-              let path = String(data: content, encoding: .utf8),
-              let url = URL(string: path) else { return nil }
+            let content = content,
+            let path = String(data: content, encoding: .utf8),
+            let url = URL(string: path) else { return nil }
         //            url.startAccessingSecurityScopedResource()
         return url
     }
