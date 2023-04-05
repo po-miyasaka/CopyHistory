@@ -45,7 +45,6 @@ struct MainView: View {
                         }
                     ),
                     secondaryButton: Alert.Button.cancel(Text("Cancel"), action: {
-                        changeWindowSize(NSSize(width: 200, height: 500))
                     })
                 )
             }

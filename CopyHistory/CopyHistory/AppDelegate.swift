@@ -41,7 +41,6 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         super.init()
         let image = NSImage(imageLiteralResourceName: "logo.svg")
         let popover = NSPopover()
-
         popover.contentSize = windowSize
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: MainView { size in
