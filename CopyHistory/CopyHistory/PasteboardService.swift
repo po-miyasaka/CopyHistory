@@ -16,12 +16,21 @@ final class PasteboardService: ObservableObject {
     @Published var copiedItems: [CopiedItem] = []
     @Published var isShowingOnlyFavorite: Bool = false
     @Published var isShowingOnlyMemoed: Bool = false
-    @AppStorage("shouldShowAllSavedItems") var shouldShowAllSavedItems: Bool = false {
+    static let displayedItemCountDefaultValue = 100
+    @AppStorage("displayedItemCount") var displayedItemCount: Int = displayedItemCountDefaultValue {
         didSet {
             updateCopiedItems()
         }
     }
 
+    lazy var displayedItemCountBinding: Binding<String> = .init(
+        get: { [weak self] in
+            String(self?.displayedItemCount ?? Self.displayedItemCountDefaultValue)
+        },
+        set: { [weak self] in
+            self?.displayedItemCount = Int($0) ?? 0
+        }
+    )
     private let persistenceController = PersistenceController()
     private var pasteBoard: NSPasteboard { NSPasteboard.general }
     private var latestChangeCount = 0
@@ -39,20 +48,21 @@ final class PasteboardService: ObservableObject {
         // If Task is used, SwiftUI Animation won't work...
         // Even if the method is nonisolated and synchronous, as long as it's in Task, the animation doesn't work
         Task {
-            copiedItems = await persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, limit: shouldShowAllSavedItems ? nil : 100)
+            copiedItems = await persistenceController.getSavedCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, limit: displayedItemCount)
         }
     }
 
     @objc func timerLoop() {
         Task {
-            if pasteBoard.changeCount == latestChangeCount { return } // 変更がなければなにもしない
+            if pasteBoard.changeCount == latestChangeCount { return } // If there is no change, do nothing.
             latestChangeCount = pasteBoard.changeCount
 
             guard let newItem = pasteBoard.pasteboardItems?.first,
                 let type = newItem.availableType(from: newItem.types),
-                let data = newItem.data(forType: type) else { return }
-            let dataHash = CryptoKit.SHA256.hash(data: data).description
+                let data = newItem.data(forType: type),
+                pasteBoard.types?.contains(where: { $0.rawValue.contains("com.agilebits.onepassword") }) == false else { return }
 
+            let dataHash = CryptoKit.SHA256.hash(data: data).description
             if let alreadySavedItem = await persistenceController.getCopiedItem(from: dataHash) {
                 // Existing
                 alreadySavedItem.updateDate = Date()
@@ -77,7 +87,6 @@ final class PasteboardService: ObservableObject {
 
     private func setup() {
         timer.fire()
-
         updateCopiedItems()
     }
 
