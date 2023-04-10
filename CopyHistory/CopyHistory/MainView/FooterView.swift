@@ -12,59 +12,25 @@ extension MainView {
     @ViewBuilder
     func Footer() -> some View {
         Group {
-            HStack {
-                Menu {
-                    MenuItems(contents: [
-                        .init(text: isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts", action: {
-                            isShowingKeyboardShortcuts.toggle()
-                        }),
-
-                        .init(text: isShowingKeyboardShortcuts ? "Hide keyboard shortcuts" : "Show keyboard shortcuts", action: {
-                            isShowingKeyboardShortcuts.toggle()
-                        }),
-                        .init(text: isExpanded ? "Minify cells" : "Expand cells", action: {
-                            isExpanded.toggle()
-                        }),
-                        .init(text: isShowingRTF ? "Stop Showing as RTF" : "Show as RTF (slow)", action: {
-                            isShowingRTF.toggle()
-                        }),
-                        .init(text: isShowingHTML ? "Stop Showing as HTML" : "Show as HTML (slow)", action: {
-                            isShowingKeyboardShortcuts.toggle()
-                        }),
-                        .init(text: pasteboardService.shouldShowAllSavedItems ? "Show 100 items maximum (faster)" : "Show all saved items (slower)", action: {
-                            pasteboardService.shouldShowAllSavedItems.toggle()
-                        }),
-                        .init(text: "About launching with a keyboard shortcut (open the Website)", action: {
-                            if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }),
-                        .init(text: "About CopyHistory (open the Website)", action: {
-                            if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }),
-                        .init(text: "Rate CopyHistory✨", action: {
-                            SKStoreReviewController.requestReview()
-                        }),
-
-                    ])
-
-                    Text(versionString)
-
-                } label: {
-                    Image(systemName: "latch.2.case")
-                        .font(.title)
-                }
-                .frame(width: 50)
-                .accentColor(.white)
-
-                Spacer()
+            HStack(alignment: .firstTextBaseline) {
                 Button(action: {
-                    isAlertPresented = true
+                    isSettingsPresented.toggle()
+                    isFocus = !isSettingsPresented
                 }, label: {
-                    Image(systemName: "trash")
+                    Image(systemName: isSettingsPresented ? "xmark" : "latch.2.case")
                 })
+                    .accentColor(.white)
+                Spacer()
+
+                if !isSettingsPresented {
+                    VStack(alignment: .leading) {
+                        Button(action: {
+                            isAlertPresented = true
+                        }, label: {
+                            Image(systemName: "trash")
+                        })
+                    }
+                }
             }
             .padding(.horizontal)
             .padding(.top, 8)
