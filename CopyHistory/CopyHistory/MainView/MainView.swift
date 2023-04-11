@@ -9,16 +9,21 @@ import SwiftUI
 import WebKit
 
 struct MainView: View {
+    
+    enum OverlayViewType {
+        case setting
+        case feedback
+    }
     @StateObject var pasteboardService: PasteboardService = .build()
     @FocusState var isFocus
     @State var isAlertPresented: Bool = false
-    @State var isSettingsPresented: Bool = false
+    @State var overlayStatus: OverlayViewType? = nil
     @State var focusedItemIndex: Int?
     @AppStorage("isShowingKeyboardShortcuts") var isShowingKeyboardShortcuts = true
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
-
+    
     var body: some View {
         Group {
             Header()
@@ -28,21 +33,27 @@ struct MainView: View {
             Footer()
         }
         .overlay(content: {
-            if isSettingsPresented {
+            if let overlayStatus {
                 VStack {
                     ZStack(alignment: .top) {
                         Color.mainViewBackground
-                        SettingView(displayedCount: pasteboardService.displayedItemCountBinding, isShowingKeyboardShortcuts: $isShowingKeyboardShortcuts,
-                                    isExpanded: $isExpanded,
-                                    isShowingRTF: $isShowingRTF,
-                                    isShowingHTML: $isShowingHTML)
+                        switch overlayStatus {
+                        case .setting:
+                            SettingView(displayedCount: pasteboardService.displayedItemCountBinding, isShowingKeyboardShortcuts: $isShowingKeyboardShortcuts,
+                                        isExpanded: $isExpanded,
+                                        isShowingRTF: $isShowingRTF,
+                                        isShowingHTML: $isShowingHTML,
+                                        overlayStatus: $overlayStatus)
+                        case .feedback:
+                            FeedbackView(overlayStatus: $overlayStatus)
+                        }
                     }
                     .padding(8)
                     Footer()
                 }
             }
         })
-
+        
         .background(Color.mainViewBackground)
         .alert(
             isPresented: $isAlertPresented,

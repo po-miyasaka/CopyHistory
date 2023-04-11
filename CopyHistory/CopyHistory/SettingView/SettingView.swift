@@ -14,6 +14,7 @@ struct SettingView: View {
     @Binding var isExpanded: Bool
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
+    @Binding var overlayStatus: MainView.OverlayViewType?
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -36,40 +37,64 @@ struct SettingView: View {
                 Spacer()
                 TextField("", text: $displayedCount).frame(width: 50)
             }
-
+            
+            Divider()
+            
+            
+            Spacer()
             Divider()
 
-            Button(action: {
-                if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
-                    NSWorkspace.shared.open(url)
-                }
-            }, label: {
-                Text("About launching with a keyboard shortcut (open the Website)")
-            })
+            Group {
+                Button(action: {
+                    if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2_shortcut_launch") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }, label: {
+                    Text("A keyboard shortcut for launching (open another Website)")
+                })
+                
+                Button(action: {
+                    if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }, label: {
+                    Text("CopyHistory Website")
+                })
+                
+                Button(action: {
+                    SKStoreReviewController.requestReview()
+                }, label: {
+                    Text("Rate CopyHistory✨")
+                })
+                
+                Button(action: {
+                    overlayStatus = .feedback
+                }, label: {
+                    Text("Send a request / feedback")
+                })
+            }.buttonStyle(LinkButtonStyle())
+            
 
-            Button(action: {
-                if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
-                    NSWorkspace.shared.open(url)
-                }
-            }, label: {
-                Text("About CopyHistory (open the Website)")
-            })
-
-            Button(action: {
-                SKStoreReviewController.requestReview()
-            }, label: {
-                Text("Rate CopyHistory✨")
-            })
+            
+            Divider()
+            Text("Version: " + versionString)
+                .padding(.bottom, 16)
+            
+            
         }.padding(8)
+
     }
 }
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        var binding: Binding<Bool> = .init(get: { true }, set: { _ in })
+        let binding: Binding<Bool> = .init(get: { true }, set: { _ in })
+        let bindingOverlay: Binding<MainView.OverlayViewType?> = .init(get: { .setting }, set: { _ in })
         SettingView(displayedCount: .init(get: { "" }, set: { _ in }), isShowingKeyboardShortcuts: binding,
                     isExpanded: binding,
                     isShowingRTF: binding,
-                    isShowingHTML: binding)
+                    isShowingHTML: binding,
+                    overlayStatus: bindingOverlay
+        )
     }
 }
