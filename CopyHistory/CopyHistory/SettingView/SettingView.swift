@@ -14,7 +14,7 @@ struct SettingView: View {
     @Binding var isExpanded: Bool
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
-    @Binding var overlayStatus: MainView.OverlayViewType?
+    @Binding var overlayViewType: MainView.OverlayViewType?
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -68,7 +68,7 @@ struct SettingView: View {
                 })
                 
                 Button(action: {
-                    overlayStatus = .feedback
+                    overlayViewType = .feedback
                 }, label: {
                     Text("Send a request / feedback")
                 })
@@ -94,7 +94,7 @@ struct SettingView_Previews: PreviewProvider {
                     isExpanded: binding,
                     isShowingRTF: binding,
                     isShowingHTML: binding,
-                    overlayStatus: bindingOverlay
+                    overlayViewType: bindingOverlay
         )
     }
 }

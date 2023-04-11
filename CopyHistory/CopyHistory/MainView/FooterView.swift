@@ -14,15 +14,15 @@ extension MainView {
         Group {
             HStack(alignment: .firstTextBaseline) {
                 Button(action: {
-                    overlayStatus = overlayStatus == nil ?  .setting : nil
-                    isFocus = overlayStatus == nil
+                    overlayViewType = overlayViewType == nil ?  .setting : nil
+                    isFocus = overlayViewType == nil
                 }, label: {
-                    Image(systemName: overlayStatus == nil ? "latch.2.case" : "xmark")
+                    Image(systemName: overlayViewType == nil ? "latch.2.case" : "xmark")
                 })
                     .accentColor(.white)
                 Spacer()
 
-                if overlayStatus == nil {
+                if overlayViewType == nil {
                     VStack(alignment: .leading) {
                         Button(action: {
                             isAlertPresented = true

@@ -10,7 +10,9 @@ import SwiftUI
 struct FeedbackView: View {
     @State var mailAddress: String = ""
     @State var feedback: String = ""
-    @Binding var overlayStatus: MainView.OverlayViewType?
+    @State var isLoading: Bool = false
+    @Binding var overlayViewType: MainView.OverlayViewType?
+    @Binding var isAlertPresented: Bool
     var body: some View {
         VStack {
             TextField("Mail Address (Optional)", text: $mailAddress).cornerRadius(10).padding(8).border(.clear)
@@ -24,6 +26,7 @@ struct FeedbackView: View {
             
             Button(action: {
                 Task {
+                    isLoading = true
                     await submit()
                 }
             }, label: {
@@ -34,9 +37,11 @@ struct FeedbackView: View {
                     .background(Color.accentColor)
                     .clipShape(Capsule())
                     .padding()
-            }).buttonStyle(PlainButtonStyle()).disabled(feedback.isEmpty)
+            }).buttonStyle(PlainButtonStyle()).disabled(feedback.isEmpty || isLoading)
         }
+        .overlay(isLoading ? LoadingView() : nil)
     }
+
     
     func submit() async {
         var urlRequest: URLRequest = .init(url:
@@ -56,7 +61,8 @@ struct FeedbackView: View {
             
         } catch {
         }
-        overlayStatus = nil
+        isAlertPresented = true
+        isLoading = false
         
     }
 }
@@ -67,8 +73,19 @@ struct RequestData: Codable {
     var appName: String = "CopyHistory"
 }
 
-struct FeedbackView_Previews: PreviewProvider {
-    static var previews: some View {
-        FeedbackView(overlayStatus: .init(get: {nil}, set: {_ in }))
+//struct FeedbackView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FeedbackView(overlayViewType: .init(get: {nil}, set: {_ in }), isAlertPresented: )
+//    }
+//}
+
+
+struct LoadingView: View {
+    var body: some View {
+        ZStack {
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                .scaleEffect(2)
+        }
     }
 }
