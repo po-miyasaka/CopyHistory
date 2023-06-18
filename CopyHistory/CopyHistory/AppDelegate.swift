@@ -10,13 +10,12 @@ import SwiftUI
 
 @main
 struct MainApp: App {
-    #if os(macOS)
-        @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    #endif
+#if os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+#endif
+    
     var body: some Scene {
-        WindowGroup {
-            VStack {}
-        }
+        WindowGroup {}
     }
 }
 
@@ -24,7 +23,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController!
 
     func applicationDidFinishLaunching(_: Notification) {
+        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.close() }
         statusBar = .init()
+
     }
 
     func applicationDidBecomeActive(_: Notification) {
@@ -54,7 +55,7 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
             button.action = #selector(togglePopover(_:))
             button.target = self
         }
-        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.close() }
+
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {
@@ -66,6 +67,7 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
                 popover?.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             }
         }
+
     }
 
     func popoverWillShow(_: Notification) {
@@ -74,6 +76,7 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
 
     func popoverDidClose(_: Notification) {
         NSApplication.shared.hide(nil) // this code make previous app activate back.
+        
     }
 }
 

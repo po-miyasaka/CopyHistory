@@ -9,16 +9,23 @@ import SwiftUI
 import WebKit
 
 struct MainView: View {
+    
+    
     @StateObject var pasteboardService: PasteboardService = .build()
     @FocusState var isFocus
     @State var isAlertPresented: Bool = false
-    @State var isSettingsPresented: Bool = false
+    @State var overlayViewType: OverlayViewType? = nil
+    enum OverlayViewType {
+        case setting
+        case feedback
+    }
     @State var focusedItemIndex: Int?
+    @State var isThanksDialogPresented: Bool = false
     @AppStorage("isShowingKeyboardShortcuts") var isShowingKeyboardShortcuts = true
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
-
+    
     var body: some View {
         Group {
             Header()
@@ -28,21 +35,27 @@ struct MainView: View {
             Footer()
         }
         .overlay(content: {
-            if isSettingsPresented {
+            if let overlayViewType {
                 VStack {
                     ZStack(alignment: .top) {
                         Color.mainViewBackground
-                        SettingView(displayedCount: pasteboardService.displayedItemCountBinding, isShowingKeyboardShortcuts: $isShowingKeyboardShortcuts,
-                                    isExpanded: $isExpanded,
-                                    isShowingRTF: $isShowingRTF,
-                                    isShowingHTML: $isShowingHTML)
+                        switch overlayViewType {
+                        case .setting:
+                            SettingView(displayedCount: pasteboardService.displayedItemCountBinding, isShowingKeyboardShortcuts: $isShowingKeyboardShortcuts,
+                                        isExpanded: $isExpanded,
+                                        isShowingRTF: $isShowingRTF,
+                                        isShowingHTML: $isShowingHTML,
+                                        overlayViewType: $overlayViewType)
+                        case .feedback:
+                            FeedbackView(overlayViewType: $overlayViewType, isAlertPresented: $isThanksDialogPresented)
+                        }
                     }
                     .padding(8)
                     Footer()
                 }
             }
         })
-
+        
         .background(Color.mainViewBackground)
         .alert(
             isPresented: $isAlertPresented,
@@ -59,6 +72,18 @@ struct MainView: View {
                 )
             }
         )
+        .alert(
+            isPresented: $isThanksDialogPresented,
+            content: {
+                Alert(title: Text("Thank you for your feedback!! \n We will put it into practice."), message: nil, dismissButton: Alert.Button.default(
+                    Text("OK"),
+                    action: {
+                        overlayViewType = nil
+                    }
+                ))
+            }
+        )
+        
     }
 }
 
