@@ -51,7 +51,7 @@ extension MainView {
                             Text("⌘ + i")
                             Text("⌘ + e")
                             Text("⌘ + r")
-                            Text("⌘ + a")
+                            Text("⌘ + h")
                         }
                     }.font(.caption)
                         .foregroundColor(Color.gray)

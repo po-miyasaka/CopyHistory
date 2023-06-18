@@ -23,13 +23,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController!
 
     func applicationDidFinishLaunching(_: Notification) {
-        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.close() }
         statusBar = .init()
+        disableUnneededWindow()
 
     }
 
     func applicationDidBecomeActive(_: Notification) {
         statusBar.togglePopover(nil)
+        disableUnneededWindow()
+        
+    }
+    
+    func disableUnneededWindow() {
+        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.setIsVisible(false) }
     }
 }
 
@@ -78,6 +84,11 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         NSApplication.shared.hide(nil) // this code make previous app activate back.
         
     }
+    
+    func popoverShouldDetach(_ popover: NSPopover) -> Bool {
+        true
+    }
+    
 }
 
 let widthKey = "windowSizeWidth"
