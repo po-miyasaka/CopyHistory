@@ -55,8 +55,14 @@ struct FeedbackView: View {
 
     
     func submit() async {
-        var urlRequest: URLRequest = .init(url:
-                                            URL(string: "https://script.google.com/macros/s/AKfycbz3DShhIzfj91KBFZRwd6-wLkl_m__8GFwW0Fq2aHzu8pGJYgo9ye4ji0x_hbv9X4nG1g/exec")!)
+        guard let url = getFeedbackURL() else {
+            print("□■□■□■□■□■□■□■□■□■□■")
+            print("Invalid URL!!!!!!")
+            print("□■□■□■□■□■□■□■□■□■□■")
+            assertionFailure("Invalid URL!!!!!!")
+            return
+        }
+        var urlRequest: URLRequest = .init(url: url)
         
         let meta = versionString + "/" + "\(ProcessInfo.processInfo.operatingSystemVersion)" + "/"
         guard let data = try? JSONEncoder().encode(RequestData(content: meta + feedback, address: mailAddress)) else {
@@ -99,4 +105,15 @@ struct LoadingView: View {
                 .scaleEffect(2)
         }
     }
+}
+
+
+func getFeedbackURL() -> URL? {
+    guard let path = Bundle.main.path(forResource: "ProductionInfo", ofType: "plist"),
+        let productionInfoDict = NSDictionary(contentsOfFile: path) as? [String: Any],
+        let requestURLString = productionInfoDict["FeedbackURL"] as? String
+    else {
+        return nil
+    }
+    return URL(string: requestURLString)
 }

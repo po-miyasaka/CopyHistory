@@ -15,7 +15,7 @@
 		CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */; };
 		D5092C1829E12E340075A1D9 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5092C1729E12E340075A1D9 /* SettingView.swift */; };
 		D5181C5D2A40C39100BCBBC7 /* CommonAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5181C5C2A40C39100BCBBC7 /* CommonAssets.xcassets */; };
-		D5678AA329E55AC300B2D58F /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5678AA229E55AC300B2D58F /* FeedbackView.swift */; };
+		D57833892A40DAC000AF12F0 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57833882A40DAC000AF12F0 /* FeedbackView.swift */; };
 		D5A5573929DC1C0200FF69C7 /* ContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573829DC1C0200FF69C7 /* ContentsView.swift */; };
 		D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */; };
 		D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573C29DC20A600FF69C7 /* FooterView.swift */; };
@@ -35,7 +35,7 @@
 		CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		D5092C1729E12E340075A1D9 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		D5181C5C2A40C39100BCBBC7 /* CommonAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonAssets.xcassets; sourceTree = "<group>"; };
-		D5678AA229E55AC300B2D58F /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		D57833882A40DAC000AF12F0 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		D5A5573829DC1C0200FF69C7 /* ContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsView.swift; sourceTree = "<group>"; };
 		D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
@@ -93,6 +93,7 @@
 		D5092C1629E12E1C0075A1D9 /* SettingView */ = {
 			isa = PBXGroup;
 			children = (
+				D57833882A40DAC000AF12F0 /* FeedbackView.swift */,
 				D5092C1729E12E340075A1D9 /* SettingView.swift */,
 			);
 			path = SettingView;
@@ -103,7 +104,6 @@
 			children = (
 				CEA8AD072874C8E1003B6035 /* MainView.swift */,
 				D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */,
-				D5678AA229E55AC300B2D58F /* FeedbackView.swift */,
 				D5A5573829DC1C0200FF69C7 /* ContentsView.swift */,
 				D5A5573C29DC20A600FF69C7 /* FooterView.swift */,
 				D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */,
@@ -186,7 +186,7 @@
 				CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */,
 				D5A5574129DC343100FF69C7 /* ShortcutButtons.swift in Sources */,
 				CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */,
-				D5678AA329E55AC300B2D58F /* FeedbackView.swift in Sources */,
+				D57833892A40DAC000AF12F0 /* FeedbackView.swift in Sources */,
 				CEA8AD082874C8E1003B6035 /* MainView.swift in Sources */,
 				CE11282428774314008144F8 /* AppDelegate.swift in Sources */,
 				D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */,
@@ -321,7 +321,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -352,7 +352,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
