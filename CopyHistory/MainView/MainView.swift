@@ -20,70 +20,46 @@ struct MainView: View {
         case feedback
     }
     @State var focusedItemIndex: Int?
-    @State var isThanksDialogPresented: Bool = false
     @AppStorage("isShowingKeyboardShortcuts") var isShowingKeyboardShortcuts = true
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
     
     var body: some View {
-        Group {
-            Header()
+        VStack {
+            Header().padding(.top, 16).padding(.horizontal, 8)
             Divider()
-            ContentsView()
+            ContentsView().padding(.horizontal)
             Divider()
-            Footer()
+            Footer().padding(.horizontal, 16).padding(.bottom, 16)
         }
         .overlay(content: {
-            if let overlayViewType {
-                VStack {
-                    ZStack(alignment: .top) {
-                        Color.mainViewBackground
-                        switch overlayViewType {
-                        case .setting:
-                            SettingView(displayedCount: pasteboardService.displayedItemCountBinding, isShowingKeyboardShortcuts: $isShowingKeyboardShortcuts,
-                                        isExpanded: $isExpanded,
-                                        isShowingRTF: $isShowingRTF,
-                                        isShowingHTML: $isShowingHTML,
-                                        overlayViewType: $overlayViewType)
-                        case .feedback:
-                            FeedbackView(overlayViewType: $overlayViewType, isAlertPresented: $isThanksDialogPresented)
-                        }
-                    }
-                    .padding(8)
-                    Footer()
-                }
-            }
+           overlayContents()
         })
         
         .background(Color.mainViewBackground)
-        .alert(
-            isPresented: $isAlertPresented,
-            content: {
-                Alert(
-                    title: Text("Deleting all history except for favorited items"),
-                    primaryButton: Alert.Button.destructive(
-                        Text("Delete"),
-                        action: {
-                            pasteboardService.clearAll()
-                        }
-                    ),
-                    secondaryButton: Alert.Button.cancel(Text("Cancel"), action: {})
-                )
-            }
-        )
-        .alert(
-            isPresented: $isThanksDialogPresented,
-            content: {
-                Alert(title: Text("Thank you for your feedback!! \n We will put it into practice."), message: nil, dismissButton: Alert.Button.default(
-                    Text("OK"),
-                    action: {
-                        overlayViewType = nil
+    }
+    
+    @ViewBuilder
+    func overlayContents() -> some View {
+        if let overlayViewType {
+            VStack(spacing: 8) {
+                ZStack(alignment: .top) {
+                    Color.mainViewBackground
+                    switch overlayViewType {
+                    case .setting:
+                        SettingView(displayedCount: pasteboardService.displayedItemCountBinding, isShowingKeyboardShortcuts: $isShowingKeyboardShortcuts,
+                                    isExpanded: $isExpanded,
+                                    isShowingRTF: $isShowingRTF,
+                                    isShowingHTML: $isShowingHTML,
+                                    overlayViewType: $overlayViewType)
+                    case .feedback:
+                        FeedbackView(overlayViewType: $overlayViewType)
                     }
-                ))
+                }
+                Footer().padding(.horizontal, 16).padding(.bottom, 16)
             }
-        )
-        
+        }
     }
 }
 

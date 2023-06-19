@@ -8,93 +8,108 @@
 import SwiftUI
 
 extension MainView {
+    
     @ViewBuilder
     func Header() -> some View {
-        Group {
-            HStack(alignment: .center, spacing: 10) {
-                TextField(isShowingKeyboardShortcuts ? "Search: ⌘ + f" : "Search", text: $pasteboardService.searchText)
-
-                    .focused($isFocus)
-                    .textFieldStyle(.roundedBorder)
-                    .onChange(of: pasteboardService.searchText, perform: { _ in
-                        focusedItemIndex = nil
-                        withAnimation {
-                            pasteboardService.search()
-                        }
-                    })
-                    .foregroundColor(.primary)
-                Text("\(pasteboardService.copiedItems.count)")
-                    .font(.caption)
-                    .foregroundColor(Color.gray)
-            }.padding()
-
+        VStack(spacing: 16) {
+            searchBar()
             HStack(alignment: .bottom) {
                 if isShowingKeyboardShortcuts {
-                    HStack {
-                        VStack(alignment: .trailing, spacing: 5) {
-                            Text("Up:")
-                            Text("Down:")
-                            Text("Select:")
-                            Text("Delete:")
-                            Text("Star:")
-                            Text("Write a memo:")
-                            Text(isExpanded ? "Minify cells:" : "Expand cells:")
-                            Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):")
-                            Text(isShowingHTML ? "Stop Showing as HTML:" : "Show as HTML (slow):")
-                        }
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("⌘ + ↑ or k")
-                            Text("⌘ + ↓ or j")
-                            Text("⌘ + ↩")
-                            Text("⌘ + ⇧ + d")
-                            Text("⌘ + o")
-                            Text("⌘ + i")
-                            Text("⌘ + e")
-                            Text("⌘ + r")
-                            Text("⌘ + h")
-                        }
-                    }.font(.caption)
-                        .foregroundColor(Color.gray)
-                        .padding(.bottom, 1)
+                    shortcutsList()
                 }
-
                 Spacer()
-
-                VStack(spacing: 0) {
-                    Button(action: {
-                        withAnimation {
-                            pasteboardService.filterMemoed()
-                        }
-
-                    }, label: {
-                        Image(systemName: "square.and.pencil")
-                            .foregroundColor(pasteboardService.isShowingOnlyMemoed ? Color.mainAccent : Color.primary)
-                    })
-                        .keyboardShortcut("p", modifiers: .command)
-
-                    if isShowingKeyboardShortcuts {
-                        Text("⌘ + p").font(.caption).foregroundColor(.gray).padding(.top, 2)
-                    }
-                }
-
-                VStack(spacing: 0) {
-                    Button(action: {
-                        withAnimation {
-                            pasteboardService.filterFavorited()
-                        }
-
-                    }, label: {
-                        Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
-                            .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
-                    })
-                        .keyboardShortcut("s", modifiers: .command)
-
-                    if isShowingKeyboardShortcuts {
-                        Text("⌘ + s").font(.caption).foregroundColor(.gray).padding(.top, 2)
-                    }
-                }
+                memoButton()
+                favoriteButton()
             }
-            .padding(.horizontal)
+        }
+    }
+    
+    
+    func searchBar() -> some View {
+        HStack(alignment: .center, spacing: 10) {
+            TextField(isShowingKeyboardShortcuts ? "Search: ⌘ + f" : "Search", text: $pasteboardService.searchText)
+            
+                .focused($isFocus)
+                .textFieldStyle(.roundedBorder)
+                .onChange(of: pasteboardService.searchText, perform: { _ in
+                    focusedItemIndex = nil
+                    withAnimation {
+                        pasteboardService.search()
+                    }
+                })
+                .foregroundColor(.primary)
+            Text("\(pasteboardService.copiedItems.count)")
+                .font(.caption)
+                .foregroundColor(Color.gray)
+        }
+    }
+    
+    @ViewBuilder
+    func shortcutsList() -> some View {
+        let columns = [GridItem(.flexible(minimum: 80), spacing: 8, alignment: .trailing), GridItem(.flexible(minimum: 150), spacing: 8)]
+        
+        
+        
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 0, content: {
+            Group {
+                Text("Up:"); Text("⌘ + ↑ or k")
+                Text("Down:"); Text("⌘ + ↓ or j")
+                Text("Select:"); Text("⌘ + ↩")
+                Text("Delete:"); Text("⌘ + ⇧ + d")
+                Text("Star:"); Text("⌘ + o")
+            }
+            Group {
+                Text("Write a memo:"); Text("⌘ + i")
+                Text(isExpanded ? "Minify cells:" : "Expand cells:"); Text("⌘ + e")
+                Text(isShowingRTF ? "Stop Showing as RTF:" : "Show as RTF (slow):"); Text("⌘ + r")
+                Text(isShowingHTML ? "Stop Showing as HTML:" : "Show as HTML (slow):"); Text("⌘ + h")
+            }
+        })
+        .font(.caption)
+        .foregroundColor(Color.gray)
+        .padding(.bottom, 1)
+        
+        
+        
+    }
+    
+    @ViewBuilder
+    func memoButton() -> some View {
+        VStack(spacing: 0) {
+            Button(action: {
+                withAnimation {
+                    pasteboardService.filterMemoed()
+                }
+                
+            }, label: {
+                Image(systemName: "square.and.pencil")
+                    .foregroundColor(pasteboardService.isShowingOnlyMemoed ? Color.mainAccent : Color.primary)
+            })
+            .keyboardShortcut("p", modifiers: .command)
+            
+            if isShowingKeyboardShortcuts {
+                Text("⌘ + p").font(.caption).foregroundColor(.gray).padding(.top, 2)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func favoriteButton() -> some View {
+        VStack(spacing: 0) {
+            Button(action: {
+                withAnimation {
+                    pasteboardService.filterFavorited()
+                }
+                
+            }, label: {
+                Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
+                    .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
+            })
+            .keyboardShortcut("s", modifiers: .command)
+            
+            if isShowingKeyboardShortcuts {
+                Text("⌘ + s").font(.caption).foregroundColor(.gray).padding(.top, 2)
+            }
         }
     }
 }

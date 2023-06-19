@@ -12,7 +12,7 @@ struct FeedbackView: View {
     @State var feedback: String = ""
     @State var isLoading: Bool = false
     @Binding var overlayViewType: MainView.OverlayViewType?
-    @Binding var isAlertPresented: Bool
+    @State var isAlertPresented: Bool = false
     var body: some View {
         VStack {
             TextField("Mail Address (Optional)", text: $mailAddress).cornerRadius(10).padding(8).border(.clear)
@@ -39,6 +39,17 @@ struct FeedbackView: View {
                     .padding()
             }).buttonStyle(PlainButtonStyle()).disabled(feedback.isEmpty || isLoading)
         }
+        .alert(
+            isPresented: $isAlertPresented,
+            content: {
+                Alert(title: Text("Thank you for your feedback!! \n We will put it into practice."), message: nil, dismissButton: Alert.Button.default(
+                    Text("OK"),
+                    action: {
+                        overlayViewType = nil
+                    }
+                ))
+            }
+        )
         .overlay(isLoading ? LoadingView() : nil)
     }
 
@@ -56,7 +67,7 @@ struct FeedbackView: View {
         
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            print(String(data: data, encoding: .utf8))
+            print(String(data: data, encoding: .utf8) ?? "no data")
             print(response)
             
         } catch {

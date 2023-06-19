@@ -94,8 +94,10 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
 let widthKey = "windowSizeWidth"
 let heightKey = "windowSizeHeight"
 var windowSize: NSSize {
-    let height = CGFloat(UserDefaults.standard.object(forKey: heightKey) as? CGFloat ?? NSScreen.main?.frame.height ?? 800)
-    let width = CGFloat(UserDefaults.standard.object(forKey: widthKey) as? CGFloat ?? 500)
+//    let height = CGFloat(UserDefaults.standard.object(forKey: heightKey) as? CGFloat ?? NSScreen.main?.frame.height ?? 800)
+//    let width = CGFloat(UserDefaults.standard.object(forKey: widthKey) as? CGFloat ?? 500)
+    let height =  CGFloat(NSScreen.main?.frame.height ?? 800)
+    let width = CGFloat(500)
     return NSSize(width: width, height: height)
 }
 
