@@ -6,5 +6,7 @@
 	<false/>
 	<key>LSUIElement</key>
 	<true/>
+	<key>CFBundleVersion</key>
+	<string>39</string>
 </dict>
 </plist>
