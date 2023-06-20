@@ -46,7 +46,7 @@ extension MainView {
 
             KeyboardCommandButtons(action: {
                 isShowingHTML.toggle()
-            }, keys: [.init(main: "a", sub: .command)])
+            }, keys: [.init(main: "h", sub: .command)])
         }
 
         .opacity(0)

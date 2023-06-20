@@ -23,13 +23,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController!
 
     func applicationDidFinishLaunching(_: Notification) {
-        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.close() }
         statusBar = .init()
+        disableUnneededWindow()
 
     }
 
     func applicationDidBecomeActive(_: Notification) {
         statusBar.togglePopover(nil)
+        disableUnneededWindow()
+        
+    }
+    
+    func disableUnneededWindow() {
+        NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.setIsVisible(false) }
     }
 }
 
@@ -78,13 +84,20 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         NSApplication.shared.hide(nil) // this code make previous app activate back.
         
     }
+    
+    func popoverShouldDetach(_ popover: NSPopover) -> Bool {
+        true
+    }
+    
 }
 
 let widthKey = "windowSizeWidth"
 let heightKey = "windowSizeHeight"
 var windowSize: NSSize {
-    let height = CGFloat(UserDefaults.standard.object(forKey: heightKey) as? CGFloat ?? NSScreen.main?.frame.height ?? 800)
-    let width = CGFloat(UserDefaults.standard.object(forKey: widthKey) as? CGFloat ?? 500)
+//    let height = CGFloat(UserDefaults.standard.object(forKey: heightKey) as? CGFloat ?? NSScreen.main?.frame.height ?? 800)
+//    let width = CGFloat(UserDefaults.standard.object(forKey: widthKey) as? CGFloat ?? 500)
+    let height =  CGFloat(NSScreen.main?.frame.height ?? 800)
+    let width = CGFloat(500)
     return NSSize(width: width, height: height)
 }
 

@@ -11,7 +11,7 @@ import SwiftUI
 extension MainView {
     @ViewBuilder
     func Footer() -> some View {
-        Group {
+        VStack {
             HStack(alignment: .firstTextBaseline) {
                 Button(action: {
                     overlayViewType = overlayViewType == nil ?  .setting : nil
@@ -19,9 +19,9 @@ extension MainView {
                 }, label: {
                     Image(systemName: overlayViewType == nil ? "latch.2.case" : "xmark")
                 })
-                    .accentColor(.white)
+                .accentColor(.white)
                 Spacer()
-
+                
                 if overlayViewType == nil {
                     VStack(alignment: .leading) {
                         Button(action: {
@@ -32,19 +32,30 @@ extension MainView {
                     }
                 }
             }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 8)
-            VStack {
-                Button(action: {
-                    NSApplication.shared.terminate(nil)
-                }, label: {
-                    Text("Quit CopyHistory")
-                })
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 16)
+            
+            
+            Button(action: {
+                NSApplication.shared.terminate(nil)
+            }, label: {
+                Text("Quit CopyHistory")
+            })
+            
         }
+        .alert(
+            isPresented: $isAlertPresented,
+            content: {
+                Alert(
+                    title: Text("Deleting all history except for favorited items"),
+                    primaryButton: Alert.Button.destructive(
+                        Text("Delete"),
+                        action: {
+                            pasteboardService.clearAll()
+                        }
+                    ),
+                    secondaryButton: Alert.Button.cancel(Text("Cancel"), action: {})
+                )
+            }
+        )
     }
 }
 
@@ -54,7 +65,7 @@ struct MenuItems: View {
         let text: String
         let action: () -> Void
     }
-
+    
     let contents: [Content]
     var body: some View {
         ForEach(contents) { content in

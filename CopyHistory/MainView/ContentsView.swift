@@ -49,7 +49,7 @@ extension MainView {
                 KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .up) }, keys:
                     [.init(main: .upArrow, sub: .command), .init(main: "k", sub: .command)])
                 Shortcuts()
-            }.padding(.horizontal)
+            }
         }
     }
 
