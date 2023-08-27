@@ -14,6 +14,11 @@
 		CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */; };
 		CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */; };
 		D5092C1829E12E340075A1D9 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5092C1729E12E340075A1D9 /* SettingView.swift */; };
+		D51104962A9A41CA00D38CC3 /* OverlayContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51104952A9A41CA00D38CC3 /* OverlayContents.swift */; };
+		D51104982A9A42B100D38CC3 /* CopiedItem+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51104972A9A42B100D38CC3 /* CopiedItem+.swift */; };
+		D51104A02A9B0B6300D38CC3 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D511049F2A9B0B6300D38CC3 /* ViewModel.swift */; };
+		D51104A32A9B0B7600D38CC3 /* CopiedItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51104A12A9B0B7600D38CC3 /* CopiedItemRepository.swift */; };
+		D51104A42A9B0B7600D38CC3 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51104A22A9B0B7600D38CC3 /* CoreDataService.swift */; };
 		D5181C5D2A40C39100BCBBC7 /* CommonAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5181C5C2A40C39100BCBBC7 /* CommonAssets.xcassets */; };
 		D57833892A40DAC000AF12F0 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57833882A40DAC000AF12F0 /* FeedbackView.swift */; };
 		D5A5573929DC1C0200FF69C7 /* ContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573829DC1C0200FF69C7 /* ContentsView.swift */; };
@@ -34,6 +39,11 @@
 		CEA8AD132874C8E3003B6035 /* CopyHistory.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopyHistory.entitlements; sourceTree = "<group>"; };
 		CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		D5092C1729E12E340075A1D9 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		D51104952A9A41CA00D38CC3 /* OverlayContents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverlayContents.swift; sourceTree = "<group>"; };
+		D51104972A9A42B100D38CC3 /* CopiedItem+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CopiedItem+.swift"; sourceTree = "<group>"; };
+		D511049F2A9B0B6300D38CC3 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		D51104A12A9B0B7600D38CC3 /* CopiedItemRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopiedItemRepository.swift; sourceTree = "<group>"; };
+		D51104A22A9B0B7600D38CC3 /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		D5181C5C2A40C39100BCBBC7 /* CommonAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonAssets.xcassets; sourceTree = "<group>"; };
 		D57833882A40DAC000AF12F0 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		D5A5573829DC1C0200FF69C7 /* ContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsView.swift; sourceTree = "<group>"; };
@@ -78,7 +88,10 @@
 				D5EDFC3C287BA72300B4507F /* Info.plist */,
 				CE11282328774314008144F8 /* AppDelegate.swift */,
 				CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */,
+				D51104A12A9B0B7600D38CC3 /* CopiedItemRepository.swift */,
+				D51104A22A9B0B7600D38CC3 /* CoreDataService.swift */,
 				D5A5573E29DC2EA400FF69C7 /* Extensions.swift */,
+				D51104972A9A42B100D38CC3 /* CopiedItem+.swift */,
 				D5A5573729DC1A4F00FF69C7 /* MainView */,
 				D5092C1629E12E1C0075A1D9 /* SettingView */,
 				CEA8AD092874C8E3003B6035 /* IconAssets.xcassets */,
@@ -103,6 +116,8 @@
 			isa = PBXGroup;
 			children = (
 				CEA8AD072874C8E1003B6035 /* MainView.swift */,
+				D51104952A9A41CA00D38CC3 /* OverlayContents.swift */,
+				D511049F2A9B0B6300D38CC3 /* ViewModel.swift */,
 				D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */,
 				D5A5573829DC1C0200FF69C7 /* ContentsView.swift */,
 				D5A5573C29DC20A600FF69C7 /* FooterView.swift */,
@@ -139,7 +154,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					CEA8AD012874C8E1003B6035 = {
 						CreatedOnToolsVersion = 13.3;
@@ -181,14 +196,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D51104A42A9B0B7600D38CC3 /* CoreDataService.swift in Sources */,
 				D5A5573929DC1C0200FF69C7 /* ContentsView.swift in Sources */,
 				D5A5573F29DC2EA400FF69C7 /* Extensions.swift in Sources */,
+				D51104962A9A41CA00D38CC3 /* OverlayContents.swift in Sources */,
 				CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */,
+				D51104982A9A42B100D38CC3 /* CopiedItem+.swift in Sources */,
 				D5A5574129DC343100FF69C7 /* ShortcutButtons.swift in Sources */,
 				CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */,
 				D57833892A40DAC000AF12F0 /* FeedbackView.swift in Sources */,
+				D51104A32A9B0B7600D38CC3 /* CopiedItemRepository.swift in Sources */,
 				CEA8AD082874C8E1003B6035 /* MainView.swift in Sources */,
 				CE11282428774314008144F8 /* AppDelegate.swift in Sources */,
+				D51104A02A9B0B6300D38CC3 /* ViewModel.swift in Sources */,
 				D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */,
 				CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */,
 				D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */,
@@ -232,9 +252,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -292,9 +314,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -322,6 +346,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 41;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -353,6 +378,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 41;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;

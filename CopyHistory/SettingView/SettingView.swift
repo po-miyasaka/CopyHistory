@@ -39,6 +39,19 @@ struct SettingView: View {
             }
             
             Divider()
+//            HStack {
+//                VStack(alignment: .leading) {
+//                    Text("Before content")
+//                    TextField("", text: $beforeContent)
+//                }
+//                
+//                VStack(alignment: .leading) {
+//                    Text("After content")
+//                    TextField("", text: $afterContent)
+//                }
+//            }
+//            
+//            Divider()
             
             
             Spacer()
@@ -89,6 +102,7 @@ struct SettingView: View {
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
         let binding: Binding<Bool> = .init(get: { true }, set: { _ in })
+
         let bindingOverlay: Binding<MainView.OverlayViewType?> = .init(get: { .setting }, set: { _ in })
         SettingView(displayedCount: .init(get: { "" }, set: { _ in }), isShowingKeyboardShortcuts: binding,
                     isExpanded: binding,

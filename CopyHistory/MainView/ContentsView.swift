@@ -14,27 +14,28 @@ extension MainView {
             // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             Spacer()
             ScrollViewReader { proxy in
-                LazyVStack(spacing: 0) {
+                VStack(spacing: 0) {
                     // ・This doesn't make ScrollView + ForEach make additional padding, https://www.reddit.com/r/SwiftUI/comments/e607z3/swiftui_scrollview_foreach_padding_weird/
-                    // ・Lazy improves the performance of the inclement search
-
-                    ForEach(Array(zip(pasteboardService.copiedItems.indices, pasteboardService.copiedItems)), id: \.1.dataHash) { index, item in
-
+                    // ・Lazy improves the performance of the inclement search.
+                    // However Lazy make selecting cell work weird...
+                    
+                    ForEach(Array(zip(viewModel.copiedItems.indices, viewModel.copiedItems)), id: \.1.dataHash) { index, item in
+                        
                         Row(item: item,
                             favorite: item.favorite,
                             didSelected: { item in
-                                focusedItemIndex = nil
-                                pasteboardService.didSelected(item)
-                                NSApplication.shared.deactivate()
-                            },
-                            favoriteButtonDidTap: { item in pasteboardService.toggleFavorite(item) },
-                            deleteButtonDidTap: { item in pasteboardService.delete(item) },
-                            memoEdited: { item, memo in pasteboardService.saveMemo(item, memo: memo) },
+                            focusedItemIndex = nil
+                            viewModel.didSelected(item)
+                            NSApplication.shared.deactivate()
+                        },
+                            favoriteButtonDidTap: { item in viewModel.toggleFavorite(item) },
+                            deleteButtonDidTap: { item in viewModel.delete(item) },
+                            memoEdited: { item, memo in viewModel.saveMemo(item, memo: memo) },
                             isFocused: index == focusedItemIndex,
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML)
-                            .id(item.dataHash)
+                        .id(item.dataHash)
                         //                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
                         //                            .onHover(perform: { hover in
                         //                                if hover {
@@ -44,42 +45,42 @@ extension MainView {
                     }
                 }
                 KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .down) }, keys:
-                    [.init(main: .downArrow, sub: .command), .init(main: "j", sub: .command)])
-
+                                        [.init(main: .downArrow, sub: .command), .init(main: "j", sub: .command)])
+                
                 KeyboardCommandButtons(action: { scroll(proxy: proxy, direction: .up) }, keys:
-                    [.init(main: .upArrow, sub: .command), .init(main: "k", sub: .command)])
+                                        [.init(main: .upArrow, sub: .command), .init(main: "k", sub: .command)])
                 Shortcuts()
             }
         }
     }
-
+    
     enum Direction {
         case up
         case down
     }
-
+    
     func scroll(proxy: ScrollViewProxy, direction: Direction) {
-        if pasteboardService.copiedItems.isEmpty {
+        if viewModel.copiedItems.isEmpty {
             return
         }
         let _focusedItemIndex: Int
         switch direction {
         case .down:
-            if let i = focusedItemIndex, pasteboardService.copiedItems.count - 1 > i {
+            if let i = focusedItemIndex, viewModel.copiedItems.count - 1 > i {
                 _focusedItemIndex = i + 1
             } else {
                 _focusedItemIndex = 0
             }
-
+            
         case .up:
             if let i = focusedItemIndex, i > 0 {
                 _focusedItemIndex = i - 1
             } else {
-                _focusedItemIndex = pasteboardService.copiedItems.count - 1
+                _focusedItemIndex = viewModel.copiedItems.count - 1
             }
         }
         focusedItemIndex = _focusedItemIndex
-        proxy.scrollTo(pasteboardService.copiedItems[_focusedItemIndex].dataHash)
+        proxy.scrollTo(viewModel.copiedItems[_focusedItemIndex].dataHash)
     }
 }
 
@@ -92,12 +93,12 @@ struct Row: View, Equatable {
     let memoEdited: (CopiedItem, String) -> Void
     let isFocused: Bool
     @FocusState var memoFocusState: Bool
-
+    
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @State var memo: String
-
+    
     init(item: CopiedItem,
          favorite: Bool,
          didSelected: @escaping (CopiedItem) -> Void,
@@ -120,28 +121,28 @@ struct Row: View, Equatable {
         self.memoEdited = memoEdited
         memo = item.memo ?? ""
     }
-
+    
     var body: some View {
         VStack {
             HStack {
                 if isFocused {
                     Color.mainAccent.frame(width: 5, alignment: .leading)
-                    KeyboardCommandButtons(
-                        action: {
-                            self.memoFocusState = true
-                        },
-                        keys: [.init(main: "i", sub: .command)]
-                    )
+//                    KeyboardCommandButtons(
+//                        action: {
+//                            self.memoFocusState = true
+//                        },
+//                        keys: [.init(main: "i", sub: .command)]
+//                    )
                 }
                 Button(action: {
                     withAnimation {
                         didSelected(item)
                     }
-
+                    
                 }, label: {
                     ZStack {
                         Color.mainViewBackground.opacity(0.1)
-
+                        
                         // spreading Button's Tap area was very difficult , but ZStack + Color make it but .clear is not available
                         // TODO: survey for alternative to Color
                         //
@@ -155,24 +156,20 @@ struct Row: View, Equatable {
                                         Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
                                     } else if isShowingRTF, let attributedString = item.attributeString {
                                         Text(AttributedString(attributedString))
-
+                                        
                                     } else if isShowingHTML, let attributedString = item.htmlString {
                                         Text(AttributedString(attributedString))
                                     } else if let url = item.fileURL {
                                         // TODO:
                                         // I want to show images from fileURL,
                                         // but images disappear next time when it's shown
-                                        //                                if let image = NSImage(contentsOf: url) {
-                                        //                                    Image(nsImage: image).resizable().scaledToFit()
-                                        //                                } else {
-                                        Text("\(url.absoluteString)")
-                                            .font(.callout)
-                                        //                                }
+                                        
+                                        FileImageView(url: url)
                                     } else {
                                         Text(item.name ?? "No Name").font(.callout)
                                     }
                                 }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
-
+                                
                                 Spacer()
                             }
                             if !memo.isEmpty {
@@ -184,20 +181,20 @@ struct Row: View, Equatable {
                             }
                         }
                     }
-
+                    
                 })
-
+                
                 VStack(alignment: .trailing) {
                     Text(item.contentTypeString ?? "").font(.caption)
                     Text("\(item.binarySizeString)").font(.caption)
                 }
-
+                
                 TextField("", text: $memo)
                     .focused($memoFocusState)
                     .onChange(of: memo, perform: { v in
                         memoEdited(item, v)
-                }).frame(width: 30)
-
+                    }).frame(width: 26)
+                
                 Button(action: {
                     favoriteButtonDidTap(item)
                 }, label: {
@@ -206,25 +203,63 @@ struct Row: View, Equatable {
                         .frame(width: 30, height: 44)
                         .contentShape(RoundedRectangle(cornerRadius: 20))
                 })
-                    .buttonStyle(PlainButtonStyle())
+                .buttonStyle(PlainButtonStyle())
                 Button(action: {
                     deleteButtonDidTap(item)
                 }, label: {
                     Image(systemName: "trash.fill").foregroundColor(.secondary)
                 })
-                    .buttonStyle(PlainButtonStyle())
+                .buttonStyle(PlainButtonStyle())
             }
         }
         .buttonStyle(PlainButtonStyle())
         Divider()
     }
-
+    
     static func == (lhs: Row, rhs: Row) -> Bool {
         // This comparation make Row stop unneeded rendering.
         return lhs.isFocused == rhs.isFocused &&
-            lhs.favorite == rhs.favorite
+        lhs.favorite == rhs.favorite
     }
 }
+
+
+struct FileImageView: View {
+    let url: URL
+    @State var image: NSImage?
+
+    var body: some View {
+        Group {
+            if let image {
+                Image(nsImage: image).resizable().scaledToFit()
+            } else {
+                Text("\(url.absoluteString)")
+                    .font(.callout)
+            }
+        }.task { // デフォルトでメインスレッドなんだな。
+            if image == nil {
+//                print("inside task", Thread.isMainThread)
+//                Task.detached { // ここでTaskを使ってもでもメインスレッド
+//                    print("outside task",Thread.isMainThread)
+//                    image = NSImage(contentsOf: url) // isMainThreadがfalseなのにここで以下のエラがでる。。
+//                    
+//                    ///This method should not be called on the main thread as it may lead to UI unresponsiveness.
+//                }
+                
+                /// 結局Xcodeのバグっぽい。
+                /// https://ios-docs.dev/this-method-should/
+                
+                image = await loadImage(from: url)
+            }
+            
+        }
+    }
+    
+    func loadImage(from url: URL) async -> NSImage? {
+        return NSImage(contentsOf: url)
+    }
+}
+extension NSImage: @unchecked Sendable {}
 
 struct KeyboardCommandButtons: View {
     struct Key: Identifiable {
@@ -232,7 +267,7 @@ struct KeyboardCommandButtons: View {
         let main: KeyEquivalent
         let sub: EventModifiers
     }
-
+    
     let action: () -> Void
     let keys: [Key]
     var body: some View {
@@ -241,10 +276,12 @@ struct KeyboardCommandButtons: View {
                 Button(action: {
                     action()
                 }, label: {})
-                    .keyboardShortcut(key.main, modifiers: key.sub)
+                .keyboardShortcut(key.main, modifiers: key.sub)
             }
         }
         .frame(width: .zero, height: .zero)
         .opacity(0)
     }
 }
+
+

@@ -49,7 +49,7 @@ extension MainView {
                     primaryButton: Alert.Button.destructive(
                         Text("Delete"),
                         action: {
-                            pasteboardService.clearAll()
+                            viewModel.clearAll()
                         }
                     ),
                     secondaryButton: Alert.Button.cancel(Text("Cancel"), action: {})

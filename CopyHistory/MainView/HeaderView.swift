@@ -27,18 +27,15 @@ extension MainView {
     
     func searchBar() -> some View {
         HStack(alignment: .center, spacing: 10) {
-            TextField(isShowingKeyboardShortcuts ? "Search: ⌘ + f" : "Search", text: $pasteboardService.searchText)
+            TextField(isShowingKeyboardShortcuts ? "Search: ⌘ + f" : "Search", text: $viewModel.searchText)
             
                 .focused($isFocus)
                 .textFieldStyle(.roundedBorder)
-                .onChange(of: pasteboardService.searchText, perform: { _ in
+                .onChange(of: viewModel.searchText, perform: { _ in
                     focusedItemIndex = nil
-                    withAnimation {
-                        pasteboardService.search()
-                    }
                 })
                 .foregroundColor(.primary)
-            Text("\(pasteboardService.copiedItems.count)")
+            Text("\(viewModel.copiedItems.count)")
                 .font(.caption)
                 .foregroundColor(Color.gray)
         }
@@ -78,12 +75,12 @@ extension MainView {
         VStack(spacing: 0) {
             Button(action: {
                 withAnimation {
-                    pasteboardService.filterMemoed()
+                    viewModel.isShowingOnlyMemoed.toggle()
                 }
                 
             }, label: {
                 Image(systemName: "square.and.pencil")
-                    .foregroundColor(pasteboardService.isShowingOnlyMemoed ? Color.mainAccent : Color.primary)
+                    .foregroundColor(viewModel.isShowingOnlyMemoed ? Color.mainAccent : Color.primary)
             })
             .keyboardShortcut("p", modifiers: .command)
             
@@ -98,12 +95,12 @@ extension MainView {
         VStack(spacing: 0) {
             Button(action: {
                 withAnimation {
-                    pasteboardService.filterFavorited()
+                    viewModel.isShowingOnlyFavorite.toggle()
                 }
                 
             }, label: {
-                Image(systemName: pasteboardService.isShowingOnlyFavorite ? "star.fill" : "star")
-                    .foregroundColor(pasteboardService.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
+                Image(systemName: viewModel.isShowingOnlyFavorite ? "star.fill" : "star")
+                    .foregroundColor(viewModel.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
             })
             .keyboardShortcut("s", modifiers: .command)
             
