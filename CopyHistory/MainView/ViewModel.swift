@@ -22,7 +22,7 @@ final class ViewModel: ObservableObject {
         if value == 0 {
             return displayedItemCountDefaultValue
         } else {
-            return min(max(value, 1), 50)
+            return max(value, 1)
         }
     }() {
         didSet {
