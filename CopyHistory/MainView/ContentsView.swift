@@ -14,7 +14,7 @@ extension MainView {
             // there is a mysterious plain view at the top of the scrollview and it overlays this content. so this is put here
             Spacer()
             ScrollViewReader { proxy in
-                VStack(spacing: 0) {
+                LazyVStack(spacing: 0) {
                     // ・This doesn't make ScrollView + ForEach make additional padding, https://www.reddit.com/r/SwiftUI/comments/e607z3/swiftui_scrollview_foreach_padding_weird/
                     // ・Lazy improves the performance of the inclement search.
                     // However Lazy make selecting cell work weird...
@@ -23,15 +23,7 @@ extension MainView {
                         
                         Row(item: item,
                             favorite: item.favorite,
-                            didSelected: { item in
-                            focusedItemIndex = nil
-                            viewModel.didSelected(item)
-                            NSApplication.shared.deactivate()
-                        },
-                            favoriteButtonDidTap: { item in viewModel.toggleFavorite(item) },
-                            deleteButtonDidTap: { item in viewModel.delete(item) },
-                            memoEdited: { item, memo in viewModel.saveMemo(item, memo: memo) },
-                            isFocused: index == focusedItemIndex,
+                            isFocused: index == focusedItemIndex, itemAction: $itemAction,
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML)
@@ -87,10 +79,6 @@ extension MainView {
 struct Row: View, Equatable {
     let item: CopiedItem
     let favorite: Bool
-    let didSelected: (CopiedItem) -> Void
-    let favoriteButtonDidTap: (CopiedItem) -> Void
-    let deleteButtonDidTap: (CopiedItem) -> Void
-    let memoEdited: (CopiedItem, String) -> Void
     let isFocused: Bool
     @FocusState var memoFocusState: Bool
     
@@ -98,27 +86,21 @@ struct Row: View, Equatable {
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @State var memo: String
-    
+    @Binding var itemAction: MainView.ItemAction?
     init(item: CopiedItem,
          favorite: Bool,
-         didSelected: @escaping (CopiedItem) -> Void,
-         favoriteButtonDidTap: @escaping (CopiedItem) -> Void,
-         deleteButtonDidTap: @escaping (CopiedItem) -> Void,
-         memoEdited: @escaping (CopiedItem, String) -> Void,
          isFocused: Bool,
+         itemAction: Binding<MainView.ItemAction?>,
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
          isShowingHTML: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
-        self.didSelected = didSelected
-        self.favoriteButtonDidTap = favoriteButtonDidTap
-        self.deleteButtonDidTap = deleteButtonDidTap
         self.isFocused = isFocused
+        _itemAction = itemAction
         _isExpanded = isExpanded
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
-        self.memoEdited = memoEdited
         memo = item.memo ?? ""
     }
     
@@ -134,55 +116,52 @@ struct Row: View, Equatable {
 //                        keys: [.init(main: "i", sub: .command)]
 //                    )
                 }
-                Button(action: {
-                    withAnimation {
-                        didSelected(item)
-                    }
+                
+                ZStack {
+                    Color.mainViewBackground.opacity(0.1)
                     
-                }, label: {
-                    ZStack {
-                        Color.mainViewBackground.opacity(0.1)
-                        
-                        // spreading Button's Tap area was very difficult , but ZStack + Color make it but .clear is not available
-                        // TODO: survey for alternative to Color
-                        //
-                        //
-                        // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
-                        // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-tappable-button
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Group {
-                                    if let content = item.content, let image = NSImage(data: content) {
-                                        Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
-                                    } else if isShowingRTF, let attributedString = item.attributeString {
-                                        Text(AttributedString(attributedString))
-                                        
-                                    } else if isShowingHTML, let attributedString = item.htmlString {
-                                        Text(AttributedString(attributedString))
-                                    } else if let url = item.fileURL {
-                                        // TODO:
-                                        // I want to show images from fileURL,
-                                        // but images disappear next time when it's shown
-                                        
-                                        FileImageView(url: url)
-                                    } else {
-                                        Text(item.name ?? "No Name").font(.callout)
-                                    }
-                                }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
-                                
-                                Spacer()
-                            }
-                            if !memo.isEmpty {
-                                Text(memo)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .lineLimit(1)
-                                    .padding(.bottom, 4)
-                            }
+                    // spreading Button's Tap area was very difficult , but ZStack + Color make it but .clear is not available
+                    // TODO: survey for alternative to Color
+                    //
+                    //
+                    // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
+                    // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-tappable-button
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Group {
+                                if let content = item.content, let image = NSImage(data: content) {
+                                    Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
+                                } else if isShowingRTF, let attributedString = item.attributeString {
+                                    Text(AttributedString(attributedString))
+                                    
+                                } else if isShowingHTML, let attributedString = item.htmlString {
+                                    Text(AttributedString(attributedString))
+                                } else if let url = item.fileURL {
+                                    // TODO:
+                                    // I want to show images from fileURL,
+                                    // but images disappear next time when it's shown
+                                    
+                                    FileImageView(url: url)
+                                } else {
+                                    Text(item.name ?? "No Name").font(.callout)
+                                }
+                            }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
+                            
+                            Spacer()
+                        }
+                        if !memo.isEmpty {
+                            Text(memo)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .lineLimit(1)
+                                .padding(.bottom, 4)
                         }
                     }
-                    
-                })
+                }.onTapGesture {
+                    withAnimation {
+                        itemAction = .init(item: item, action: .select)
+                    }
+                }
                 
                 VStack(alignment: .trailing) {
                     Text(item.contentTypeString ?? "").font(.caption)
@@ -191,35 +170,31 @@ struct Row: View, Equatable {
                 
                 TextField("", text: $memo)
                     .focused($memoFocusState)
-                    .onChange(of: memo, perform: { v in
-                        memoEdited(item, v)
+                    .onSubmit({
+                        itemAction = .init(item: item, action: .memoEdited(memo))
                     }).frame(width: 26)
                 
-                Button(action: {
-                    favoriteButtonDidTap(item)
-                }, label: {
-                    Image(systemName: favorite ? "star.fill" : "star")
-                        .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                        .frame(width: 30, height: 44)
-                        .contentShape(RoundedRectangle(cornerRadius: 20))
-                })
-                .buttonStyle(PlainButtonStyle())
-                Button(action: {
-                    deleteButtonDidTap(item)
-                }, label: {
-                    Image(systemName: "trash.fill").foregroundColor(.secondary)
-                })
-                .buttonStyle(PlainButtonStyle())
+                Image(systemName: favorite ? "star.fill" : "star")
+                    .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                    .frame(width: 30, height: 44)
+                    .contentShape(RoundedRectangle(cornerRadius: 20))
+                    .onTapGesture {
+                        itemAction = .init(item: item, action: .favorite)
+                    }
+                
+                Image(systemName: "trash.fill").foregroundColor(.secondary).onTapGesture {
+                    itemAction = .init(item: item, action: .delete)
+                }
             }
         }
         .buttonStyle(PlainButtonStyle())
         Divider()
     }
     
+    /// This comparation make Row stop unneeded rendering.
     static func == (lhs: Row, rhs: Row) -> Bool {
-        // This comparation make Row stop unneeded rendering.
-        return lhs.isFocused == rhs.isFocused &&
-        lhs.favorite == rhs.favorite
+        return lhs.isFocused == rhs.isFocused
+        && lhs.favorite == rhs.favorite
     }
 }
 
@@ -249,7 +224,7 @@ struct FileImageView: View {
                 /// 結局Xcodeのバグっぽい。
                 /// https://ios-docs.dev/this-method-should/
                 
-                image = await loadImage(from: url)
+//                image = await loadImage(from: url)
             }
             
         }

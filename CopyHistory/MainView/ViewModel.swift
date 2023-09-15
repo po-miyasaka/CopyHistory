@@ -77,7 +77,7 @@ final class ViewModel: ObservableObject {
         Task {  [weak self] in
             if let stream = self?.repository.stream {
                 for await copiedItems in stream {
-                    self?.copiedItems = copiedItems
+                        self?.copiedItems = copiedItems
                 }
             }
         }
