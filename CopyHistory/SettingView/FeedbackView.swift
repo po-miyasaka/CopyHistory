@@ -23,7 +23,7 @@ struct FeedbackView: View {
                 .opacity(0.8)
                 .frame(height: 300)
                 .padding(8)
-            
+
             Button(action: {
                 Task {
                     isLoading = true
@@ -53,7 +53,6 @@ struct FeedbackView: View {
         .overlay(isLoading ? LoadingView() : nil)
     }
 
-    
     func submit() async {
         guard let url = getFeedbackURL() else {
             print("□■□■□■□■□■□■□■□■□■□■")
@@ -63,24 +62,24 @@ struct FeedbackView: View {
             return
         }
         var urlRequest: URLRequest = .init(url: url)
-        
+
         let meta = versionString + "/" + "\(ProcessInfo.processInfo.operatingSystemVersion)" + "/"
         guard let data = try? JSONEncoder().encode(RequestData(content: meta + feedback, address: mailAddress)) else {
             return
         }
         urlRequest.httpBody = data
         urlRequest.httpMethod = "POST"
-        
+
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             print(String(data: data, encoding: .utf8) ?? "no data")
             print(response)
-            
+
         } catch {
         }
         isAlertPresented = true
         isLoading = false
-        
+
     }
 }
 
@@ -96,7 +95,6 @@ struct RequestData: Codable {
 //    }
 //}
 
-
 struct LoadingView: View {
     var body: some View {
         ZStack {
@@ -106,7 +104,6 @@ struct LoadingView: View {
         }
     }
 }
-
 
 func getFeedbackURL() -> URL? {
     guard let path = Bundle.main.path(forResource: "ProductionInfo", ofType: "plist"),

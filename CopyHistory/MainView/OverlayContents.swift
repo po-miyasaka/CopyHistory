@@ -31,5 +31,5 @@ extension MainView {
             }
         }
     }
-    
+
 }

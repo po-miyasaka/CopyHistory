@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension MainView {
-    
+
     @ViewBuilder
     func Header() -> some View {
         VStack(spacing: 16) {
@@ -23,12 +23,11 @@ extension MainView {
             }
         }
     }
-    
-    
+
     func searchBar() -> some View {
         HStack(alignment: .center, spacing: 10) {
             TextField(isShowingKeyboardShortcuts ? "Search: ⌘ + f" : "Search", text: $viewModel.searchText)
-            
+
                 .focused($isFocus)
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: viewModel.searchText, perform: { _ in
@@ -40,13 +39,11 @@ extension MainView {
                 .foregroundColor(Color.gray)
         }
     }
-    
+
     @ViewBuilder
     func shortcutsList() -> some View {
         let columns = [GridItem(.flexible(minimum: 80), spacing: 8, alignment: .trailing), GridItem(.flexible(minimum: 150), spacing: 8)]
-        
-        
-        
+
         LazyVGrid(columns: columns, alignment: .leading, spacing: 0, content: {
             Group {
                 Text("Up:"); Text("⌘ + ↑ or k")
@@ -65,11 +62,9 @@ extension MainView {
         .font(.caption)
         .foregroundColor(Color.gray)
         .padding(.bottom, 1)
-        
-        
-        
+
     }
-    
+
     @ViewBuilder
     func memoButton() -> some View {
         VStack(spacing: 0) {
@@ -77,19 +72,19 @@ extension MainView {
                 withAnimation {
                     viewModel.isShowingOnlyMemoed.toggle()
                 }
-                
+
             }, label: {
                 Image(systemName: "square.and.pencil")
                     .foregroundColor(viewModel.isShowingOnlyMemoed ? Color.mainAccent : Color.primary)
             })
             .keyboardShortcut("p", modifiers: .command)
-            
+
             if isShowingKeyboardShortcuts {
                 Text("⌘ + p").font(.caption).foregroundColor(.gray).padding(.top, 2)
             }
         }
     }
-    
+
     @ViewBuilder
     func favoriteButton() -> some View {
         VStack(spacing: 0) {
@@ -97,13 +92,13 @@ extension MainView {
                 withAnimation {
                     viewModel.isShowingOnlyFavorite.toggle()
                 }
-                
+
             }, label: {
                 Image(systemName: viewModel.isShowingOnlyFavorite ? "star.fill" : "star")
                     .foregroundColor(viewModel.isShowingOnlyFavorite ? Color.mainAccent : Color.primary)
             })
             .keyboardShortcut("s", modifiers: .command)
-            
+
             if isShowingKeyboardShortcuts {
                 Text("⌘ + s").font(.caption).foregroundColor(.gray).padding(.top, 2)
             }

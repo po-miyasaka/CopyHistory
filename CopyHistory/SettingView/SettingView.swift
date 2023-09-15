@@ -37,7 +37,7 @@ struct SettingView: View {
                 Spacer()
                 TextField("", text: $displayedCount).frame(width: 50)
             }
-            
+
             Divider()
 //            HStack {
 //                VStack(alignment: .leading) {
@@ -52,8 +52,7 @@ struct SettingView: View {
 //            }
 //            
 //            Divider()
-            
-            
+
             Spacer()
             Divider()
 
@@ -65,7 +64,7 @@ struct SettingView: View {
                 }, label: {
                     Text("A keyboard shortcut for launching (open another Website)")
                 })
-                
+
                 Button(action: {
                     if let url = URL(string: "https://miyashi.app/articles/copy_history_mark_2") {
                         NSWorkspace.shared.open(url)
@@ -73,27 +72,24 @@ struct SettingView: View {
                 }, label: {
                     Text("CopyHistory Website")
                 })
-                
+
                 Button(action: {
                     SKStoreReviewController.requestReview()
                 }, label: {
                     Text("Rate CopyHistory✨")
                 })
-                
+
                 Button(action: {
                     overlayViewType = .feedback
                 }, label: {
                     Text("Send a request / feedback")
                 })
             }.buttonStyle(LinkButtonStyle())
-            
 
-            
             Divider()
             Text("Version: " + versionString)
                 .padding(.bottom, 16)
-            
-            
+
         }.padding(8)
 
     }

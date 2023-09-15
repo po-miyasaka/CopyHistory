@@ -13,7 +13,7 @@ struct MainApp: App {
 #if os(macOS)
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 #endif
-    
+
     var body: some Scene {
         WindowGroup {}
     }
@@ -21,13 +21,13 @@ struct MainApp: App {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBar: StatusBarController?
-    
+
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = .init()
         disableUnneededWindow()
-        
+
     }
-    
+
     func applicationDidBecomeActive(_: Notification) {
         disableUnneededWindow()
         if statusBar?.popover?.isShown == false {
@@ -35,9 +35,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // SONOMAより前はStatusBarのボタンを押してもDidBecameActiveは呼ばれなかった。
             statusBar?.show()
         }
-        
+
     }
-    
+
     func disableUnneededWindow() {
         NSApp.windows.filter { window in window.className == "SwiftUI.AppKitWindow" }.forEach { $0.setIsVisible(false) }
     }
@@ -47,7 +47,7 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
     var mainMenu: NSMenu?
     var popover: NSPopover?
     var statusBarItem: NSStatusItem?
-    
+
     override init() {
         super.init()
         let image = NSImage(imageLiteralResourceName: "logo.svg")
@@ -65,9 +65,9 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
             button.action = #selector(togglePopover(_:))
             button.target = self
         }
-        
+
     }
-    
+
     @objc func togglePopover(_ sender: AnyObject?) {
         if popover?.isShown == true {
             hide()
@@ -75,30 +75,30 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
             show()
         }
     }
-    
+
     func show() {
         if let button = statusBarItem?.button {
             popover?.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
         }
     }
-    
+
     func hide() {
         popover?.performClose(nil)
     }
-    
+
     func popoverWillShow(_: Notification) {
         NSApplication.shared.unhide(nil)
     }
-    
+
     func popoverDidClose(_: Notification) {
         NSApplication.shared.hide(nil) // this code make previous app activate back.
-        
+
     }
-    
+
     func popoverShouldDetach(_ popover: NSPopover) -> Bool {
         true
     }
-    
+
 }
 
 let widthKey = "windowSizeWidth"

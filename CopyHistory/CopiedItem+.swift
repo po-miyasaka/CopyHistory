@@ -46,12 +46,10 @@ extension CopiedItem {
             let content = content,
             let path = String(data: content, encoding: .utf8),
             let url = URL(string: path) else {
-            
-            
+
             return nil
         }
 //                    url.startAccessingSecurityScopedResource()
         return url
     }
 }
-

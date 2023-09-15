@@ -21,7 +21,7 @@ extension MainView {
                 })
                 .accentColor(.white)
                 Spacer()
-                
+
                 if overlayViewType == nil {
                     VStack(alignment: .leading) {
                         Button(action: {
@@ -32,14 +32,13 @@ extension MainView {
                     }
                 }
             }
-            
-            
+
             Button(action: {
                 NSApplication.shared.terminate(nil)
             }, label: {
                 Text("Quit CopyHistory")
             })
-            
+
         }
         .alert(
             isPresented: $isAlertPresented,
@@ -65,7 +64,7 @@ struct MenuItems: View {
         let text: String
         let action: () -> Void
     }
-    
+
     let contents: [Content]
     var body: some View {
         ForEach(contents) { content in

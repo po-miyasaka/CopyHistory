@@ -14,7 +14,7 @@ class FetchedResultsControllerDelegateWrapper<T>: NSObject, NSFetchedResultsCont
     init(continuation: AsyncStream<T>.Continuation) {
         self.continuation = continuation
     }
-    
+
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         if let fetchedObjects = controller.fetchedObjects as? T {
             continuation.yield(fetchedObjects)
@@ -22,9 +22,9 @@ class FetchedResultsControllerDelegateWrapper<T>: NSObject, NSFetchedResultsCont
     }
 }
 
-class CoreDataService  {
+class CoreDataService {
     let container: NSPersistentContainer
-    
+
     init() {
         container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores(completionHandler: { _, error in
@@ -32,29 +32,29 @@ class CoreDataService  {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
-        
+
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
-    
+
     // MARK: - CRD
-    
+
     func makeFetchedResultController<T>(request: NSFetchRequest<T>) -> NSFetchedResultsController<T> {
         return .init(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
     }
-    
+
     func create<T: NSManagedObject>(type: T.Type) -> T {
         type.init(context: container.viewContext)
     }
-    
+
     func getObject<T: NSManagedObject>(from request: NSFetchRequest<T>) -> T? {
         (try? container.viewContext.fetch(request))?.first
     }
-    
+
     func save() {
         try! container.viewContext.save()
-        
+
     }
-    
+
     func deleteAll(targets: [NSManagedObject]) {
         let context = container.newBackgroundContext()
         targets.forEach {
@@ -62,11 +62,11 @@ class CoreDataService  {
         }
         try? context.save()
     }
-    
+
     func delete(target: NSManagedObject) {
         container.viewContext.delete(target)
         try? container.viewContext.save()
-        
+
     }
-    
+
 }
