@@ -44,12 +44,11 @@ struct MainView: View {
         VStack {
             Header().padding(.top, 16).padding(.horizontal, 8)
             Divider()
-            ContentsView().padding(.horizontal)
+            ContentsView()
             Divider()
             Footer().padding(.horizontal, 16).padding(.bottom, 16)
         }
         .onReceive(Just(itemAction)) { actionItem in
-            // Do something with the selected item
             guard let actionItem else {
                 return
             }
