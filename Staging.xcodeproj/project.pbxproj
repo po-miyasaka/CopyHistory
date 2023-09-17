@@ -13,6 +13,7 @@
 		CEA8AD0A2874C8E3003B6035 /* IconAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA8AD092874C8E3003B6035 /* IconAssets.xcassets */; };
 		CEA8AD0F2874C8E3003B6035 /* PasteboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD0E2874C8E3003B6035 /* PasteboardService.swift */; };
 		CEA8AD372874CAA7003B6035 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */; };
+		D50545142AB7743800CE1BF4 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D50545132AB7743800CE1BF4 /* Algorithms */; };
 		D5092C1829E12E340075A1D9 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5092C1729E12E340075A1D9 /* SettingView.swift */; };
 		D51104962A9A41CA00D38CC3 /* OverlayContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51104952A9A41CA00D38CC3 /* OverlayContents.swift */; };
 		D51104982A9A42B100D38CC3 /* CopiedItem+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51104972A9A42B100D38CC3 /* CopiedItem+.swift */; };
@@ -60,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D50545142AB7743800CE1BF4 /* Algorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +144,9 @@
 			dependencies = (
 			);
 			name = CopyHistory;
+			packageProductDependencies = (
+				D50545132AB7743800CE1BF4 /* Algorithms */,
+			);
 			productName = CopyHistory;
 			productReference = CEA8AD022874C8E1003B6035 /* CopyHistory.app */;
 			productType = "com.apple.product-type.application";
@@ -170,6 +175,9 @@
 				Base,
 			);
 			mainGroup = CEA8ACF92874C8E1003B6035;
+			packageReferences = (
+				D50545122AB7743800CE1BF4 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+			);
 			productRefGroup = CEA8AD032874C8E1003B6035 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -422,6 +430,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D50545122AB7743800CE1BF4 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D50545132AB7743800CE1BF4 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D50545122AB7743800CE1BF4 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {

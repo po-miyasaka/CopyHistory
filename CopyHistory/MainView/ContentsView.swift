@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Algorithms
 extension MainView {
     @ViewBuilder
     func ContentsView() -> some View {
@@ -19,7 +19,8 @@ extension MainView {
                     // ・Lazy improves the performance of the inclement search.
                     // However Lazy make selecting cell work weird...
                     
-                    ForEach(Array(zip(viewModel.copiedItems.indices, viewModel.copiedItems)), id: \.1.dataHash) { index, item in
+                    
+                    ForEach(viewModel.copiedItems.indexed(), id: \.element.dataHash) { index, item in
                         
                         Row(item: item,
                             favorite: item.favorite,
