@@ -102,6 +102,7 @@ class CopiedItemRepository {
     private func makeCopiedItemsRequest(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, limit: Int? = nil) -> NSFetchRequest<CopiedItem> {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
         fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "dataHash", "favorite", "memo", "name", "rawString", "updateDate"]
 
         var favoritePredicate: NSPredicate?
         if isShowingOnlyFavorite {
