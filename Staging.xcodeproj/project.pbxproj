@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5F00001CCCC000100000001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D5F00001CCCC000000000001 /* Localizable.xcstrings */; };
 		CE11282428774314008144F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE11282328774314008144F8 /* AppDelegate.swift */; };
 		CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */; };
 		CEA8AD082874C8E1003B6035 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD072874C8E1003B6035 /* MainView.swift */; };
@@ -64,6 +65,7 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000004 /* TransformActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformActionsBar.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformEditorView.swift; sourceTree = "<group>"; };
+		D5F00001CCCC000000000001 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				D5F00001AAAA000000000001 /* TransformAction.swift */,
 				D5F00001AAAA000000000002 /* TextTransformer.swift */,
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
+				D5F00001CCCC000000000001 /* Localizable.xcstrings */,
 				D5A5573729DC1A4F00FF69C7 /* MainView */,
 				D5092C1629E12E1C0075A1D9 /* SettingView */,
 				CEA8AD092874C8E3003B6035 /* IconAssets.xcassets */,
@@ -188,6 +191,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = CEA8ACF92874C8E1003B6035;
 			packageReferences = (
@@ -209,6 +213,7 @@
 			files = (
 				CEA8AD0A2874C8E3003B6035 /* IconAssets.xcassets in Resources */,
 				D5181C5D2A40C39100BCBBC7 /* CommonAssets.xcassets in Resources */,
+				D5F00001CCCC000100000001 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +393,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.staging";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -420,7 +425,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.staging";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

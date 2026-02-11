@@ -57,7 +57,7 @@ struct TransformActionsBar: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.small)
-        .help(action.helpText)
+        .help(Text(LocalizedStringKey(action.helpText)))
     }
 
     private func qrCodeButton() -> some View {
@@ -73,6 +73,6 @@ struct TransformActionsBar: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.small)
-        .help(TransformAction.showQRCode.helpText)
+        .help(Text(LocalizedStringKey(TransformAction.showQRCode.helpText)))
     }
 }

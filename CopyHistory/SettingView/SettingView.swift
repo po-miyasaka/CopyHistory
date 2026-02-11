@@ -90,7 +90,7 @@ struct SettingView: View {
             }.buttonStyle(LinkButtonStyle())
 
             Divider()
-            Text("Version: " + versionString)
+            Text("Version: \(versionString)")
                 .padding(.bottom, 16)
 
         }.padding(8)
