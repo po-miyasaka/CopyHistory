@@ -71,7 +71,7 @@ class CopiedItemRepository {
     }
 
     func deleteAll() {
-        coreDataService.deleteAll(targets: _copiedItems.value.filter {$0.favorite})
+        coreDataService.deleteAll(targets: _copiedItems.value.filter { !$0.favorite })
     }
 
     private func request(with request: NSFetchRequest<CopiedItem>) {
