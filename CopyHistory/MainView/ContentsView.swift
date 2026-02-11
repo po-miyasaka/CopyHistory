@@ -257,6 +257,12 @@ struct Row: View, Equatable {
                 })
 
             }
+
+            if isFocused && !isImageType {
+                TransformActionsBar(item: item) { transformAction in
+                    itemAction(.init(item: item, action: .transform(transformAction)))
+                }
+            }
         }
         .buttonStyle(PlainButtonStyle())
         .task(id: item.dataHash) {

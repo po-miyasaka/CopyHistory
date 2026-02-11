@@ -33,6 +33,7 @@ struct MainView: View {
         case memoEdited(String)
         case select
         case favorite
+        case transform(TransformAction)
     }
 
     struct ItemAction {
@@ -61,6 +62,10 @@ struct MainView: View {
             case .select:
                 focusedItemIndex = nil
                 viewModel.didSelected(actionItem.item)
+                NSApplication.shared.deactivate()
+            case .transform(let transformAction):
+                focusedItemIndex = nil
+                viewModel.didSelectWithTransform(actionItem.item, transform: transformAction)
                 NSApplication.shared.deactivate()
             case .favorite:
                 viewModel.toggleFavorite(actionItem.item)

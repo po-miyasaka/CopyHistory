@@ -39,19 +39,10 @@ struct SettingView: View {
             }
 
             Divider()
-//            HStack {
-//                VStack(alignment: .leading) {
-//                    Text("Before content")
-//                    TextField("", text: $beforeContent)
-//                }
-//                
-//                VStack(alignment: .leading) {
-//                    Text("After content")
-//                    TextField("", text: $afterContent)
-//                }
-//            }
-//            
-//            Divider()
+
+            CustomTransformEditorView()
+
+            Divider()
 
             Spacer()
             Divider()
