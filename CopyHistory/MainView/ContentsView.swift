@@ -7,6 +7,71 @@
 
 import SwiftUI
 import Algorithms
+
+final class ThumbnailCache {
+    static let shared = ThumbnailCache()
+    private let cache = NSCache<NSString, NSImage>()
+    private let maxThumbnailHeight: CGFloat = 300
+
+    private init() {
+        cache.countLimit = 200
+    }
+
+    func thumbnail(for dataHash: String?, content: Data?) -> NSImage? {
+        guard let dataHash = dataHash else { return nil }
+        let key = dataHash as NSString
+        if let cached = cache.object(forKey: key) {
+            return cached
+        }
+        guard let content = content, let original = NSImage(data: content) else { return nil }
+        let thumbnail = downsize(original)
+        cache.setObject(thumbnail, forKey: key)
+        return thumbnail
+    }
+
+    nonisolated func thumbnailAsync(for dataHash: String?, content: @Sendable @escaping () -> Data?) async -> NSImage? {
+        guard let dataHash = dataHash else { return nil }
+        let key = dataHash as NSString
+        if let cached = await MainActor.run(body: { cache.object(forKey: key) }) {
+            return cached
+        }
+        return await Task.detached(priority: .utility) { [maxThumbnailHeight] in
+            guard let content = content(), let original = NSImage(data: content) else { return nil as NSImage? }
+            let size = original.size
+            if size.height <= maxThumbnailHeight && size.width <= maxThumbnailHeight * 2 {
+                return original
+            }
+            let scale = min(maxThumbnailHeight / size.height, (maxThumbnailHeight * 2) / size.width)
+            let newSize = NSSize(width: size.width * scale, height: size.height * scale)
+            let thumbnail = NSImage(size: newSize)
+            thumbnail.lockFocus()
+            original.draw(in: NSRect(origin: .zero, size: newSize),
+                          from: NSRect(origin: .zero, size: size),
+                          operation: .copy,
+                          fraction: 1.0)
+            thumbnail.unlockFocus()
+            return thumbnail
+        }.value
+    }
+
+    private func downsize(_ image: NSImage) -> NSImage {
+        let size = image.size
+        if size.height <= maxThumbnailHeight && size.width <= maxThumbnailHeight * 2 {
+            return image
+        }
+        let scale = min(maxThumbnailHeight / size.height, (maxThumbnailHeight * 2) / size.width)
+        let newSize = NSSize(width: size.width * scale, height: size.height * scale)
+        let thumbnail = NSImage(size: newSize)
+        thumbnail.lockFocus()
+        image.draw(in: NSRect(origin: .zero, size: newSize),
+                   from: NSRect(origin: .zero, size: size),
+                   operation: .copy,
+                   fraction: 1.0)
+        thumbnail.unlockFocus()
+        return thumbnail
+    }
+}
+
 extension MainView {
     @ViewBuilder
     func ContentsView() -> some View {
@@ -29,7 +94,9 @@ extension MainView {
                         },
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
-                            isShowingHTML: $isShowingHTML)
+                            isShowingHTML: $isShowingHTML,
+                            isShowingDate: $isShowingDate,
+                            isShowingFileInfo: $isShowingFileInfo)
                         .id(item.dataHash)
                         
                         //                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
@@ -84,15 +151,33 @@ struct Row: View, Equatable {
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
+    @Binding var isShowingDate: Bool
+    @Binding var isShowingFileInfo: Bool
     @State var memo: String
+    @State private var thumbnailImage: NSImage?
     var itemAction: (MainView.ItemAction) -> Void
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.locale = Locale.current
+        return formatter
+    }()
+
+    private var isImageType: Bool {
+        guard let type = item.contentTypeString else { return false }
+        return type.contains("image") || type.contains("png") || type.contains("jpeg") || type.contains("tiff") || type.contains("gif") || type.contains("bmp")
+    }
+
     init(item: CopiedItem,
          favorite: Bool,
          isFocused: Bool,
          itemAction: @escaping (MainView.ItemAction) -> Void,
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
-         isShowingHTML: Binding<Bool>) {
+         isShowingHTML: Binding<Bool>,
+         isShowingDate: Binding<Bool>,
+         isShowingFileInfo: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
         self.isFocused = isFocused
@@ -100,109 +185,131 @@ struct Row: View, Equatable {
         _isExpanded = isExpanded
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
+        _isShowingDate = isShowingDate
+        _isShowingFileInfo = isShowingFileInfo
         memo = item.memo ?? ""
     }
-    
+
     var body: some View {
-        //        let _ = print(item.name?.prefix(4) ?? "no name")
-        VStack {
-            HStack {
-                if isFocused {
-                    Color.mainAccent.frame(width: 5, alignment: .leading)
-                    KeyboardCommandButtons(
-                        action: {
-                            self.memoFocusState = true
-                        },
-                        keys: [.init(main: "i", sub: .command)]
-                    )
-                }
-                
-                Button(action: {
-                    itemAction(.init(item: item, action: .select))
-                }, label: {
-                    
-                    ZStack {
-                        Color.mainViewBackground.opacity(0.1)
-                        
-                        // spreading Button's Tap area was very difficult , but ZStack + Color make it but .clear is not available
-                        // TODO: survey for alternative to Color
-                        //
-                        //
-                        // https://stackoverflow.com/questions/57333573/swiftui-button-tap-only-on-text-portion
-                        // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-tappable-button
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Group {
-                                    if let content = item.content, let image = NSImage(data: content) {
-                                        Image(nsImage: image).resizable().scaledToFit().frame(maxHeight: 300)
-                                    } else if isShowingRTF, let attributedString = item.attributeString {
-                                        Text(AttributedString(attributedString))
-                                        
-                                    } else if isShowingHTML, let attributedString = item.htmlString {
-                                        Text(AttributedString(attributedString))
-                                    } else if let url = item.fileURL {
-                                        // TODO:
-                                        // I want to show images from fileURL,
-                                        // but images disappear next time when it's shown
-                                        // → that's for a security feature of apple.
-                                        // it looks like it requires some agreements.
-                                        
-                                        FileImageView(url: url)
-                                    } else {
-                                        Text(item.name ?? "No Name").font(.callout)
-                                    }
-                                }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
-                                
-                                Spacer()
+        HStack(spacing: 0) {
+            if isFocused {
+                Color.mainAccent.frame(width: 5)
+                    .padding(.trailing, 4)
+                KeyboardCommandButtons(
+                    action: {
+                        self.memoFocusState = true
+                    },
+                    keys: [.init(main: "i", sub: .command)]
+                )
+            }
+
+            VStack(spacing: 0) {
+                HStack {
+                    Button(action: {
+                        itemAction(.init(item: item, action: .select))
+                    }, label: {
+
+                        ZStack {
+                            Color.mainViewBackground.opacity(0.1)
+
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Group {
+                                        if isImageType {
+                                            if let thumbnailImage {
+                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: 300)
+                                            } else {
+                                                ProgressView()
+                                                    .frame(maxHeight: 300)
+                                            }
+                                        } else if isShowingRTF, let attributedString = item.attributeString {
+                                            Text(AttributedString(attributedString))
+
+                                        } else if isShowingHTML, let attributedString = item.htmlString {
+                                            Text(AttributedString(attributedString))
+                                        } else if let url = item.fileURL {
+                                            FileImageView(url: url)
+                                        } else {
+                                            Text(item.name ?? "No Name").font(.callout)
+                                        }
+                                    }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
+
+                                    Spacer()
+                                }
+                                if !memo.isEmpty {
+                                    Text(memo)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                        .lineLimit(1)
+                                        .padding(.bottom, 4)
+                                }
                             }
-                            if !memo.isEmpty {
-                                Text(memo)
+                        }
+                    })
+
+                    if isShowingFileInfo || isShowingDate {
+                        VStack(alignment: .trailing) {
+                            if isShowingFileInfo {
+                                Text(item.contentTypeString ?? "").font(.caption)
+                                Text("\(item.binarySizeString)").font(.caption)
+                            }
+                            if isShowingDate, let date = item.updateDate {
+                                Text(Self.dateFormatter.string(from: date))
                                     .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .lineLimit(1)
-                                    .padding(.bottom, 4)
+                                    .foregroundColor(.secondary)
                             }
                         }
                     }
-                })
-                
-                VStack(alignment: .trailing) {
-                    Text(item.contentTypeString ?? "").font(.caption)
-                    Text("\(item.binarySizeString)").font(.caption)
+
+                    TextField("", text: $memo)
+                        .focused($memoFocusState)
+                        .onSubmit({
+                            itemAction(.init(item: item, action: .memoEdited(memo)))
+                        }).frame(width: 26)
+
+                    Button(action: {
+                        itemAction(.init(item: item, action: .favorite))
+                    }, label: {
+                        Image(systemName: favorite ? "star.fill" : "star")
+                            .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                            .frame(width: 30, height: 44)
+                            .contentShape(RoundedRectangle(cornerRadius: 20))
+                    })
+
+                    Button(action: {
+                        itemAction(.init(item: item, action: .delete))
+                    }, label: {
+                        Image(systemName: "trash.fill").foregroundColor(.secondary)
+                    })
                 }
-                
-                TextField("", text: $memo)
-                    .focused($memoFocusState)
-                    .onSubmit({
-                        itemAction(.init(item: item, action: .memoEdited(memo)))
-                    }).frame(width: 26)
-                
-                Button(action: {
-                    itemAction(.init(item: item, action: .favorite))
-                }, label: {
-                    Image(systemName: favorite ? "star.fill" : "star")
-                        .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                        .frame(width: 30, height: 44)
-                        .contentShape(RoundedRectangle(cornerRadius: 20))
-                })
-                
-                Button(action: {
-                    itemAction(.init(item: item, action: .delete))
-                }, label: {
-                    Image(systemName: "trash.fill").foregroundColor(.secondary)
-                })
-                
+
+                if isFocused && !isImageType {
+                    TransformActionsBar(item: item) { transformAction in
+                        itemAction(.init(item: item, action: .transform(transformAction)))
+                    }
+                }
             }
         }
         .buttonStyle(PlainButtonStyle())
+        .task(id: item.dataHash) {
+            guard isImageType, thumbnailImage == nil else { return }
+            let dataHash = item.dataHash
+            let content = item.content
+            thumbnailImage = await ThumbnailCache.shared.thumbnailAsync(for: dataHash) { content }
+        }
         Divider()
     }
-    
+
     /// This comparation make Row stop unneeded rendering.
     static func == (lhs: Row, rhs: Row) -> Bool {
         return lhs.item.dataHash == rhs.item.dataHash &&
         lhs.isFocused == rhs.isFocused &&
-        lhs.favorite == rhs.favorite
+        lhs.favorite == rhs.favorite &&
+        lhs.isExpanded == rhs.isExpanded &&
+        lhs.isShowingRTF == rhs.isShowingRTF &&
+        lhs.isShowingHTML == rhs.isShowingHTML &&
+        lhs.isShowingDate == rhs.isShowingDate &&
+        lhs.isShowingFileInfo == rhs.isShowingFileInfo
     }
 }
 

@@ -56,11 +56,10 @@ class CoreDataService {
     }
 
     func deleteAll(targets: [NSManagedObject]) {
-        let context = container.newBackgroundContext()
         targets.forEach {
-            context.delete($0)
+            container.viewContext.delete($0)
         }
-        try? context.save()
+        try? container.viewContext.save()
     }
 
     func delete(target: NSManagedObject) {

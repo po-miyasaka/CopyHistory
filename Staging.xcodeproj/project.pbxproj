@@ -27,6 +27,11 @@
 		D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573C29DC20A600FF69C7 /* FooterView.swift */; };
 		D5A5573F29DC2EA400FF69C7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573E29DC2EA400FF69C7 /* Extensions.swift */; };
 		D5A5574129DC343100FF69C7 /* ShortcutButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */; };
+		D5F00001AAAA000100000001 /* TransformAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000001 /* TransformAction.swift */; };
+		D5F00001AAAA000100000002 /* TextTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000002 /* TextTransformer.swift */; };
+		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
+		D5F00001AAAA000100000004 /* TransformActionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000004 /* TransformActionsBar.swift */; };
+		D5F00001AAAA000100000005 /* CustomTransformEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +59,11 @@
 		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
 		D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model3.xcdatamodel; sourceTree = "<group>"; };
 		D5EDFC3C287BA72300B4507F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D5F00001AAAA000000000001 /* TransformAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformAction.swift; sourceTree = "<group>"; };
+		D5F00001AAAA000000000002 /* TextTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTransformer.swift; sourceTree = "<group>"; };
+		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
+		D5F00001AAAA000000000004 /* TransformActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformActionsBar.swift; sourceTree = "<group>"; };
+		D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformEditorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +104,9 @@
 				D51104A22A9B0B7600D38CC3 /* CoreDataService.swift */,
 				D5A5573E29DC2EA400FF69C7 /* Extensions.swift */,
 				D51104972A9A42B100D38CC3 /* CopiedItem+.swift */,
+				D5F00001AAAA000000000001 /* TransformAction.swift */,
+				D5F00001AAAA000000000002 /* TextTransformer.swift */,
+				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				D5A5573729DC1A4F00FF69C7 /* MainView */,
 				D5092C1629E12E1C0075A1D9 /* SettingView */,
 				CEA8AD092874C8E3003B6035 /* IconAssets.xcassets */,
@@ -110,6 +123,7 @@
 			children = (
 				D57833882A40DAC000AF12F0 /* FeedbackView.swift */,
 				D5092C1729E12E340075A1D9 /* SettingView.swift */,
+				D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */,
 			);
 			path = SettingView;
 			sourceTree = "<group>";
@@ -124,6 +138,7 @@
 				D5A5573829DC1C0200FF69C7 /* ContentsView.swift */,
 				D5A5573C29DC20A600FF69C7 /* FooterView.swift */,
 				D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */,
+				D5F00001AAAA000000000004 /* TransformActionsBar.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
@@ -221,6 +236,11 @@
 				CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */,
 				D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */,
 				D5092C1829E12E340075A1D9 /* SettingView.swift in Sources */,
+				D5F00001AAAA000100000001 /* TransformAction.swift in Sources */,
+				D5F00001AAAA000100000002 /* TextTransformer.swift in Sources */,
+				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
+				D5F00001AAAA000100000004 /* TransformActionsBar.swift in Sources */,
+				D5F00001AAAA000100000005 /* CustomTransformEditorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +373,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -368,7 +388,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.staging";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -385,7 +405,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -400,7 +420,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.staging";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

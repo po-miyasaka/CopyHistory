@@ -25,6 +25,8 @@ struct MainView: View {
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
+    @AppStorage("isShowingDate") var isShowingDate: Bool = false
+    @AppStorage("isShowingFileInfo") var isShowingFileInfo: Bool = true
 
     @State var itemAction: ItemAction?
 
@@ -33,12 +35,14 @@ struct MainView: View {
         case memoEdited(String)
         case select
         case favorite
+        case transform(TransformAction)
     }
 
     struct ItemAction {
         let item: CopiedItem
         let action: Action
     }
+    
 
     var body: some View {
         VStack {
@@ -61,6 +65,10 @@ struct MainView: View {
             case .select:
                 focusedItemIndex = nil
                 viewModel.didSelected(actionItem.item)
+                NSApplication.shared.deactivate()
+            case .transform(let transformAction):
+                focusedItemIndex = nil
+                viewModel.didSelectWithTransform(actionItem.item, transform: transformAction)
                 NSApplication.shared.deactivate()
             case .favorite:
                 viewModel.toggleFavorite(actionItem.item)

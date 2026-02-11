@@ -87,6 +87,15 @@ final class ViewModel: ObservableObject {
         repository.update()
     }
 
+    func didSelectWithTransform(_ copiedItem: CopiedItem, transform: TransformAction) {
+        guard let rawString = copiedItem.rawString,
+              let transformed = TextTransformer.apply(transform, to: rawString)
+        else { return }
+        pasteboardService.applyTransformed(transformed)
+        copiedItem.updateDate = Date()
+        repository.update()
+    }
+
     func toggleFavorite(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
         repository.update()

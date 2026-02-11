@@ -14,18 +14,30 @@ struct SettingView: View {
     @Binding var isExpanded: Bool
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
+    @Binding var isShowingDate: Bool
+    @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
 
     var body: some View {
         VStack(alignment: .leading) {
             Group {
                 Toggle("Show keyboard shortcuts", isOn: $isShowingKeyboardShortcuts)
+                    .help("Show shortcut key hints on the main screen")
                 Divider()
                 Toggle("Expand cells", isOn: $isExpanded)
+                    .help("Show clipboard content in multiple lines instead of a single line")
                 Divider()
                 Toggle("Show items as RTF", isOn: $isShowingRTF)
+                    .help("Display Rich Text Format content with its original styling")
                 Divider()
                 Toggle("Show items as HTML", isOn: $isShowingHTML)
+                    .help("Display HTML content with its original styling")
+                Divider()
+                Toggle("Show saved date", isOn: $isShowingDate)
+                    .help("Display the date and time when each item was saved")
+                Divider()
+                Toggle("Show file type and size", isOn: $isShowingFileInfo)
+                    .help("Display the content type (e.g. plain-text, image) and data size for each item")
                 Divider()
             }
 
@@ -39,19 +51,10 @@ struct SettingView: View {
             }
 
             Divider()
-//            HStack {
-//                VStack(alignment: .leading) {
-//                    Text("Before content")
-//                    TextField("", text: $beforeContent)
-//                }
-//                
-//                VStack(alignment: .leading) {
-//                    Text("After content")
-//                    TextField("", text: $afterContent)
-//                }
-//            }
-//            
-//            Divider()
+
+            CustomTransformEditorView()
+
+            Divider()
 
             Spacer()
             Divider()
@@ -104,6 +107,8 @@ struct SettingView_Previews: PreviewProvider {
                     isExpanded: binding,
                     isShowingRTF: binding,
                     isShowingHTML: binding,
+                    isShowingDate: binding,
+                    isShowingFileInfo: binding,
                     overlayViewType: bindingOverlay
         )
     }

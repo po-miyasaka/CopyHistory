@@ -52,7 +52,13 @@ class PasteboardService {
         }
         pasteBoard.declareTypes([type, .string], owner: nil)
         pasteBoard.writeObjects([item])
+    }
 
+    func applyTransformed(_ text: String) {
+        let item = NSPasteboardItem()
+        item.setString(text, forType: .string)
+        pasteBoard.declareTypes([.string], owner: nil)
+        pasteBoard.writeObjects([item])
     }
 
     @objc func timerLoop() {
