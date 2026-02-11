@@ -4,6 +4,7 @@ struct TransformActionsBar: View {
     let item: CopiedItem
     let onTransform: (TransformAction) -> Void
     @ObservedObject var customStore = CustomTransformStore.shared
+    @ObservedObject var usageTracker = TransformUsageTracker.shared
     @State private var showQRPopover = false
     @State private var qrImage: NSImage?
 
@@ -11,20 +12,22 @@ struct TransformActionsBar: View {
         item.rawString != nil && !(item.rawString?.isEmpty ?? true)
     }
 
+    private var sortedActions: [TransformAction] {
+        let builtIn = TransformAction.allBuiltIn
+        let custom = customStore.transforms.map { TransformAction.custom($0) }
+        return usageTracker.sorted(builtIn + custom)
+    }
+
     var body: some View {
         if hasTextContent {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 4) {
-                    ForEach(TransformAction.allBuiltIn) { action in
+                    ForEach(sortedActions) { action in
                         if action == .showQRCode {
                             qrCodeButton()
                         } else {
                             transformButton(action)
                         }
-                    }
-
-                    ForEach(customStore.transforms.map { TransformAction.custom($0) }) { action in
-                        transformButton(action)
                     }
                 }
                 .padding(.horizontal, 8)
@@ -44,7 +47,10 @@ struct TransformActionsBar: View {
     }
 
     private func transformButton(_ action: TransformAction) -> some View {
-        Button(action: { onTransform(action) }) {
+        Button(action: {
+            usageTracker.recordUsage(action)
+            onTransform(action)
+        }) {
             Label(action.displayName, systemImage: action.iconName)
                 .font(.caption2)
                 .lineLimit(1)
@@ -55,6 +61,7 @@ struct TransformActionsBar: View {
 
     private func qrCodeButton() -> some View {
         Button(action: {
+            usageTracker.recordUsage(.showQRCode)
             guard let rawString = item.rawString else { return }
             qrImage = TextTransformer.generateQRCode(from: rawString)
             showQRPopover = qrImage != nil

@@ -87,3 +87,27 @@ struct CustomTransform: Identifiable, Hashable, Codable {
     var pattern: String
     var replacement: String
 }
+
+final class TransformUsageTracker: ObservableObject {
+    static let shared = TransformUsageTracker()
+    @Published private(set) var recentActionIDs: [String] = []
+
+    private init() {}
+
+    func recordUsage(_ action: TransformAction) {
+        recentActionIDs.removeAll { $0 == action.id }
+        recentActionIDs.insert(action.id, at: 0)
+    }
+
+    func sorted(_ actions: [TransformAction]) -> [TransformAction] {
+        guard !recentActionIDs.isEmpty else { return actions }
+        return actions.sorted { a, b in
+            let indexA = recentActionIDs.firstIndex(of: a.id) ?? Int.max
+            let indexB = recentActionIDs.firstIndex(of: b.id) ?? Int.max
+            if indexA == indexB {
+                return false
+            }
+            return indexA < indexB
+        }
+    }
+}
