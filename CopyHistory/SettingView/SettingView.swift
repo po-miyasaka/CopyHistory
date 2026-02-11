@@ -14,6 +14,7 @@ struct SettingView: View {
     @Binding var isExpanded: Bool
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
+    @Binding var isShowingDate: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
 
     var body: some View {
@@ -26,6 +27,8 @@ struct SettingView: View {
                 Toggle("Show items as RTF", isOn: $isShowingRTF)
                 Divider()
                 Toggle("Show items as HTML", isOn: $isShowingHTML)
+                Divider()
+                Toggle("Show saved date", isOn: $isShowingDate)
                 Divider()
             }
 
@@ -95,6 +98,7 @@ struct SettingView_Previews: PreviewProvider {
                     isExpanded: binding,
                     isShowingRTF: binding,
                     isShowingHTML: binding,
+                    isShowingDate: binding,
                     overlayViewType: bindingOverlay
         )
     }

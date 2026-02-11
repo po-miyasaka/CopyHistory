@@ -94,7 +94,8 @@ extension MainView {
                         },
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
-                            isShowingHTML: $isShowingHTML)
+                            isShowingHTML: $isShowingHTML,
+                            isShowingDate: $isShowingDate)
                         .id(item.dataHash)
                         
                         //                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
@@ -149,9 +150,17 @@ struct Row: View, Equatable {
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
+    @Binding var isShowingDate: Bool
     @State var memo: String
     @State private var thumbnailImage: NSImage?
     var itemAction: (MainView.ItemAction) -> Void
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.locale = Locale.current
+        return formatter
+    }()
 
     private var isImageType: Bool {
         guard let type = item.contentTypeString else { return false }
@@ -164,7 +173,8 @@ struct Row: View, Equatable {
          itemAction: @escaping (MainView.ItemAction) -> Void,
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
-         isShowingHTML: Binding<Bool>) {
+         isShowingHTML: Binding<Bool>,
+         isShowingDate: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
         self.isFocused = isFocused
@@ -172,6 +182,7 @@ struct Row: View, Equatable {
         _isExpanded = isExpanded
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
+        _isShowingDate = isShowingDate
         memo = item.memo ?? ""
     }
 
@@ -179,6 +190,7 @@ struct Row: View, Equatable {
         HStack(spacing: 0) {
             if isFocused {
                 Color.mainAccent.frame(width: 5)
+                    .padding(.trailing, 4)
                 KeyboardCommandButtons(
                     action: {
                         self.memoFocusState = true
@@ -234,6 +246,11 @@ struct Row: View, Equatable {
                     VStack(alignment: .trailing) {
                         Text(item.contentTypeString ?? "").font(.caption)
                         Text("\(item.binarySizeString)").font(.caption)
+                        if isShowingDate, let date = item.updateDate {
+                            Text(Self.dateFormatter.string(from: date))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
 
                     TextField("", text: $memo)
@@ -282,7 +299,8 @@ struct Row: View, Equatable {
         lhs.favorite == rhs.favorite &&
         lhs.isExpanded == rhs.isExpanded &&
         lhs.isShowingRTF == rhs.isShowingRTF &&
-        lhs.isShowingHTML == rhs.isShowingHTML
+        lhs.isShowingHTML == rhs.isShowingHTML &&
+        lhs.isShowingDate == rhs.isShowingDate
     }
 }
 

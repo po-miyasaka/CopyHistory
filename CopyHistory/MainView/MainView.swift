@@ -25,6 +25,7 @@ struct MainView: View {
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
+    @AppStorage("isShowingDate") var isShowingDate: Bool = false
 
     @State var itemAction: ItemAction?
 
