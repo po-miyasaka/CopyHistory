@@ -40,6 +40,7 @@ struct MainView: View {
         let item: CopiedItem
         let action: Action
     }
+    
 
     var body: some View {
         VStack {

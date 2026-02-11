@@ -176,91 +176,92 @@ struct Row: View, Equatable {
     }
 
     var body: some View {
-        VStack {
-            HStack {
-                if isFocused {
-                    Color.mainAccent.frame(width: 5, alignment: .leading)
-                    KeyboardCommandButtons(
-                        action: {
-                            self.memoFocusState = true
-                        },
-                        keys: [.init(main: "i", sub: .command)]
-                    )
-                }
-
-                Button(action: {
-                    itemAction(.init(item: item, action: .select))
-                }, label: {
-
-                    ZStack {
-                        Color.mainViewBackground.opacity(0.1)
-
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Group {
-                                    if isImageType {
-                                        if let thumbnailImage {
-                                            Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: 300)
-                                        } else {
-                                            ProgressView()
-                                                .frame(maxHeight: 300)
-                                        }
-                                    } else if isShowingRTF, let attributedString = item.attributeString {
-                                        Text(AttributedString(attributedString))
-
-                                    } else if isShowingHTML, let attributedString = item.htmlString {
-                                        Text(AttributedString(attributedString))
-                                    } else if let url = item.fileURL {
-                                        FileImageView(url: url)
-                                    } else {
-                                        Text(item.name ?? "No Name").font(.callout)
-                                    }
-                                }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
-
-                                Spacer()
-                            }
-                            if !memo.isEmpty {
-                                Text(memo)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .lineLimit(1)
-                                    .padding(.bottom, 4)
-                            }
-                        }
-                    }
-                })
-
-                VStack(alignment: .trailing) {
-                    Text(item.contentTypeString ?? "").font(.caption)
-                    Text("\(item.binarySizeString)").font(.caption)
-                }
-
-                TextField("", text: $memo)
-                    .focused($memoFocusState)
-                    .onSubmit({
-                        itemAction(.init(item: item, action: .memoEdited(memo)))
-                    }).frame(width: 26)
-
-                Button(action: {
-                    itemAction(.init(item: item, action: .favorite))
-                }, label: {
-                    Image(systemName: favorite ? "star.fill" : "star")
-                        .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                        .frame(width: 30, height: 44)
-                        .contentShape(RoundedRectangle(cornerRadius: 20))
-                })
-
-                Button(action: {
-                    itemAction(.init(item: item, action: .delete))
-                }, label: {
-                    Image(systemName: "trash.fill").foregroundColor(.secondary)
-                })
-
+        HStack(spacing: 0) {
+            if isFocused {
+                Color.mainAccent.frame(width: 5)
+                KeyboardCommandButtons(
+                    action: {
+                        self.memoFocusState = true
+                    },
+                    keys: [.init(main: "i", sub: .command)]
+                )
             }
 
-            if isFocused && !isImageType {
-                TransformActionsBar(item: item) { transformAction in
-                    itemAction(.init(item: item, action: .transform(transformAction)))
+            VStack(spacing: 0) {
+                HStack {
+                    Button(action: {
+                        itemAction(.init(item: item, action: .select))
+                    }, label: {
+
+                        ZStack {
+                            Color.mainViewBackground.opacity(0.1)
+
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Group {
+                                        if isImageType {
+                                            if let thumbnailImage {
+                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: 300)
+                                            } else {
+                                                ProgressView()
+                                                    .frame(maxHeight: 300)
+                                            }
+                                        } else if isShowingRTF, let attributedString = item.attributeString {
+                                            Text(AttributedString(attributedString))
+
+                                        } else if isShowingHTML, let attributedString = item.htmlString {
+                                            Text(AttributedString(attributedString))
+                                        } else if let url = item.fileURL {
+                                            FileImageView(url: url)
+                                        } else {
+                                            Text(item.name ?? "No Name").font(.callout)
+                                        }
+                                    }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
+
+                                    Spacer()
+                                }
+                                if !memo.isEmpty {
+                                    Text(memo)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                        .lineLimit(1)
+                                        .padding(.bottom, 4)
+                                }
+                            }
+                        }
+                    })
+
+                    VStack(alignment: .trailing) {
+                        Text(item.contentTypeString ?? "").font(.caption)
+                        Text("\(item.binarySizeString)").font(.caption)
+                    }
+
+                    TextField("", text: $memo)
+                        .focused($memoFocusState)
+                        .onSubmit({
+                            itemAction(.init(item: item, action: .memoEdited(memo)))
+                        }).frame(width: 26)
+
+                    Button(action: {
+                        itemAction(.init(item: item, action: .favorite))
+                    }, label: {
+                        Image(systemName: favorite ? "star.fill" : "star")
+                            .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                            .frame(width: 30, height: 44)
+                            .contentShape(RoundedRectangle(cornerRadius: 20))
+                    })
+
+                    Button(action: {
+                        itemAction(.init(item: item, action: .delete))
+                    }, label: {
+                        Image(systemName: "trash.fill").foregroundColor(.secondary)
+                    })
+                }
+
+                if isFocused && !isImageType {
+                    TransformActionsBar(item: item) { transformAction in
+                        itemAction(.init(item: item, action: .transform(transformAction)))
+                    }
                 }
             }
         }
