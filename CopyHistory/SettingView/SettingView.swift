@@ -22,16 +22,22 @@ struct SettingView: View {
         VStack(alignment: .leading) {
             Group {
                 Toggle("Show keyboard shortcuts", isOn: $isShowingKeyboardShortcuts)
+                    .help("Show shortcut key hints on the main screen")
                 Divider()
                 Toggle("Expand cells", isOn: $isExpanded)
+                    .help("Show clipboard content in multiple lines instead of a single line")
                 Divider()
                 Toggle("Show items as RTF", isOn: $isShowingRTF)
+                    .help("Display Rich Text Format content with its original styling")
                 Divider()
                 Toggle("Show items as HTML", isOn: $isShowingHTML)
+                    .help("Display HTML content with its original styling")
                 Divider()
                 Toggle("Show saved date", isOn: $isShowingDate)
+                    .help("Display the date and time when each item was saved")
                 Divider()
                 Toggle("Show file type and size", isOn: $isShowingFileInfo)
+                    .help("Display the content type (e.g. plain-text, image) and data size for each item")
                 Divider()
             }
 

@@ -57,6 +57,7 @@ struct TransformActionsBar: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.small)
+        .help(action.helpText)
     }
 
     private func qrCodeButton() -> some View {
@@ -72,5 +73,6 @@ struct TransformActionsBar: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.small)
+        .help(TransformAction.showQRCode.helpText)
     }
 }

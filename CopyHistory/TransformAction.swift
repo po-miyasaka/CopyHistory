@@ -73,6 +73,25 @@ enum TransformAction: Identifiable, Hashable {
         }
     }
 
+    var helpText: String {
+        switch self {
+        case .jsonPretty: return "Format JSON with indentation for readability"
+        case .wrapJapaneseBrackets: return "Wrap text with Japanese brackets「」"
+        case .wrapDoubleQuotes: return "Wrap text with double quotes \"\""
+        case .numberCommaFormat: return "Format numbers with comma separators (e.g. 1,234,567)"
+        case .escapeNewlines: return "Replace line breaks with \\n"
+        case .urlEncode: return "Encode text for use in URLs (percent-encoding)"
+        case .urlDecode: return "Decode percent-encoded URL text back to readable text"
+        case .base64Encode: return "Encode text to Base64 format"
+        case .base64Decode: return "Decode Base64 text back to original text"
+        case .uppercase: return "Convert all characters to uppercase"
+        case .lowercase: return "Convert all characters to lowercase"
+        case .trimWhitespace: return "Remove leading and trailing whitespace and newlines"
+        case .showQRCode: return "Generate a QR code from the text"
+        case .custom(let t): return "Custom transform: \(t.pattern) → \(t.replacement)"
+        }
+    }
+
     static var allBuiltIn: [TransformAction] {
         [.jsonPretty, .wrapJapaneseBrackets, .wrapDoubleQuotes,
          .numberCommaFormat, .escapeNewlines, .urlEncode, .urlDecode,
