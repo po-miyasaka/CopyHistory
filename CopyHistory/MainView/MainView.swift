@@ -26,6 +26,7 @@ struct MainView: View {
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
     @AppStorage("isShowingDate") var isShowingDate: Bool = false
+    @AppStorage("isShowingFileInfo") var isShowingFileInfo: Bool = true
 
     @State var itemAction: ItemAction?
 

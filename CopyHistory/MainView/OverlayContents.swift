@@ -22,6 +22,7 @@ extension MainView {
                                     isShowingRTF: $isShowingRTF,
                                     isShowingHTML: $isShowingHTML,
                                     isShowingDate: $isShowingDate,
+                                    isShowingFileInfo: $isShowingFileInfo,
                                     overlayViewType: $overlayViewType
                         )
                     case .feedback:

@@ -15,6 +15,7 @@ struct SettingView: View {
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @Binding var isShowingDate: Bool
+    @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
 
     var body: some View {
@@ -29,6 +30,8 @@ struct SettingView: View {
                 Toggle("Show items as HTML", isOn: $isShowingHTML)
                 Divider()
                 Toggle("Show saved date", isOn: $isShowingDate)
+                Divider()
+                Toggle("Show file type and size", isOn: $isShowingFileInfo)
                 Divider()
             }
 
@@ -99,6 +102,7 @@ struct SettingView_Previews: PreviewProvider {
                     isShowingRTF: binding,
                     isShowingHTML: binding,
                     isShowingDate: binding,
+                    isShowingFileInfo: binding,
                     overlayViewType: bindingOverlay
         )
     }

@@ -95,7 +95,8 @@ extension MainView {
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML,
-                            isShowingDate: $isShowingDate)
+                            isShowingDate: $isShowingDate,
+                            isShowingFileInfo: $isShowingFileInfo)
                         .id(item.dataHash)
                         
                         //                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
@@ -151,6 +152,7 @@ struct Row: View, Equatable {
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @Binding var isShowingDate: Bool
+    @Binding var isShowingFileInfo: Bool
     @State var memo: String
     @State private var thumbnailImage: NSImage?
     var itemAction: (MainView.ItemAction) -> Void
@@ -174,7 +176,8 @@ struct Row: View, Equatable {
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
          isShowingHTML: Binding<Bool>,
-         isShowingDate: Binding<Bool>) {
+         isShowingDate: Binding<Bool>,
+         isShowingFileInfo: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
         self.isFocused = isFocused
@@ -183,6 +186,7 @@ struct Row: View, Equatable {
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
         _isShowingDate = isShowingDate
+        _isShowingFileInfo = isShowingFileInfo
         memo = item.memo ?? ""
     }
 
@@ -243,13 +247,17 @@ struct Row: View, Equatable {
                         }
                     })
 
-                    VStack(alignment: .trailing) {
-                        Text(item.contentTypeString ?? "").font(.caption)
-                        Text("\(item.binarySizeString)").font(.caption)
-                        if isShowingDate, let date = item.updateDate {
-                            Text(Self.dateFormatter.string(from: date))
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                    if isShowingFileInfo || isShowingDate {
+                        VStack(alignment: .trailing) {
+                            if isShowingFileInfo {
+                                Text(item.contentTypeString ?? "").font(.caption)
+                                Text("\(item.binarySizeString)").font(.caption)
+                            }
+                            if isShowingDate, let date = item.updateDate {
+                                Text(Self.dateFormatter.string(from: date))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
 
@@ -300,7 +308,8 @@ struct Row: View, Equatable {
         lhs.isExpanded == rhs.isExpanded &&
         lhs.isShowingRTF == rhs.isShowingRTF &&
         lhs.isShowingHTML == rhs.isShowingHTML &&
-        lhs.isShowingDate == rhs.isShowingDate
+        lhs.isShowingDate == rhs.isShowingDate &&
+        lhs.isShowingFileInfo == rhs.isShowingFileInfo
     }
 }
 
