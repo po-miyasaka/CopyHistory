@@ -25,7 +25,65 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = .init()
         disableUnneededWindow()
+        registerGlobalShortcut()
+    }
 
+    private func registerGlobalShortcut() {
+        NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            self?.handleKeyEvent(event)
+        }
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            if self?.handleKeyEvent(event) == true {
+                return nil
+            }
+            return event
+        }
+    }
+
+    @discardableResult
+    private func handleKeyEvent(_ event: NSEvent) -> Bool {
+        let requiredFlags: NSEvent.ModifierFlags = [.command, .control, .option]
+        guard event.modifierFlags.intersection(.deviceIndependentFlagsMask).contains(requiredFlags),
+              event.charactersIgnoringModifiers == "4"
+        else { return false }
+
+        saveClipboardImageToDesktop()
+        return true
+    }
+
+    private func saveClipboardImageToDesktop() {
+        let pasteboard = NSPasteboard.general
+
+        guard let image = NSImage(pasteboard: pasteboard) else {
+            NSSound.beep()
+            return
+        }
+
+        guard let tiffData = image.tiffRepresentation,
+              let bitmapRep = NSBitmapImageRep(data: tiffData),
+              let pngData = bitmapRep.representation(using: .png, properties: [:])
+        else {
+            NSSound.beep()
+            return
+        }
+
+        let fileName = UUID().uuidString + ".png"
+        guard let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else {
+            NSSound.beep()
+            return
+        }
+        let fileURL = desktopURL.appendingPathComponent(fileName)
+
+        do {
+            try pngData.write(to: fileURL)
+        } catch {
+            NSSound.beep()
+            return
+        }
+
+        PasteboardService.skipNextPasteboardChange = true
+        pasteboard.clearContents()
+        pasteboard.setString(fileURL.path, forType: .string)
     }
 
     func applicationDidBecomeActive(_: Notification) {
