@@ -279,25 +279,28 @@ struct Row: View, Equatable {
                             itemAction(.init(item: item, action: .memoEdited(memo)))
                         }).frame(width: 26)
 
-                    reminderButton()
-                        .visible(isFocused || reminderDate != nil)
+                    if isFocused || reminderDate != nil {
+                        reminderButton()
+                    }
 
-                    Button(action: {
-                        itemAction(.init(item: item, action: .favorite))
-                    }, label: {
-                        Image(systemName: favorite ? "star.fill" : "star")
-                            .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                            .frame(width: 30, height: 44)
-                            .contentShape(RoundedRectangle(cornerRadius: 20))
-                    })
-                    .visible(isFocused || favorite)
+                    if isFocused || favorite {
+                        Button(action: {
+                            itemAction(.init(item: item, action: .favorite))
+                        }, label: {
+                            Image(systemName: favorite ? "star.fill" : "star")
+                                .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                                .frame(width: 30, height: 44)
+                                .contentShape(RoundedRectangle(cornerRadius: 20))
+                        })
+                    }
 
-                    Button(action: {
-                        itemAction(.init(item: item, action: .delete))
-                    }, label: {
-                        Image(systemName: "trash.fill").foregroundColor(.secondary)
-                    })
-                    .visible(isFocused)
+                    if isFocused {
+                        Button(action: {
+                            itemAction(.init(item: item, action: .delete))
+                        }, label: {
+                            Image(systemName: "trash.fill").foregroundColor(.secondary)
+                        })
+                    }
                 }
 
                 if isFocused && isImageType {

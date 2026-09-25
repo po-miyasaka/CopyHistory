@@ -12,11 +12,3 @@ extension Color {
     static var mainAccent = Color("AccentColor")
 }
 
-
-extension View {
-    /// Hides the view without changing the layout, and makes it ignore clicks while hidden.
-    func visible(_ isVisible: Bool) -> some View {
-        opacity(isVisible ? 1 : 0)
-            .allowsHitTesting(isVisible)
-    }
-}
