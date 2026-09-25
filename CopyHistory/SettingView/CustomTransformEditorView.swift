@@ -16,6 +16,10 @@ private enum AIPrompt {
     (describe here)
     """
 
+    static var localized: String {
+        Bundle.main.preferredLocalizations.first == "ja" ? japanese : english
+    }
+
     static let japanese = """
     テキスト変換ツール用の JavaScript 関数を書いてください。
 
@@ -38,7 +42,7 @@ struct CustomTransformEditorView: View {
     @State private var testInput = ""
     @State private var testOutput: String?
     @State private var testFailed = false
-    @State private var copiedLabel: String?
+    @State private var isPromptCopied = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -55,13 +59,7 @@ struct CustomTransformEditorView: View {
                 Divider()
             }
 
-            Text("Ask an AI to write the script: copy a prompt, add what you want, and paste the code below.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            HStack {
-                promptButton("Copy AI prompt (English)", text: AIPrompt.english)
-                promptButton("Copy AI prompt (Japanese)", text: AIPrompt.japanese)
-            }
+            promptButton()
 
             Group {
                 TextField("Name", text: $newName)
@@ -93,15 +91,15 @@ struct CustomTransformEditorView: View {
         }
     }
 
-    private func promptButton(_ title: LocalizedStringKey, text: String) -> some View {
-        Button(title) {
+    private func promptButton() -> some View {
+        Button("Copy prompt for AI code generation") {
             NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(text, forType: .string)
+            NSPasteboard.general.setString(AIPrompt.localized, forType: .string)
             PasteboardService.skipNextPasteboardChange = true
-            copiedLabel = text
+            isPromptCopied = true
         }
         .overlay(alignment: .trailing) {
-            if copiedLabel == text {
+            if isPromptCopied {
                 Text("Copied!").font(.caption2).foregroundColor(.green).offset(x: 48)
             }
         }

@@ -655,42 +655,12 @@
         }
       }
     },
-    "Copy AI prompt (English)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AI用プロンプトをコピー (英語)"
-          }
-        }
-      }
-    },
-    "Copy AI prompt (Japanese)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AI用プロンプトをコピー (日本語)"
-          }
-        }
-      }
-    },
     "Copied!" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "コピーしました"
-          }
-        }
-      }
-    },
-    "Ask an AI to write the script: copy a prompt, add what you want, and paste the code below." : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AIにスクリプトを書いてもらえます。プロンプトをコピーし、やりたいことを追記して、出てきたコードを下に貼り付けてください。"
           }
         }
       }
@@ -731,6 +701,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "デフォルトに戻す"
+          }
+        }
+      }
+    },
+    "Copy prompt for AI code generation" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コード生成用AIプロンプトをコピー"
           }
         }
       }

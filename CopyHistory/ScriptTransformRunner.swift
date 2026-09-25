@@ -27,9 +27,6 @@ enum ScriptTransformRunner {
     static let timeout: TimeInterval = 2
 
     static let templateScript = """
-    // Receives the copied text and returns the new text.
-    // コピーしたテキストを受け取り、変換後のテキストを返します。
-    // Example / 例: "Hello" -> "Hello (5文字)"
     function transform(text) {
       const count = [...text].length;
       return text + " (" + count + "文字)";
