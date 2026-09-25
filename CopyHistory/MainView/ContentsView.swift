@@ -268,6 +268,16 @@ struct Row: View, Equatable {
                         if hovering { onHoverContent(index) }
                     }
 
+                    TextField("", text: $memo)
+                        .focused($memoFocusState)
+                        .onSubmit({
+                            itemAction(.init(item: item, action: .memoEdited(memo)))
+                        }).frame(width: 26)
+
+                    if !isFocused {
+                        statusButtons
+                    }
+
                     if isShowingFileInfo || isShowingDate || isShowingUpdatedDate {
                         VStack(alignment: .trailing) {
                             if isShowingFileInfo {
@@ -286,21 +296,13 @@ struct Row: View, Equatable {
                             }
                         }
                     }
-
-                    TextField("", text: $memo)
-                        .focused($memoFocusState)
-                        .onSubmit({
-                            itemAction(.init(item: item, action: .memoEdited(memo)))
-                        }).frame(width: 26)
-
-                    if !isFocused {
-                        statusButtons
-                    }
                 }
                 .padding(.vertical, Self.cellVerticalMargin)
 
                 if isFocused {
                     HStack(alignment: .top, spacing: 8) {
+                        actionButtons
+
                         Group {
                             if isImageType {
                                 saveImageButton
@@ -311,8 +313,6 @@ struct Row: View, Equatable {
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-
-                        actionButtons
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
