@@ -48,7 +48,8 @@ enum CSVImporter {
                 createdDate: formatter.date(from: value("saved_at")),
                 updateDate: formatter.date(from: value("updated_at")),
                 reminderDate: formatter.date(from: value("reminder_at")),
-                ocrText: value("ocr_text")
+                ocrText: value("ocr_text"),
+                imageCaption: value("image_caption")
             )
         }
         return .success(rows)

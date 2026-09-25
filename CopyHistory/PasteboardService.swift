@@ -20,23 +20,28 @@ class PasteboardService {
     private var createCopiedItem: (() -> CopiedItem?)
     private var getItem: ((String) -> CopiedItem?)
     private var saveItem: (() -> Void)
+    private var didCreateItem: ((CopiedItem) -> Void)
 
     private init(createCopiedItem: @escaping () -> CopiedItem?,
                  getItem: @escaping (String) -> CopiedItem?,
-                 saveItem: @escaping () -> Void) {
+                 saveItem: @escaping () -> Void,
+                 didCreateItem: @escaping (CopiedItem) -> Void) {
         self.createCopiedItem = createCopiedItem
         self.getItem = getItem
         self.saveItem = saveItem
+        self.didCreateItem = didCreateItem
     }
 
     static func build(
         createCopiedItem: @escaping () -> CopiedItem?,
         getItem: @escaping (String) -> CopiedItem?,
-        saveItem: @escaping () -> Void) -> PasteboardService {
+        saveItem: @escaping () -> Void,
+        didCreateItem: @escaping (CopiedItem) -> Void = { _ in }) -> PasteboardService {
             let pasteboardService = PasteboardService(
                 createCopiedItem: createCopiedItem,
                 getItem: getItem,
-                saveItem: saveItem)
+                saveItem: saveItem,
+                didCreateItem: didCreateItem)
             pasteboardService.timer.fire()
             return pasteboardService
         }
@@ -83,6 +88,7 @@ class PasteboardService {
                   pasteBoard.types?.contains(where: { $0.rawValue.contains("com.agilebits.onepassword") }) == false else { return }
 
             let dataHash = CryptoKit.SHA256.hash(data: data).description
+            var createdItem: CopiedItem?
 
             if let alreadySavedItem = getItem(dataHash) {
                 // Existing
@@ -102,9 +108,11 @@ class PasteboardService {
                     copiedItem.createdDate = now
                     copiedItem.updateDate = now
                     copiedItem.dataHash = dataHash
+                    createdItem = copiedItem
                 }
             }
             saveItem()
+            if let createdItem { didCreateItem(createdItem) }
         }
     }
 

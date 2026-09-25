@@ -61,7 +61,7 @@ class CopiedItemRepository {
     /// Every saved item (favorites included), newest first, without the binary payload.
     func fetchAllForExport() throws -> [CopiedItem] {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
-        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "memo", "name", "ocrText", "rawString", "reminderDate", "updateDate"]
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "imageCaption", "memo", "name", "ocrText", "rawString", "reminderDate", "updateDate"]
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updateDate", ascending: false)]
         return try coreDataService.fetch(fetchRequest)
     }
@@ -163,7 +163,7 @@ class CopiedItemRepository {
     private func makeCopiedItemsRequest(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, isShowingOnlyReminder: Bool = false, sort: ItemSort = ItemSort(), limit: Int? = nil) -> NSFetchRequest<CopiedItem> {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
         fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "dataHash", "favorite", "memo", "name", "ocrText", "rawString", "reminderDate", "textLength", "updateDate"]
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "dataHash", "favorite", "imageCaption", "memo", "name", "ocrText", "rawString", "reminderDate", "textLength", "updateDate"]
 
         var favoritePredicate: NSPredicate?
         if isShowingOnlyFavorite {
@@ -179,7 +179,7 @@ class CopiedItemRepository {
         }
         var textPredicate: NSPredicate?
         if let text = text, !text.isEmpty {
-            textPredicate = NSPredicate(format: "contentTypeString Contains[c] %@ OR rawString Contains[c] %@ OR name Contains[c] %@ OR memo Contains[c] %@ OR ocrText Contains[c] %@", arguments: getVaList([text, text, text, text, text]))
+            textPredicate = NSPredicate(format: "contentTypeString Contains[c] %@ OR rawString Contains[c] %@ OR name Contains[c] %@ OR memo Contains[c] %@ OR ocrText Contains[c] %@ OR imageCaption Contains[c] %@", arguments: getVaList([text, text, text, text, text, text]))
         }
 
         let predicate: NSPredicate? = NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, favoritePredicate, memoedPredicate, reminderPredicate].compactMap { $0 })

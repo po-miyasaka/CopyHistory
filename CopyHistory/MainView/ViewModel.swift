@@ -56,10 +56,14 @@ final class ViewModel: ObservableObject {
         self?.repository.getItem(hash: $0)
     }, saveItem: { [weak self] in
         self?.repository.update()
+    }, didCreateItem: { [weak self] item in
+        self?.describeNewImage(item)
     })
 
     private let repository = CopiedItemRepository()
 
+    private var captionQueue: [String] = []
+    private var captionTask: Task<Void, Never>?
     private var ocrTask: Task<Void, Never>?
     private var ocrRerunRequested = false
 
@@ -152,6 +156,25 @@ final class ViewModel: ObservableObject {
         pasteboardService.applyTransformed(transformed)
         copiedItem.updateDate = Date()
         repository.update()
+    }
+
+    /// Describes a newly copied image (Japanese and English) so it can be found by what it shows.
+    /// Only new images are described; a declined image just gets no description.
+    private func describeNewImage(_ item: CopiedItem) {
+        guard item.isImage, ImageCaptionService.isAvailable, let hash = item.dataHash else { return }
+        captionQueue.append(hash)
+        guard captionTask == nil else { return }
+        captionTask = Task(priority: .utility) { [weak self] in
+            while let self, !Task.isCancelled, !self.captionQueue.isEmpty {
+                let hash = self.captionQueue.removeFirst()
+                guard let item = self.repository.getItem(hash: hash), item.imageCaption == nil, let data = item.content else { continue }
+                let caption = await ImageCaptionService.describe(data)
+                // An empty string marks the image as handled so it is never described again.
+                item.imageCaption = caption ?? ""
+                self.repository.update()
+            }
+            self?.captionTask = nil
+        }
     }
 
     /// Reads the text of images that have not been read yet, one at a time in the background, so it can be searched.

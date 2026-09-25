@@ -33,6 +33,7 @@
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
 		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
+		E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000CA02 /* ImageCaptionService.swift */; };
 		E5C0DE00000000000000OA01 /* OCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000OA02 /* OCRService.swift */; };
 		E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000TA02 /* TranslationService.swift */; };
 		E5C0DE00000000000000AA21 /* AIFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA22 /* AIFilterView.swift */; };
@@ -68,6 +69,7 @@
 		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		D5A5573E29DC2EA400FF69C7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
+		E5C0DE0000000000000000E4 /* Model8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model8.xcdatamodel; sourceTree = "<group>"; };
 		E5C0DE0000000000000000E3 /* Model7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model7.xcdatamodel; sourceTree = "<group>"; };
 		E5C0DE0000000000000000E2 /* Model6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model6.xcdatamodel; sourceTree = "<group>"; };
 		E5C0DE0000000000000000E1 /* Model5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model5.xcdatamodel; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000CA02 /* ImageCaptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptionService.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000OA02 /* OCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRService.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000TA02 /* TranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationService.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000AA22 /* AIFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFilterView.swift; sourceTree = "<group>"; };
@@ -135,6 +138,7 @@
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
 				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
+				E5C0DE00000000000000CA02 /* ImageCaptionService.swift */,
 				E5C0DE00000000000000OA02 /* OCRService.swift */,
 				E5C0DE00000000000000TA02 /* TranslationService.swift */,
 				E5C0DE00000000000000AA22 /* AIFilterView.swift */,
@@ -280,6 +284,7 @@
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
 				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
+				E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */,
 				E5C0DE00000000000000OA01 /* OCRService.swift in Sources */,
 				E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */,
 				E5C0DE00000000000000AA21 /* AIFilterView.swift in Sources */,
@@ -523,6 +528,7 @@
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				E5C0DE0000000000000000E4 /* Model8.xcdatamodel */,
 				E5C0DE0000000000000000E3 /* Model7.xcdatamodel */,
 				E5C0DE0000000000000000E2 /* Model6.xcdatamodel */,
 				E5C0DE0000000000000000E1 /* Model5.xcdatamodel */,
@@ -531,7 +537,7 @@
 				CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */,
 				CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */,
 			);
-			currentVersion = E5C0DE0000000000000000E3 /* Model7.xcdatamodel */;
+			currentVersion = E5C0DE0000000000000000E4 /* Model8.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

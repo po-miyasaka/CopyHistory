@@ -11,6 +11,7 @@ struct CSVExportRow: Equatable {
     let updateDate: Date?
     let reminderDate: Date?
     let ocrText: String
+    var imageCaption: String = ""
     /// Only written by the AI filter export: true when the model could not judge the item.
     var isUnjudged = false
 }
@@ -27,13 +28,14 @@ extension CSVExportRow {
             createdDate: item.createdDate,
             updateDate: item.updateDate,
             reminderDate: item.reminderDate,
-            ocrText: item.ocrText ?? ""
+            ocrText: item.ocrText ?? "",
+            imageCaption: item.imageCaption ?? ""
         )
     }
 }
 
 enum CSVExporter {
-    static let header = ["name", "content_type", "text", "memo", "favorite", "size_bytes", "saved_at", "updated_at", "reminder_at", "ocr_text"]
+    static let header = ["name", "content_type", "text", "memo", "favorite", "size_bytes", "saved_at", "updated_at", "reminder_at", "ocr_text", "image_caption"]
 
     /// RFC 4180 CSV with a UTF-8 BOM so spreadsheet apps detect the encoding.
     static let unjudgedHeader = "could_not_judge"
@@ -57,7 +59,8 @@ enum CSVExporter {
                 row.createdDate.map(formatter.string(from:)) ?? "",
                 row.updateDate.map(formatter.string(from:)) ?? "",
                 row.reminderDate.map(formatter.string(from:)) ?? "",
-                row.ocrText
+                row.ocrText,
+                row.imageCaption
             ] + (includesUnjudged ? [row.isUnjudged ? unjudgedMark : ""] : [])
         }
         return "\u{FEFF}" + lines.map { $0.map(escape).joined(separator: ",") }.joined(separator: "\r\n") + "\r\n"
