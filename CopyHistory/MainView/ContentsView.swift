@@ -167,6 +167,13 @@ struct Row: View, Equatable {
         return formatter
     }()
 
+    private static let minRowHeight: CGFloat = 44
+
+    /// Collapsed rows keep images within the same height as a one-line text row.
+    private var imageMaxHeight: CGFloat {
+        isExpanded ? 300 : Self.minRowHeight - 16
+    }
+
     private var isImageType: Bool {
         guard let type = item.contentTypeString else { return false }
         return type.contains("image") || type.contains("png") || type.contains("jpeg") || type.contains("tiff") || type.contains("gif") || type.contains("bmp")
@@ -222,10 +229,10 @@ struct Row: View, Equatable {
                                     Group {
                                         if isImageType {
                                             if let thumbnailImage {
-                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: 300)
+                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: imageMaxHeight)
                                             } else {
                                                 ProgressView()
-                                                    .frame(maxHeight: 300)
+                                                    .frame(maxHeight: imageMaxHeight)
                                             }
                                         } else if isShowingRTF, let attributedString = item.attributeString {
                                             Text(AttributedString(attributedString))
@@ -250,6 +257,7 @@ struct Row: View, Equatable {
                                 }
                             }
                         }
+                        .frame(minHeight: Self.minRowHeight)
                     })
 
                     if isShowingFileInfo || isShowingDate {
