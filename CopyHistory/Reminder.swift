@@ -13,7 +13,11 @@ enum ReminderService {
     private static var center: UNUserNotificationCenter { .current() }
 
     static func schedule(id: String, body: String, at date: Date) async throws {
-        guard try await center.requestAuthorization(options: [.alert, .sound]) else {
+        do {
+            guard try await center.requestAuthorization(options: [.alert, .sound]) else {
+                throw ReminderError.notificationsDenied
+            }
+        } catch let error as UNError where error.code == .notificationsNotAllowed {
             throw ReminderError.notificationsDenied
         }
         let content = UNMutableNotificationContent()
@@ -23,7 +27,11 @@ enum ReminderService {
 
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-        try await center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+        do {
+            try await center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+        } catch let error as UNError where error.code == .notificationsNotAllowed {
+            throw ReminderError.notificationsDenied
+        }
     }
 
     static func cancel(ids: [String]) {
