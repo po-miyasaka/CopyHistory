@@ -23,6 +23,12 @@ struct SettingView: View {
     let onImportCSV: () -> Void
 
     var body: some View {
+        ScrollView {
+            content
+        }
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: 12) {
             Group {
                 Toggle("Show keyboard shortcuts", isOn: $isShowingKeyboardShortcuts)
