@@ -75,7 +75,9 @@ struct MainView: View {
             case .favorite:
                 viewModel.toggleFavorite(actionItem.item)
             case .saveImageToDesktop:
-                viewModel.saveImageToDesktop(actionItem.item)
+                // Present the save panel after this view update finishes, like the CSV export button does.
+                let item = actionItem.item
+                DispatchQueue.main.async { viewModel.saveImageToDesktop(item) }
             case .reminder(let date):
                 viewModel.setReminder(actionItem.item, date: date)
             }
