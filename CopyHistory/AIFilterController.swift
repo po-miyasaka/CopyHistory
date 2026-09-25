@@ -5,9 +5,15 @@ struct JudgeCandidate: Equatable {
     let text: String
 }
 
+struct JudgeOutcome: Equatable, Sendable {
+    /// Candidates that match the criterion.
+    let matchedIDs: Set<String>
+    /// Candidates that could not be judged (they are retried later and never cached).
+    let failedIDs: Set<String>
+}
+
 protocol ItemJudge: Sendable {
-    /// Returns the ids of the candidates that match the criterion.
-    func matches(criterion: String, in candidates: [JudgeCandidate]) async throws -> Set<String>
+    func judge(criterion: String, candidates: [JudgeCandidate]) async throws -> JudgeOutcome
 }
 
 /// Filters items by a free-form criterion, judged in small batches by an `ItemJudge`.
@@ -99,13 +105,14 @@ final class AIFilterController: ObservableObject {
             for batch in batches {
                 guard !Task.isCancelled else { return }
                 do {
-                    let matched = try await judge.matches(criterion: criterion, in: batch)
+                    let outcome = try await judge.judge(criterion: criterion, candidates: batch)
                     guard !Task.isCancelled, let self else { return }
                     var updated = self.verdicts
-                    for candidate in batch {
-                        updated[Self.key(criterion, candidate.id)] = matched.contains(candidate.id)
+                    for candidate in batch where !outcome.failedIDs.contains(candidate.id) {
+                        updated[Self.key(criterion, candidate.id)] = outcome.matchedIDs.contains(candidate.id)
                     }
                     self.verdicts = updated
+                    self.failedCount += outcome.failedIDs.count
                 } catch is CancellationError {
                     return
                 } catch {
