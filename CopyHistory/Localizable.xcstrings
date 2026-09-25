@@ -1265,6 +1265,26 @@
         }
       }
     },
+    "Translating…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳中…"
+          }
+        }
+      }
+    },
+    "Can't translate on this Mac. Clicking opens %@ in your browser." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac では翻訳できません。クリックすると、ブラウザで%@を開きます。"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {
