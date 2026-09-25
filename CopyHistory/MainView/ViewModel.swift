@@ -66,8 +66,9 @@ final class ViewModel: ObservableObject {
     let aiFilter = AIFilterController(makeJudge: { AIFilterAvailability.makeDefaultJudge() })
     @Published private(set) var aiPool: [CopiedItem] = []
 
-    static let aiFilterLimitKey = "aiFilterLimit"
-    static let aiFilterLimitDefault = 200
+    /// How many matches the AI filter returns at most; judging stops once this many are found.
+    static let aiFilterLimitKey = "aiFilterResultLimit"
+    static let aiFilterLimitDefault = 50
 
     private var aiFilterLimit: Int {
         let stored = UserDefaults.standard.integer(forKey: Self.aiFilterLimitKey)
@@ -77,9 +78,10 @@ final class ViewModel: ObservableObject {
     /// What the list shows: every match of the AI filter while it is on, otherwise the regular list.
     var visibleItems: [CopiedItem] {
         guard aiFilter.isActive else { return copiedItems }
-        return aiPool.filter { item in
+        let matches = aiPool.filter { item in
             !item.isDeleted && item.managedObjectContext != nil && (item.dataHash.map(aiFilter.isMatch) ?? false)
         }
+        return Array(matches.prefix(aiFilter.limit))
     }
     private var cancellables: [AnyCancellable] = []
 
@@ -190,7 +192,7 @@ final class ViewModel: ObservableObject {
     func applyAIFilter(_ query: String) {
         guard let pool = fetchAIPool() else { return }
         aiPool = pool
-        aiFilter.apply(query: query, candidates: pool.compactMap(\.judgeCandidate))
+        aiFilter.apply(query: query, candidates: pool.compactMap(\.judgeCandidate), limit: aiFilterLimit)
     }
 
     func clearAIFilter() {
@@ -201,7 +203,7 @@ final class ViewModel: ObservableObject {
     private func refreshAIPool() {
         guard aiFilter.isActive, let pool = fetchAIPool() else { return }
         aiPool = pool
-        aiFilter.refresh(candidates: pool.compactMap(\.judgeCandidate))
+        aiFilter.refresh(candidates: pool.compactMap(\.judgeCandidate), limit: aiFilterLimit)
     }
 
     private func fetchAIPool() -> [CopiedItem]? {
@@ -211,8 +213,7 @@ final class ViewModel: ObservableObject {
                 isShowingOnlyFavorite: isShowingOnlyFavorite,
                 isShowingOnlyMemoed: isShowingOnlyMemoed,
                 isShowingOnlyReminder: isShowingOnlyReminder,
-                sort: sort,
-                limit: aiFilterLimit
+                sort: sort
             )
         } catch {
             NSLog("Failed to load items for the AI filter: \(error)")

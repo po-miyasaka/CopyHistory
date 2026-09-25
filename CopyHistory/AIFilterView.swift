@@ -80,13 +80,14 @@ private struct AIFilterPopover: View {
 
             if let progress = controller.progress {
                 VStack(alignment: .leading, spacing: 4) {
-                    ProgressView(value: Double(progress.done), total: Double(max(progress.total, 1)))
-                    Text("\(progress.done)/\(progress.total) · \(matchCount)")
+                    ProgressView(value: min(max(Double(progress.done) / Double(max(progress.total, 1)),
+                                            Double(matchCount) / Double(max(controller.limit, 1))), 1))
+                    Text("Checked \(progress.done)/\(progress.total) · Found \(matchCount)/\(controller.limit)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             } else if controller.isActive {
-                Text(controller.isStopped ? "Stopped · \(matchCount)" : "Done · \(matchCount)")
+                Text(statusText)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -113,6 +114,11 @@ private struct AIFilterPopover: View {
         }
         .padding(16)
         .frame(width: 340)
+    }
+
+    private var statusText: LocalizedStringKey {
+        if controller.isStopped { return "Stopped · \(matchCount)" }
+        return controller.reachedLimit ? "Reached the limit · \(matchCount)" : "Done · \(matchCount)"
     }
 
     private func apply() {

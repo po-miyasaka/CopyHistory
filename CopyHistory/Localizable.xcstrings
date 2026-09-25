@@ -1025,16 +1025,6 @@
         }
       }
     },
-    "%lld/%lld · %lld" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld/%2$lld · %3$lld件"
-          }
-        }
-      }
-    },
     "Stopped · %lld" : {
       "localizations" : {
         "ja" : {
@@ -1071,16 +1061,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CSVで書き出し…"
-          }
-        }
-      }
-    },
-    "AI filter: max items to judge" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AI絞り込み: 判定する最大件数"
           }
         }
       }
@@ -1181,6 +1161,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "画像の中に文字が見つかりませんでした。"
+          }
+        }
+      }
+    },
+    "Checked %lld/%lld · Found %lld/%lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定 %1$lld/%2$lld · 該当 %3$lld/%4$lld"
+          }
+        }
+      }
+    },
+    "Reached the limit · %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上限に達しました · %lld件"
+          }
+        }
+      }
+    },
+    "AI filter: max results" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI絞り込み: 取得する最大件数"
           }
         }
       }

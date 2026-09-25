@@ -77,9 +77,9 @@ struct SettingView: View {
             Divider()
 
             if AIFilterAvailability.isAvailable {
-                Stepper(value: $aiFilterLimit, in: 50...2000, step: 50) {
+                Stepper(value: $aiFilterLimit, in: 10...500, step: 10) {
                     HStack {
-                        Text("AI filter: max items to judge")
+                        Text("AI filter: max results")
                         Spacer()
                         Text("\(aiFilterLimit)").monospacedDigit()
                     }
