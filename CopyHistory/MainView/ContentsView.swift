@@ -145,6 +145,7 @@ struct Row: View, Equatable {
     let reminderDate: Date?
     let isFocused: Bool
     @State private var isShowingReminderPopover = false
+    @State private var isShowingStatusReminderPopover = false
     @FocusState var memoFocusState: Bool
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
@@ -268,9 +269,7 @@ struct Row: View, Equatable {
                         if hovering { onHoverContent(index) }
                     }
 
-                    if !isFocused {
-                        statusButtons
-                    }
+                    statusButtons
 
                     TextField("", text: $memo)
                         .focused($memoFocusState)
@@ -341,11 +340,11 @@ struct Row: View, Equatable {
         return reminderDate < Date() ? Color.red : Color.mainAccent
     }
 
-    /// Favorite and reminder stay visible (and clickable) while the row is not focused.
+    /// Favorite and reminder markers stay visible (and clickable) whether or not the row is focused.
     private var statusButtons: some View {
         HStack(spacing: 4) {
             if reminderDate != nil {
-                reminderButton()
+                reminderButton(isPresented: $isShowingStatusReminderPopover)
             }
             if favorite {
                 favoriteButton
@@ -378,7 +377,7 @@ struct Row: View, Equatable {
 
     private var actionButtons: some View {
         HStack(spacing: 4) {
-            reminderButton()
+            reminderButton(isPresented: $isShowingReminderPopover)
 
             favoriteButton
 
@@ -393,9 +392,9 @@ struct Row: View, Equatable {
         }
     }
 
-    private func reminderButton() -> some View {
+    private func reminderButton(isPresented: Binding<Bool>) -> some View {
         Button(action: {
-            isShowingReminderPopover = true
+            isPresented.wrappedValue = true
         }, label: {
             VStack(spacing: 0) {
                 Image(systemName: reminderDate == nil ? "clock" : "clock.fill")
@@ -407,15 +406,15 @@ struct Row: View, Equatable {
             .frame(minWidth: 30, minHeight: 28)
             .contentShape(Rectangle())
         })
-        .popover(isPresented: $isShowingReminderPopover) {
+        .popover(isPresented: isPresented) {
             ReminderPopoverView(
                 current: reminderDate,
                 onSet: { date in
-                    isShowingReminderPopover = false
+                    isPresented.wrappedValue = false
                     itemAction(.init(item: item, action: .reminder(date)))
                 },
                 onClear: {
-                    isShowingReminderPopover = false
+                    isPresented.wrappedValue = false
                     itemAction(.init(item: item, action: .reminder(nil)))
                 }
             )
