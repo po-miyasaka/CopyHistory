@@ -63,8 +63,8 @@ struct CustomTransformEditorView: View {
             }
 
             HStack {
-                Button("Add action", action: store.add)
-                Button("Copy prompt for AI code generation", action: copyPrompt)
+                Button("Add custom action", action: store.add)
+                Button("Copy AI prompt for custom action code generation", action: copyPrompt)
                 if isPromptCopied {
                     Text("Copied!").font(.caption).foregroundColor(.green)
                 }

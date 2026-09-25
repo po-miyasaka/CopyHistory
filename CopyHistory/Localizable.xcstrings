@@ -635,12 +635,12 @@
         }
       }
     },
-    "Copy prompt for AI code generation" : {
+    "Copy AI prompt for custom action code generation" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "コード生成用AIプロンプトをコピー"
+            "value" : "カスタムアクション用コード生成のAIプロンプトコピー"
           }
         }
       }
@@ -945,12 +945,12 @@
         }
       }
     },
-    "Add action" : {
+    "Add custom action" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アクションを追加"
+            "value" : "カスタムアクションを追加"
           }
         }
       }
