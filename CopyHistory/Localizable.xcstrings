@@ -885,12 +885,12 @@
         }
       }
     },
-    "Save to Desktop" : {
+    "Save to Desktop…" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "デスクトップに保存"
+            "value" : "デスクトップに保存…"
           }
         }
       }
@@ -911,16 +911,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "画像を読み込めませんでした。"
-          }
-        }
-      }
-    },
-    "The Desktop folder could not be found." : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "デスクトップフォルダが見つかりませんでした。"
           }
         }
       }

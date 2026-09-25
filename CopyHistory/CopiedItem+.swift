@@ -10,12 +10,10 @@ import AppKit
 
 enum ImageSaveError: LocalizedError {
     case unreadableImage
-    case desktopNotFound
 
     var errorDescription: String? {
         switch self {
         case .unreadableImage: return String(localized: "The image could not be read.")
-        case .desktopNotFound: return String(localized: "The Desktop folder could not be found.")
         }
     }
 }

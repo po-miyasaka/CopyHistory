@@ -155,11 +155,13 @@ final class ViewModel: ObservableObject {
     func saveImageToDesktop(_ copiedItem: CopiedItem) {
         do {
             guard let png = copiedItem.imagePNGData else { throw ImageSaveError.unreadableImage }
-            guard let desktop = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else {
-                throw ImageSaveError.desktopNotFound
-            }
-            try png.write(to: availableImageURL(in: desktop), options: .atomic)
-            NSSound(named: "Glass")?.play()
+            let panel = NSSavePanel()
+            panel.allowedContentTypes = [.png]
+            panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).png"
+            panel.directoryURL = Self.realDesktopURL
+            NSApp.activate(ignoringOtherApps: true)
+            guard panel.runModal() == .OK, let url = panel.url else { return }
+            try png.write(to: url, options: .atomic)
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to save the image")
@@ -167,15 +169,10 @@ final class ViewModel: ObservableObject {
         }
     }
 
-    private func availableImageURL(in directory: URL) -> URL {
-        let base = "CopyHistory-\(Self.exportDateFormatter.string(from: Date()))"
-        var url = directory.appendingPathComponent("\(base).png")
-        var suffix = 2
-        while FileManager.default.fileExists(atPath: url.path) {
-            url = directory.appendingPathComponent("\(base)-\(suffix).png")
-            suffix += 1
-        }
-        return url
+    /// Inside the sandbox `.desktopDirectory` points into the app container, so resolve the real home instead.
+    private static var realDesktopURL: URL? {
+        guard let entry = getpwuid(getuid()), let home = entry.pointee.pw_dir else { return nil }
+        return URL(fileURLWithPath: String(cString: home)).appendingPathComponent("Desktop")
     }
 
     func delete(_ copiedItem: CopiedItem) {

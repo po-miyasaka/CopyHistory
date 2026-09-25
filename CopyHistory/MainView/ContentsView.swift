@@ -302,7 +302,7 @@ struct Row: View, Equatable {
                         Button(action: {
                             itemAction(.init(item: item, action: .saveImageToDesktop))
                         }, label: {
-                            Label("Save to Desktop", systemImage: "square.and.arrow.down")
+                            Label("Save to Desktop…", systemImage: "square.and.arrow.down")
                                 .font(.caption2)
                                 .lineLimit(1)
                         })
