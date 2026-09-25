@@ -37,9 +37,9 @@ enum CSVExporter {
 
     /// RFC 4180 CSV with a UTF-8 BOM so spreadsheet apps detect the encoding.
     static let unjudgedHeader = "could_not_judge"
-    static let unjudgedMark = "○"
+    static let unjudgedMark = "×"
 
-    /// With `includesUnjudged`, an extra last column holds ○ for items the AI filter could not judge and stays empty otherwise.
+    /// With `includesUnjudged`, an extra last column holds × for items the AI filter could not judge and stays empty otherwise.
     static func makeCSV(rows: [CSVExportRow], includesUnjudged: Bool = false, timeZone: TimeZone = .current) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
