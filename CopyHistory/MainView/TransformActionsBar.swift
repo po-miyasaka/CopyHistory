@@ -18,20 +18,18 @@ struct TransformActionsBar: View {
         return usageTracker.sorted(builtIn + custom)
     }
 
+    private let columns = [GridItem(.adaptive(minimum: 84), spacing: 4, alignment: .leading)]
+
     var body: some View {
         if hasTextContent {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 4) {
-                    ForEach(sortedActions) { action in
-                        if action == .showQRCode {
-                            qrCodeButton()
-                        } else {
-                            transformButton(action)
-                        }
+            LazyVGrid(columns: columns, alignment: .leading, spacing: 4) {
+                ForEach(sortedActions) { action in
+                    if action == .showQRCode {
+                        qrCodeButton()
+                    } else {
+                        transformButton(action)
                     }
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 2)
             }
             .popover(isPresented: $showQRPopover) {
                 if let qrImage {
@@ -54,6 +52,7 @@ struct TransformActionsBar: View {
             Label(action.displayName, systemImage: action.iconName)
                 .font(.caption2)
                 .lineLimit(1)
+                .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
         .controlSize(.small)
@@ -70,6 +69,7 @@ struct TransformActionsBar: View {
             Label(TransformAction.showQRCode.displayName, systemImage: TransformAction.showQRCode.iconName)
                 .font(.caption2)
                 .lineLimit(1)
+                .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
         .controlSize(.small)

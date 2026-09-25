@@ -165,7 +165,7 @@ struct Row: View, Equatable {
 
     /// Collapsed rows keep images within the same height as a one-line text row.
     private var imageMaxHeight: CGFloat {
-        isExpanded ? 300 : Self.minRowHeight - 16
+        isExpanded || isFocused ? 300 : Self.minRowHeight - 16
     }
 
     private var isImageType: Bool {
@@ -286,51 +286,28 @@ struct Row: View, Equatable {
                             itemAction(.init(item: item, action: .memoEdited(memo)))
                         }).frame(width: 26)
 
-                    if isFocused || reminderDate != nil {
-                        reminderButton()
-                    }
-
-                    if isFocused || favorite {
-                        Button(action: {
-                            itemAction(.init(item: item, action: .favorite))
-                        }, label: {
-                            Image(systemName: favorite ? "star.fill" : "star")
-                                .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                                .frame(width: 30, height: 44)
-                                .contentShape(RoundedRectangle(cornerRadius: 20))
-                        })
-                    }
-
-                    if isFocused {
-                        Button(action: {
-                            itemAction(.init(item: item, action: .delete))
-                        }, label: {
-                            Image(systemName: "trash.fill").foregroundColor(.secondary)
-                        })
+                    if !isFocused {
+                        statusIndicators
                     }
                 }
 
-                if isFocused && isImageType {
-                    HStack {
-                        Button(action: {
-                            itemAction(.init(item: item, action: .saveImageToDesktop))
-                        }, label: {
-                            Label("Save to Desktop…", systemImage: "square.and.arrow.down")
-                                .font(.caption2)
-                                .lineLimit(1)
-                        })
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                        Spacer()
+                if isFocused {
+                    HStack(alignment: .top, spacing: 8) {
+                        Group {
+                            if isImageType {
+                                saveImageButton
+                            } else {
+                                TransformActionsBar(item: item) { transformAction in
+                                    itemAction(.init(item: item, action: .transform(transformAction)))
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        actionButtons
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
-                }
-
-                if isFocused && !isImageType {
-                    TransformActionsBar(item: item) { transformAction in
-                        itemAction(.init(item: item, action: .transform(transformAction)))
-                    }
                 }
             }
         }
@@ -350,9 +327,65 @@ struct Row: View, Equatable {
         return formatter
     }()
 
+    private var reminderColor: Color {
+        guard let reminderDate else { return Color.primary }
+        return reminderDate < Date() ? Color.red : Color.mainAccent
+    }
+
+    /// Read-only markers shown while the row is not focused, so favorites and reminders stay visible.
+    private var statusIndicators: some View {
+        HStack(spacing: 6) {
+            if let reminderDate {
+                HStack(spacing: 2) {
+                    Image(systemName: "clock.fill")
+                    Text(Self.reminderFormatter.string(from: reminderDate)).font(.caption2)
+                }
+                .foregroundColor(reminderColor)
+            }
+            if favorite {
+                Image(systemName: "star.fill").foregroundColor(Color.mainAccent)
+            }
+        }
+    }
+
+    private var saveImageButton: some View {
+        Button(action: {
+            itemAction(.init(item: item, action: .saveImageToDesktop))
+        }, label: {
+            Label("Save to Desktop…", systemImage: "square.and.arrow.down")
+                .font(.caption2)
+                .lineLimit(1)
+        })
+        .buttonStyle(.bordered)
+        .controlSize(.small)
+    }
+
+    private var actionButtons: some View {
+        HStack(spacing: 4) {
+            reminderButton()
+
+            Button(action: {
+                itemAction(.init(item: item, action: .favorite))
+            }, label: {
+                Image(systemName: favorite ? "star.fill" : "star")
+                    .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                    .frame(width: 30, height: 28)
+                    .contentShape(Rectangle())
+            })
+
+            Button(action: {
+                itemAction(.init(item: item, action: .delete))
+            }, label: {
+                Image(systemName: "trash.fill")
+                    .foregroundColor(.secondary)
+                    .frame(width: 30, height: 28)
+                    .contentShape(Rectangle())
+            })
+        }
+    }
+
     private func reminderButton() -> some View {
-        let isOverdue = reminderDate.map { $0 < Date() } ?? false
-        return Button(action: {
+        Button(action: {
             isShowingReminderPopover = true
         }, label: {
             VStack(spacing: 0) {
@@ -361,8 +394,8 @@ struct Row: View, Equatable {
                     Text(Self.reminderFormatter.string(from: reminderDate)).font(.caption2)
                 }
             }
-            .foregroundColor(reminderDate == nil ? Color.primary : (isOverdue ? Color.red : Color.mainAccent))
-            .frame(minWidth: 30, minHeight: 44)
+            .foregroundColor(reminderColor)
+            .frame(minWidth: 30, minHeight: 28)
             .contentShape(Rectangle())
         })
         .popover(isPresented: $isShowingReminderPopover) {
