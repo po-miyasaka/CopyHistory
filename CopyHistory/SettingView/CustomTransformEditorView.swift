@@ -39,9 +39,6 @@ struct CustomTransformEditorView: View {
     @ObservedObject var store = CustomTransformStore.shared
     @State private var newName = ""
     @State private var newScript = ScriptTransformRunner.templateScript
-    @State private var testInput = ""
-    @State private var testOutput: String?
-    @State private var testFailed = false
     @State private var isPromptCopied = false
 
     var body: some View {
@@ -68,23 +65,13 @@ struct CustomTransformEditorView: View {
                     .font(.system(.caption, design: .monospaced))
                     .frame(height: 110)
                     .border(Color.secondary.opacity(0.3))
-                TextField("Test input", text: $testInput)
                 HStack {
-                    Button("Test", action: runTest)
                     Button("Reset to default") {
                         newScript = ScriptTransformRunner.templateScript
-                        testOutput = nil
                     }
                     .disabled(newScript == ScriptTransformRunner.templateScript)
                     Button("Add", action: add)
                         .disabled(newName.isEmpty || newScript.isEmpty)
-                }
-                if let testOutput {
-                    Text("Result:").font(.caption)
-                    Text(testOutput)
-                        .font(.system(.caption, design: .monospaced))
-                        .foregroundColor(testFailed ? .red : .primary)
-                        .textSelection(.enabled)
                 }
             }
             .textFieldStyle(.roundedBorder)
@@ -114,17 +101,5 @@ struct CustomTransformEditorView: View {
         store.add(CustomTransform(name: newName, script: newScript))
         newName = ""
         newScript = ScriptTransformRunner.templateScript
-        testOutput = nil
-    }
-
-    private func runTest() {
-        switch ScriptTransformRunner.run(script: newScript, input: testInput) {
-        case .success(let output):
-            testFailed = false
-            testOutput = output
-        case .failure(let error):
-            testFailed = true
-            testOutput = error.localizedDescription
-        }
     }
 }

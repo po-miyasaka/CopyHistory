@@ -625,36 +625,6 @@
         }
       }
     },
-    "Test input" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "テスト入力"
-          }
-        }
-      }
-    },
-    "Test" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "テスト"
-          }
-        }
-      }
-    },
-    "Result:" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "結果:"
-          }
-        }
-      }
-    },
     "Copied!" : {
       "localizations" : {
         "ja" : {
