@@ -61,7 +61,7 @@ class CopiedItemRepository {
     /// Every saved item (favorites included), newest first, without the binary payload.
     func fetchAllForExport() throws -> [CopiedItem] {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
-        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "memo", "name", "rawString", "reminderDate", "updateDate"]
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "memo", "name", "ocrText", "rawString", "reminderDate", "updateDate"]
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updateDate", ascending: false)]
         return try coreDataService.fetch(fetchRequest)
     }

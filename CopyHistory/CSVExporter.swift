@@ -10,6 +10,7 @@ struct CSVExportRow: Equatable {
     let createdDate: Date?
     let updateDate: Date?
     let reminderDate: Date?
+    let ocrText: String
 }
 
 extension CSVExportRow {
@@ -23,13 +24,14 @@ extension CSVExportRow {
             binarySize: item.binarySize,
             createdDate: item.createdDate,
             updateDate: item.updateDate,
-            reminderDate: item.reminderDate
+            reminderDate: item.reminderDate,
+            ocrText: item.ocrText ?? ""
         )
     }
 }
 
 enum CSVExporter {
-    static let header = ["name", "content_type", "text", "memo", "favorite", "size_bytes", "saved_at", "updated_at", "reminder_at"]
+    static let header = ["name", "content_type", "text", "memo", "favorite", "size_bytes", "saved_at", "updated_at", "reminder_at", "ocr_text"]
 
     /// RFC 4180 CSV with a UTF-8 BOM so spreadsheet apps detect the encoding.
     static func makeCSV(rows: [CSVExportRow], timeZone: TimeZone = .current) -> String {
@@ -48,7 +50,8 @@ enum CSVExporter {
                 String(row.binarySize),
                 row.createdDate.map(formatter.string(from:)) ?? "",
                 row.updateDate.map(formatter.string(from:)) ?? "",
-                row.reminderDate.map(formatter.string(from:)) ?? ""
+                row.reminderDate.map(formatter.string(from:)) ?? "",
+                row.ocrText
             ]
         }
         return "\u{FEFF}" + lines.map { $0.map(escape).joined(separator: ",") }.joined(separator: "\r\n") + "\r\n"
