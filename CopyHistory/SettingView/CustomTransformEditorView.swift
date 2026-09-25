@@ -37,44 +37,21 @@ private enum AIPrompt {
 
 struct CustomTransformEditorView: View {
     @ObservedObject var store = CustomTransformStore.shared
-    @State private var newName = ""
-    @State private var newScript = ScriptTransformRunner.templateScript
     @State private var isPromptCopied = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Custom Transforms (JavaScript)").font(.headline)
 
-            ForEach(store.transforms) { transform in
-                HStack {
-                    Text(transform.name).font(.callout)
-                    Spacer()
-                    Button(action: { remove(transform) }) {
-                        Image(systemName: "trash").foregroundColor(.secondary)
-                    }
-                }
-                Divider()
-            }
-
             promptButton()
 
-            Group {
-                TextField("Name", text: $newName)
-                Text("Script (define function transform(text))").font(.caption)
-                TextEditor(text: $newScript)
-                    .font(.system(.caption, design: .monospaced))
-                    .frame(height: 110)
-                    .border(Color.secondary.opacity(0.3))
-                HStack {
-                    Button("Reset to default") {
-                        newScript = ScriptTransformRunner.templateScript
-                    }
-                    .disabled(newScript == ScriptTransformRunner.templateScript)
-                    Button("Add", action: add)
-                        .disabled(newName.isEmpty || newScript.isEmpty)
-                }
-            }
-            .textFieldStyle(.roundedBorder)
+            TextEditor(text: $store.script)
+                .font(.system(.caption, design: .monospaced))
+                .frame(height: 110)
+                .border(Color.secondary.opacity(0.3))
+
+            Button("Reset to default", action: store.resetToDefault)
+                .disabled(store.script == ScriptTransformRunner.templateScript)
         }
     }
 
@@ -90,16 +67,5 @@ struct CustomTransformEditorView: View {
                 Text("Copied!").font(.caption2).foregroundColor(.green).offset(x: 48)
             }
         }
-    }
-
-    private func remove(_ transform: CustomTransform) {
-        guard let index = store.transforms.firstIndex(where: { $0.id == transform.id }) else { return }
-        store.remove(at: IndexSet(integer: index))
-    }
-
-    private func add() {
-        store.add(CustomTransform(name: newName, script: newScript))
-        newName = ""
-        newScript = ScriptTransformRunner.templateScript
     }
 }

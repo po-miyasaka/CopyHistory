@@ -4,34 +4,23 @@ import Combine
 final class CustomTransformStore: ObservableObject {
     static let shared = CustomTransformStore()
 
-    private static let userDefaultsKey = "customScriptTransforms"
+    private static let userDefaultsKey = "customTransformScript"
+    private static let actionID = "custom"
 
-    @Published var transforms: [CustomTransform] = [] {
-        didSet { save() }
+    @Published var script: String {
+        didSet { UserDefaults.standard.set(script, forKey: Self.userDefaultsKey) }
+    }
+
+    var transforms: [CustomTransform] {
+        guard !script.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return [] }
+        return [CustomTransform(id: Self.actionID, name: "Custom", script: script)]
     }
 
     private init() {
-        load()
+        script = UserDefaults.standard.string(forKey: Self.userDefaultsKey) ?? ScriptTransformRunner.templateScript
     }
 
-    func add(_ transform: CustomTransform) {
-        transforms.append(transform)
-    }
-
-    func remove(at offsets: IndexSet) {
-        transforms.remove(atOffsets: offsets)
-    }
-
-    private func load() {
-        guard let data = UserDefaults.standard.data(forKey: Self.userDefaultsKey),
-              let decoded = try? JSONDecoder().decode([CustomTransform].self, from: data)
-        else { return }
-        transforms = decoded
-    }
-
-    private func save() {
-        guard let data = try? JSONEncoder().encode(transforms)
-        else { return }
-        UserDefaults.standard.set(data, forKey: Self.userDefaultsKey)
+    func resetToDefault() {
+        script = ScriptTransformRunner.templateScript
     }
 }

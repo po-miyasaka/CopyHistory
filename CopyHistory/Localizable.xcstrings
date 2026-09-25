@@ -65,16 +65,6 @@
         }
       }
     },
-    "Add" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "追加"
-          }
-        }
-      }
-    },
     "Cancel" : {
       "localizations" : {
         "ja" : {
@@ -311,16 +301,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "セルを縮小:"
-          }
-        }
-      }
-    },
-    "Name" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名前"
           }
         }
       }
@@ -611,16 +591,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "スクリプトの実行に時間がかかりすぎたため停止しました。"
-          }
-        }
-      }
-    },
-    "Script (define function transform(text))" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "スクリプト (function transform(text) を定義)"
           }
         }
       }
