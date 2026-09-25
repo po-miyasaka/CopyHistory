@@ -96,6 +96,29 @@ final class ViewModel: ObservableObject {
         repository.update()
     }
 
+    func exportCSV() {
+        do {
+            let rows = try repository.fetchAllForExport().map(CSVExportRow.init(item:))
+            let panel = NSSavePanel()
+            panel.allowedContentTypes = [.commaSeparatedText]
+            panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).csv"
+            NSApp.activate(ignoringOtherApps: true)
+            guard panel.runModal() == .OK, let url = panel.url else { return }
+            try CSVExporter.makeCSV(rows: rows).write(to: url, atomically: true, encoding: .utf8)
+        } catch {
+            let alert = NSAlert(error: error)
+            alert.messageText = String(localized: "Failed to export CSV")
+            alert.runModal()
+        }
+    }
+
+    private static let exportDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyyMMdd-HHmmss"
+        return formatter
+    }()
+
     func toggleFavorite(_ copiedItem: CopiedItem) {
         copiedItem.favorite.toggle()
         repository.update()

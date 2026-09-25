@@ -32,6 +32,7 @@
 		D5F00001AAAA000100000002 /* TextTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000002 /* TextTransformer.swift */; };
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
+		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
 		D5F00001AAAA000100000004 /* TransformActionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000004 /* TransformActionsBar.swift */; };
 		D5F00001AAAA000100000005 /* CustomTransformEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		D5F00001AAAA000000000002 /* TextTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTransformer.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
+		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000004 /* TransformActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformActionsBar.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformEditorView.swift; sourceTree = "<group>"; };
 		D5F00001CCCC000000000001 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				D5F00001AAAA000000000002 /* TextTransformer.swift */,
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
+				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
 				D5F00001CCCC000000000001 /* Localizable.xcstrings */,
 				D5A5573729DC1A4F00FF69C7 /* MainView */,
 				D5092C1629E12E1C0075A1D9 /* SettingView */,
@@ -249,6 +252,7 @@
 				D5F00001AAAA000100000002 /* TextTransformer.swift in Sources */,
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
+				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
 				D5F00001AAAA000100000004 /* TransformActionsBar.swift in Sources */,
 				D5F00001AAAA000100000005 /* CustomTransformEditorView.swift in Sources */,
 			);

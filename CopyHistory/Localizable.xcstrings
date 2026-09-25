@@ -695,6 +695,36 @@
         }
       }
     },
+    "Export all data as CSV…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのデータをCSVでエクスポート…"
+          }
+        }
+      }
+    },
+    "Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存したすべてのアイテム（テキスト、メモ、お気に入り、日時）をCSVファイルに保存します。画像などのバイナリデータは含まれません。"
+          }
+        }
+      }
+    },
+    "Failed to export CSV" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVのエクスポートに失敗しました"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

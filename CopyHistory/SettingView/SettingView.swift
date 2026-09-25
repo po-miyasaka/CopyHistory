@@ -17,6 +17,7 @@ struct SettingView: View {
     @Binding var isShowingDate: Bool
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
+    let onExportCSV: () -> Void
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -53,6 +54,11 @@ struct SettingView: View {
             Divider()
 
             CustomTransformEditorView()
+
+            Divider()
+
+            Button("Export all data as CSV…", action: onExportCSV)
+                .help("Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included.")
 
             Divider()
 
@@ -109,7 +115,8 @@ struct SettingView_Previews: PreviewProvider {
                     isShowingHTML: binding,
                     isShowingDate: binding,
                     isShowingFileInfo: binding,
-                    overlayViewType: bindingOverlay
+                    overlayViewType: bindingOverlay,
+                    onExportCSV: {}
         )
     }
 }

@@ -42,6 +42,10 @@ class CoreDataService {
         return .init(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
     }
 
+    func fetch<T: NSManagedObject>(_ request: NSFetchRequest<T>) throws -> [T] {
+        try container.viewContext.fetch(request)
+    }
+
     func create<T: NSManagedObject>(type: T.Type) -> T {
         type.init(context: container.viewContext)
     }
