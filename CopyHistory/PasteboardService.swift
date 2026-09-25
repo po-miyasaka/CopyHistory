@@ -63,7 +63,8 @@ class PasteboardService {
     }
 
     @objc func timerLoop() {
-        Task {
+        // Core Data's view context is bound to the main thread, so this work must not run on a background thread.
+        Task { @MainActor in
             if pasteBoard.changeCount == latestChangeCount { return } // If there is no change, do nothing.
 
             if Self.skipNextPasteboardChange {
