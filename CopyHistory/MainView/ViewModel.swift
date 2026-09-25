@@ -201,21 +201,33 @@ final class ViewModel: ObservableObject {
         }
     }
 
+    /// Copies the text found in the image, followed by "describing: <what the image shows>".
+    /// Missing text or description is produced on the spot, so images saved earlier work too.
     func copyImageText(_ copiedItem: CopiedItem) {
         Task {
-            var text = copiedItem.ocrText
-            if text == nil, let data = copiedItem.content {
-                text = await OCRService.recognizeText(in: data) ?? ""
-                copiedItem.ocrText = text
+            var recognized = copiedItem.ocrText
+            if recognized == nil, let data = copiedItem.content {
+                recognized = await OCRService.recognizeText(in: data) ?? ""
+                copiedItem.ocrText = recognized
                 repository.update()
             }
-            guard let text, !text.isEmpty else {
+            var described = copiedItem.imageCaption
+            if described == nil, ImageCaptionService.isAvailable, let data = copiedItem.content {
+                described = await ImageCaptionService.describe(data) ?? ""
+                copiedItem.imageCaption = described
+                repository.update()
+            }
+            let caption = described.flatMap { ImageCaptionService.caption(in: $0, japanese: ImageCaptionService.prefersJapanese) }
+            let parts = [recognized, caption.map { "describing: \($0)" }]
+                .compactMap { $0 }
+                .filter { !$0.isEmpty }
+            guard !parts.isEmpty else {
                 let alert = NSAlert()
                 alert.messageText = String(localized: "No text was found in the image.")
                 ModalPresenter.run(alert)
                 return
             }
-            pasteboardService.applyTransformed(text)
+            pasteboardService.applyTransformed(parts.joined(separator: "\n"))
             copiedItem.updateDate = Date()
             repository.update()
         }
