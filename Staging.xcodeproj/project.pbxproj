@@ -58,6 +58,7 @@
 		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		D5A5573E29DC2EA400FF69C7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
+		D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model4.xcdatamodel; sourceTree = "<group>"; };
 		D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model3.xcdatamodel; sourceTree = "<group>"; };
 		D5EDFC3C287BA72300B4507F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D5F00001AAAA000000000001 /* TransformAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformAction.swift; sourceTree = "<group>"; };
@@ -479,11 +480,12 @@
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */,
 				D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */,
 				CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */,
 				CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */,
 			);
-			currentVersion = D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */;
+			currentVersion = D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

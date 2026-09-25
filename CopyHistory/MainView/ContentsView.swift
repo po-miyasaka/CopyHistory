@@ -253,10 +253,17 @@ struct Row: View, Equatable {
                                 Text(item.contentTypeString ?? "").font(.caption)
                                 Text("\(item.binarySizeString)").font(.caption)
                             }
-                            if isShowingDate, let date = item.updateDate {
-                                Text(Self.dateFormatter.string(from: date))
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                            if isShowingDate {
+                                if let created = item.createdDate ?? item.updateDate {
+                                    Text("Saved: \(Self.dateFormatter.string(from: created))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                if let updated = item.updateDate {
+                                    Text("Updated: \(Self.dateFormatter.string(from: updated))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                     }
