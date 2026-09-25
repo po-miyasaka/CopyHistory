@@ -121,7 +121,7 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: MainView())
         self.popover = popover
-        FilePanelPin.suspendPopover = { [weak self] in
+        ModalPresenter.suspendPopover = { [weak self] in
             guard let self, self.popover?.isShown == true else { return {} }
             self.popover?.close()
             return { [weak self] in self?.show() }
@@ -165,11 +165,11 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
     }
 
     func popoverShouldClose(_: NSPopover) -> Bool {
-        !FilePanelPin.isPinned
+        !ModalPresenter.isPinned
     }
 
     func popoverDidClose(_: Notification) {
-        guard !FilePanelPin.isPinned else { return }
+        guard !ModalPresenter.isPinned else { return }
         NSApplication.shared.hide(nil) // this code make previous app activate back.
 
     }
@@ -180,23 +180,36 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
 
 }
 
-/// File panels and the popover fight over the front: an open popover covers the panel, and closing it the
-/// usual way hides the whole app. So the popover is closed on purpose while a panel is up, without hiding the
-/// app, and shown again once the panel is dismissed.
-enum FilePanelPin {
+/// Modal windows (file panels, alerts) and the popover fight over the front: an open popover covers them, and
+/// closing it the usual way hides the whole app. So the popover is closed on purpose while a modal window is up,
+/// without hiding the app, and shown again once it is dismissed.
+enum ModalPresenter {
     static var isPinned = false
     /// Closes the popover if it is showing and returns a closure that shows it again.
     static var suspendPopover: (() -> () -> Void)?
 
     @MainActor
     static func run(_ panel: NSSavePanel) -> NSApplication.ModalResponse {
+        present { panel.runModal() }
+    }
+
+    @discardableResult @MainActor
+    static func run(_ alert: NSAlert) -> NSApplication.ModalResponse {
+        present {
+            NSApp.activate(ignoringOtherApps: true)
+            return alert.runModal()
+        }
+    }
+
+    @MainActor
+    private static func present(_ body: () -> NSApplication.ModalResponse) -> NSApplication.ModalResponse {
         isPinned = true
         let resume = suspendPopover?() ?? {}
         defer {
             isPinned = false
             resume()
         }
-        return panel.runModal()
+        return body()
     }
 }
 

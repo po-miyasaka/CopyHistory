@@ -115,12 +115,12 @@ final class ViewModel: ObservableObject {
             panel.allowedContentTypes = [.commaSeparatedText]
             panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).csv"
             NSApp.activate(ignoringOtherApps: true)
-            guard FilePanelPin.run(panel) == .OK, let url = panel.url else { return }
+            guard ModalPresenter.run(panel) == .OK, let url = panel.url else { return }
             try CSVExporter.makeCSV(rows: rows).write(to: url, atomically: true, encoding: .utf8)
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to export CSV")
-            alert.runModal()
+            ModalPresenter.run(alert)
         }
     }
 
@@ -160,12 +160,12 @@ final class ViewModel: ObservableObject {
             panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).png"
             panel.directoryURL = Self.realDesktopURL
             NSApp.activate(ignoringOtherApps: true)
-            guard FilePanelPin.run(panel) == .OK, let url = panel.url else { return }
+            guard ModalPresenter.run(panel) == .OK, let url = panel.url else { return }
             try png.write(to: url, options: .atomic)
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to save the image")
-            alert.runModal()
+            ModalPresenter.run(alert)
         }
     }
 
@@ -198,8 +198,22 @@ final class ViewModel: ObservableObject {
                 try await ReminderService.schedule(id: dataHash, body: body, at: date)
             } catch {
                 NSLog("Failed to schedule reminder: \(error)")
-                if reportsFailure { NSAlert(error: error).runModal() }
+                if reportsFailure { presentReminderFailure(error) }
             }
+        }
+    }
+
+    private func presentReminderFailure(_ error: Error) {
+        let alert = NSAlert(error: error)
+        let isDenied = (error as? ReminderError) != nil
+        if isDenied {
+            alert.addButton(withTitle: String(localized: "Open System Settings"))
+            alert.addButton(withTitle: String(localized: "OK"))
+        }
+        let response = ModalPresenter.run(alert)
+        if isDenied, response == .alertFirstButtonReturn,
+           let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension") {
+            NSWorkspace.shared.open(url)
         }
     }
 
@@ -208,18 +222,18 @@ final class ViewModel: ObservableObject {
         panel.allowedContentTypes = [.commaSeparatedText]
         panel.allowsMultipleSelection = false
         NSApp.activate(ignoringOtherApps: true)
-        guard FilePanelPin.run(panel) == .OK, let url = panel.url else { return }
+        guard ModalPresenter.run(panel) == .OK, let url = panel.url else { return }
 
         do {
             let rows = try CSVImporter.parse(String(contentsOf: url, encoding: .utf8)).get()
             let imported = importRows(rows)
             let alert = NSAlert()
             alert.messageText = String(localized: "Imported \(imported) items, skipped \(rows.count - imported) duplicates or empty rows.")
-            alert.runModal()
+            ModalPresenter.run(alert)
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to import CSV")
-            alert.runModal()
+            ModalPresenter.run(alert)
         }
     }
 
