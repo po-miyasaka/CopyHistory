@@ -14,9 +14,7 @@ struct AIFilterButton: View {
             Button(action: { isPresented = true }, label: {
                 HStack(spacing: 4) {
                     Image(systemName: "sparkles")
-                    if controller.isActive {
-                        Text(label).font(.caption).lineLimit(1)
-                    }
+                    Text(label).font(.caption).lineLimit(1)
                 }
                 .foregroundColor(controller.isActive ? Color.mainAccent : Color.primary)
             })
@@ -47,9 +45,11 @@ struct AIFilterButton: View {
     }
 
     private var label: String {
-        let query = String(controller.query.prefix(16))
-        guard let progress = controller.progress else { return query }
-        return "\(query) \(progress.done)/\(progress.total)"
+        let title = String(localized: "AI Filter")
+        guard controller.isActive else { return title }
+        let query = String(controller.query.prefix(12))
+        guard let progress = controller.progress else { return "\(title): \(query)" }
+        return "\(title): \(query) \(progress.done)/\(progress.total)"
     }
 }
 
