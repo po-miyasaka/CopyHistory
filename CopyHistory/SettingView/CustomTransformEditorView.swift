@@ -73,6 +73,11 @@ struct CustomTransformEditorView: View {
                 TextField("Test input", text: $testInput)
                 HStack {
                     Button("Test", action: runTest)
+                    Button("Reset to default") {
+                        newScript = ScriptTransformRunner.templateScript
+                        testOutput = nil
+                    }
+                    .disabled(newScript == ScriptTransformRunner.templateScript)
                     Button("Add", action: add)
                         .disabled(newName.isEmpty || newScript.isEmpty)
                 }
