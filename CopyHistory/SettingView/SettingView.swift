@@ -78,7 +78,7 @@ struct SettingView: View {
             Divider()
 
             HStack {
-                Text("Web translator (when this Mac can't translate)")
+                Text("Web translator")
                 Spacer()
                 Picker("", selection: $webTranslator) {
                     ForEach(WebTranslator.Service.allCases) { service in

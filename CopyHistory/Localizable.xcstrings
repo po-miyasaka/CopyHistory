@@ -1065,16 +1065,6 @@
         }
       }
     },
-    "Translate the text into your language (or English if it is already in your language)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "テキストを自分の言語に翻訳します（すでに自分の言語なら、英語に翻訳します）"
-          }
-        }
-      }
-    },
     "Failed to translate" : {
       "localizations" : {
         "ja" : {
@@ -1255,16 +1245,6 @@
         }
       }
     },
-    "Web translator (when this Mac can't translate)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ウェブ翻訳（この Mac で翻訳できないとき）"
-          }
-        }
-      }
-    },
     "Translating…" : {
       "localizations" : {
         "ja" : {
@@ -1281,6 +1261,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "この Mac では翻訳できません。クリックすると、ブラウザで%@を開きます。"
+          }
+        }
+      }
+    },
+    "Web translator" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウェブ翻訳"
+          }
+        }
+      }
+    },
+    "Translate the text into your language (or English if it is already in your language) and open the web translator" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストを自分の言語に翻訳して、ウェブ翻訳も開きます（すでに自分の言語なら、英語に翻訳します）"
+          }
+        }
+      }
+    },
+    "Click to copy this and open %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリックで、これをコピーして、%@を開きます"
           }
         }
       }

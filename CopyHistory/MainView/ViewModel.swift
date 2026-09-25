@@ -280,31 +280,34 @@ final class ViewModel: ObservableObject {
         exportCSV(rows: rows, includesUnjudged: true, baseName: "CopyHistory-filtered")
     }
 
+    /// Opens the web translator with the text, and puts the on-device translation on the clipboard
+    /// (or the original text when this Mac cannot translate it, so it can be pasted).
     private func translate(_ copiedItem: CopiedItem) {
         guard let rawString = copiedItem.rawString, !rawString.isEmpty else { return }
+
+        let languages = WebTranslator.languages(for: rawString)
+        if let source = languages.source, source == languages.target {
+            let alert = NSAlert()
+            alert.messageText = String(localized: "Failed to translate")
+            alert.informativeText = String(localized: "This text is already in your language.")
+            ModalPresenter.run(alert)
+            return
+        }
+        if let url = WebTranslator.url(for: WebTranslator.preferred, text: rawString, source: languages.source, target: languages.target) {
+            NSWorkspace.shared.open(url)
+        }
+
         Task {
             do {
                 let translated = try await TranslationService.translate(rawString)
                 pasteboardService.applyTransformed(translated)
-                copiedItem.updateDate = Date()
-                repository.update()
-            } catch let error as TranslationError where error.isAboutTheText {
-                let alert = NSAlert(error: error)
-                alert.messageText = String(localized: "Failed to translate")
-                ModalPresenter.run(alert)
             } catch {
-                // Not translatable on this Mac: open the web translator with the text ready to paste.
-                NSLog("On-device translation failed, opening the web translator: \(error)")
-                openWebTranslator(for: rawString)
+                NSLog("On-device translation failed, the web translator is open instead: \(error)")
+                pasteboardService.applyTransformed(rawString)
             }
+            copiedItem.updateDate = Date()
+            repository.update()
         }
-    }
-
-    private func openWebTranslator(for text: String) {
-        let languages = WebTranslator.languages(for: text)
-        guard let url = WebTranslator.url(for: WebTranslator.preferred, text: text, source: languages.source, target: languages.target) else { return }
-        pasteboardService.applyTransformed(text)
-        NSWorkspace.shared.open(url)
     }
 
     func exportCSV() {

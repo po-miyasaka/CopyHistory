@@ -69,11 +69,12 @@ final class TranslationPreview: ObservableObject {
     var tooltip: String {
         switch state {
         case .idle:
-            return String(localized: "Translate the text into your language (or English if it is already in your language)")
+            return String(localized: "Translate the text into your language (or English if it is already in your language) and open the web translator")
         case .loading:
             return String(localized: "Translating…")
         case .translated(let text):
-            return String(text.prefix(Self.maxTooltipCharacters))
+            let hint = String(localized: "Click to copy this and open \(webTranslatorName())")
+            return String(text.prefix(Self.maxTooltipCharacters)) + "\n\n" + hint
         case .notNeeded(let message):
             return message
         case .webFallback:

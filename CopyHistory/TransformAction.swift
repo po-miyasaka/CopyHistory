@@ -96,7 +96,7 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "Convert all characters to lowercase"
         case .trimWhitespace: return "Remove leading and trailing whitespace and newlines"
         case .showQRCode: return "Generate a QR code from the text"
-        case .translate: return "Translate the text into your language (or English if it is already in your language)"
+        case .translate: return "Translate the text into your language (or English if it is already in your language) and open the web translator"
         case .openInBrowser: return "Open the link in your browser"
         case .custom: return "Run a custom JavaScript transform"
         }
