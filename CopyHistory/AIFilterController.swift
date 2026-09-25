@@ -40,12 +40,15 @@ final class AIFilterController: ObservableObject {
     @Published private(set) var lastFailureReason: String?
     /// Items that could not be judged. They are shown as if they matched: missing a match is worse than showing an extra item.
     @Published private(set) var uncertainKeys: Set<String> = []
+    /// Whether unjudged items are shown (and counted toward the limit) as tentative matches.
+    @Published private(set) var includesUncertain = true
     /// True after the user stopped a run: judging does not resume on its own until the criterion is applied again.
     @Published private(set) var isStopped = false
     @Published private(set) var verdicts: [String: Bool] = [:]
 
     private let makeJudge: () -> ItemJudge?
     private var task: Task<Void, Never>?
+    private var lastCandidates: [JudgeCandidate] = []
 
     init(makeJudge: @escaping () -> ItemJudge?) {
         self.makeJudge = makeJudge
@@ -58,7 +61,24 @@ final class AIFilterController: ObservableObject {
 
     func isMatch(id: String) -> Bool {
         let key = Self.key(query, id)
-        return verdicts[key] == true || uncertainKeys.contains(key)
+        return verdicts[key] == true || (includesUncertain && uncertainKeys.contains(key))
+    }
+
+    /// True for an item that could not be judged (regardless of whether it is currently shown).
+    func isUncertain(id: String) -> Bool {
+        uncertainKeys.contains(Self.key(query, id))
+    }
+
+    func setIncludesUncertain(_ value: Bool, limit: Int) {
+        guard value != includesUncertain else { return }
+        includesUncertain = value
+        guard isActive else { return }
+        if isStopped {
+            matchCount = Self.countMatches(in: lastCandidates, verdicts: verdicts, uncertain: uncertainKeys, includesUncertain: value, criterion: query)
+        } else {
+            self.limit = max(limit, 1)
+            judgePending(lastCandidates)
+        }
     }
 
     func apply(query: String, candidates: [JudgeCandidate], limit: Int) {
@@ -105,11 +125,12 @@ final class AIFilterController: ObservableObject {
 
     private func judgePending(_ candidates: [JudgeCandidate]) {
         task?.cancel()
+        lastCandidates = candidates
         let criterion = query
         let limit = self.limit
         let pendingTotal = candidates.filter { verdicts[Self.key(criterion, $0.id)] == nil }.count
-        matchCount = Self.countMatches(in: candidates, verdicts: verdicts, uncertain: uncertainKeys, criterion: criterion)
-        guard !Self.nextBatch(in: candidates, verdicts: verdicts, uncertain: uncertainKeys, skipped: [], criterion: criterion, limit: limit).isEmpty else {
+        matchCount = Self.countMatches(in: candidates, verdicts: verdicts, uncertain: uncertainKeys, includesUncertain: includesUncertain, criterion: criterion)
+        guard !Self.nextBatch(in: candidates, verdicts: verdicts, uncertain: uncertainKeys, includesUncertain: includesUncertain, skipped: [], criterion: criterion, limit: limit).isEmpty else {
             progress = nil
             return
         }
@@ -117,7 +138,7 @@ final class AIFilterController: ObservableObject {
             failedCount += pendingTotal
             lastFailureReason = String(localized: "The on-device model is not available.")
             uncertainKeys.formUnion(candidates.filter { verdicts[Self.key(criterion, $0.id)] == nil }.map { Self.key(criterion, $0.id) })
-            matchCount = Self.countMatches(in: candidates, verdicts: verdicts, uncertain: uncertainKeys, criterion: criterion)
+            matchCount = Self.countMatches(in: candidates, verdicts: verdicts, uncertain: uncertainKeys, includesUncertain: includesUncertain, criterion: criterion)
             progress = nil
             return
         }
@@ -128,8 +149,8 @@ final class AIFilterController: ObservableObject {
             var skipped = Set<String>() // items that failed in this run are not retried until the next one
             while !Task.isCancelled, let self {
                 let known = self.verdicts
-                self.matchCount = Self.countMatches(in: candidates, verdicts: known, uncertain: self.uncertainKeys, criterion: criterion)
-                let batch = Self.nextBatch(in: candidates, verdicts: known, uncertain: self.uncertainKeys, skipped: skipped, criterion: criterion, limit: limit)
+                self.matchCount = Self.countMatches(in: candidates, verdicts: known, uncertain: self.uncertainKeys, includesUncertain: self.includesUncertain, criterion: criterion)
+                let batch = Self.nextBatch(in: candidates, verdicts: known, uncertain: self.uncertainKeys, includesUncertain: self.includesUncertain, skipped: skipped, criterion: criterion, limit: limit)
                 if batch.isEmpty { break }
 
                 do {
@@ -162,7 +183,7 @@ final class AIFilterController: ObservableObject {
                 self.progress = Progress(done: done, total: pendingTotal)
             }
             guard !Task.isCancelled, let self else { return }
-            self.matchCount = Self.countMatches(in: candidates, verdicts: self.verdicts, uncertain: self.uncertainKeys, criterion: criterion)
+            self.matchCount = Self.countMatches(in: candidates, verdicts: self.verdicts, uncertain: self.uncertainKeys, includesUncertain: self.includesUncertain, criterion: criterion)
             self.progress = nil
         }
     }
@@ -172,6 +193,7 @@ final class AIFilterController: ObservableObject {
         in candidates: [JudgeCandidate],
         verdicts: [String: Bool],
         uncertain: Set<String>,
+        includesUncertain: Bool,
         skipped: Set<String>,
         criterion: String,
         limit: Int
@@ -186,7 +208,7 @@ final class AIFilterController: ObservableObject {
             case false?:
                 break
             case nil:
-                if uncertain.contains(key(criterion, candidate.id)) { matches += 1 }
+                if includesUncertain, uncertain.contains(key(criterion, candidate.id)) { matches += 1 }
                 guard !skipped.contains(candidate.id) else { continue }
                 batch.append(candidate)
                 if batch.count == batchSize { return batch }
@@ -195,10 +217,10 @@ final class AIFilterController: ObservableObject {
         return batch
     }
 
-    private static func countMatches(in candidates: [JudgeCandidate], verdicts: [String: Bool], uncertain: Set<String>, criterion: String) -> Int {
+    private static func countMatches(in candidates: [JudgeCandidate], verdicts: [String: Bool], uncertain: Set<String>, includesUncertain: Bool, criterion: String) -> Int {
         candidates.reduce(0) { count, candidate in
             let key = key(criterion, candidate.id)
-            return count + (verdicts[key] == true || uncertain.contains(key) ? 1 : 0)
+            return count + (verdicts[key] == true || (includesUncertain && uncertain.contains(key)) ? 1 : 0)
         }
     }
 

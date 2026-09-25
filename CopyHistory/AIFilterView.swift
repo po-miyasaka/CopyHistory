@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AIFilterButton: View {
     @ObservedObject var controller: AIFilterController
+    @Binding var showsUnjudged: Bool
     let matchCount: Int
     let onApply: (String) -> Void
     let onClear: () -> Void
@@ -22,6 +23,7 @@ struct AIFilterButton: View {
             .popover(isPresented: $isPresented) {
                 AIFilterPopover(
                     controller: controller,
+                    showsUnjudged: $showsUnjudged,
                     matchCount: matchCount,
                     onApply: { query in
                         isPresented = false
@@ -55,6 +57,7 @@ struct AIFilterButton: View {
 
 private struct AIFilterPopover: View {
     @ObservedObject var controller: AIFilterController
+    @Binding var showsUnjudged: Bool
     let matchCount: Int
     let onApply: (String) -> Void
     let onClear: () -> Void
@@ -62,9 +65,10 @@ private struct AIFilterPopover: View {
 
     @State private var draft: String
 
-    init(controller: AIFilterController, matchCount: Int,
+    init(controller: AIFilterController, showsUnjudged: Binding<Bool>, matchCount: Int,
          onApply: @escaping (String) -> Void, onClear: @escaping () -> Void, onExport: @escaping () -> Void) {
         self.controller = controller
+        _showsUnjudged = showsUnjudged
         self.matchCount = matchCount
         self.onApply = onApply
         self.onClear = onClear
@@ -105,6 +109,9 @@ private struct AIFilterPopover: View {
                     }
                 }
             }
+
+            Toggle("Show items that couldn't be judged", isOn: $showsUnjudged)
+                .font(.caption)
 
             HStack {
                 if controller.isActive {

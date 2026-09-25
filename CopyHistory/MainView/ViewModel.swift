@@ -66,6 +66,14 @@ final class ViewModel: ObservableObject {
     let aiFilter = AIFilterController(makeJudge: { AIFilterAvailability.makeDefaultJudge() })
     @Published private(set) var aiPool: [CopiedItem] = []
 
+    /// Whether the AI filter also shows the items it could not judge.
+    @Published var aiShowsUnjudged: Bool = UserDefaults.standard.object(forKey: "aiFilterShowsUnjudged") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(aiShowsUnjudged, forKey: "aiFilterShowsUnjudged")
+            aiFilter.setIncludesUncertain(aiShowsUnjudged, limit: aiFilterLimit)
+        }
+    }
+
     /// How many matches the AI filter returns at most; judging stops once this many are found.
     static let aiFilterLimitKey = "aiFilterResultLimit"
     static let aiFilterLimitDefault = 50
@@ -112,6 +120,7 @@ final class ViewModel: ObservableObject {
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
+        aiFilter.setIncludesUncertain(aiShowsUnjudged, limit: aiFilterLimit)
         indexImages()
 
         // TODO: このタスクの使い方

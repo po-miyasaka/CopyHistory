@@ -23,6 +23,7 @@ extension MainView {
                     if AIFilterAvailability.isAvailable {
                         AIFilterButton(
                             controller: viewModel.aiFilter,
+                            showsUnjudged: $viewModel.aiShowsUnjudged,
                             matchCount: viewModel.visibleItems.count,
                             onApply: viewModel.applyAIFilter,
                             onClear: viewModel.clearAIFilter,

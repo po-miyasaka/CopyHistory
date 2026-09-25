@@ -90,6 +90,7 @@ extension MainView {
                         Row(item: item,
                             favorite: item.favorite,
                             reminderDate: item.reminderDate,
+                            isUnjudged: viewModel.aiFilter.isActive && (item.dataHash.map(viewModel.aiFilter.isUncertain) ?? false),
                             isFocused: index == focusedItemIndex, itemAction: {
                             itemAction = $0
                         },
@@ -143,6 +144,7 @@ struct Row: View, Equatable {
     let item: CopiedItem
     let favorite: Bool
     let reminderDate: Date?
+    let isUnjudged: Bool
     let isFocused: Bool
     @State private var isShowingReminderPopover = false
     @State private var isShowingStatusReminderPopover = false
@@ -182,6 +184,7 @@ struct Row: View, Equatable {
     init(item: CopiedItem,
          favorite: Bool,
          reminderDate: Date?,
+         isUnjudged: Bool,
          isFocused: Bool,
          itemAction: @escaping (MainView.ItemAction) -> Void,
          index: Int,
@@ -195,6 +198,7 @@ struct Row: View, Equatable {
         self.item = item
         self.favorite = favorite
         self.reminderDate = reminderDate
+        self.isUnjudged = isUnjudged
         self.isFocused = isFocused
         self.itemAction = itemAction
         self.index = index
@@ -253,6 +257,12 @@ struct Row: View, Equatable {
                                     }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
 
                                     Spacer()
+                                }
+                                if isUnjudged {
+                                    Label("Couldn't judge", systemImage: "questionmark.circle")
+                                        .font(.caption2)
+                                        .foregroundColor(.orange)
+                                        .padding(.bottom, 4)
                                 }
                                 if !memo.isEmpty {
                                     Text(memo)
@@ -443,6 +453,7 @@ struct Row: View, Equatable {
         lhs.isFocused == rhs.isFocused &&
         lhs.favorite == rhs.favorite &&
         lhs.reminderDate == rhs.reminderDate &&
+        lhs.isUnjudged == rhs.isUnjudged &&
         lhs.isExpanded == rhs.isExpanded &&
         lhs.isShowingRTF == rhs.isShowingRTF &&
         lhs.isShowingHTML == rhs.isShowingHTML &&

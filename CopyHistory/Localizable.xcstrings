@@ -1215,6 +1215,26 @@
         }
       }
     },
+    "Couldn't judge" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定できませんでした"
+          }
+        }
+      }
+    },
+    "Show items that couldn't be judged" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定できなかったものも表示"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {
