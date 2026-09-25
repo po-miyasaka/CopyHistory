@@ -99,6 +99,7 @@ extension MainView {
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML,
                             isShowingDate: $isShowingDate,
+                            isShowingUpdatedDate: $isShowingUpdatedDate,
                             isShowingFileInfo: $isShowingFileInfo)
                         .id(item.dataHash)
                     }
@@ -149,6 +150,7 @@ struct Row: View, Equatable {
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @Binding var isShowingDate: Bool
+    @Binding var isShowingUpdatedDate: Bool
     @Binding var isShowingFileInfo: Bool
     @State var memo: String
     @State private var thumbnailImage: NSImage?
@@ -187,6 +189,7 @@ struct Row: View, Equatable {
          isShowingRTF: Binding<Bool>,
          isShowingHTML: Binding<Bool>,
          isShowingDate: Binding<Bool>,
+         isShowingUpdatedDate: Binding<Bool>,
          isShowingFileInfo: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
@@ -199,6 +202,7 @@ struct Row: View, Equatable {
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
         _isShowingDate = isShowingDate
+        _isShowingUpdatedDate = isShowingUpdatedDate
         _isShowingFileInfo = isShowingFileInfo
         memo = item.memo ?? ""
     }
@@ -264,23 +268,21 @@ struct Row: View, Equatable {
                         if hovering { onHoverContent(index) }
                     }
 
-                    if isShowingFileInfo || isShowingDate {
+                    if isShowingFileInfo || isShowingDate || isShowingUpdatedDate {
                         VStack(alignment: .trailing) {
                             if isShowingFileInfo {
                                 Text(item.contentTypeString ?? "").font(.caption)
                                 Text("\(item.binarySizeString)").font(.caption)
                             }
-                            if isShowingDate {
-                                if let created = item.createdDate ?? item.updateDate {
-                                    Text("Saved: \(Self.dateFormatter.string(from: created))")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                if let updated = item.updateDate {
-                                    Text("Updated: \(Self.dateFormatter.string(from: updated))")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
+                            if isShowingDate, let created = item.createdDate ?? item.updateDate {
+                                Text("Saved: \(Self.dateFormatter.string(from: created))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            if isShowingUpdatedDate, let updated = item.updateDate {
+                                Text("Updated: \(Self.dateFormatter.string(from: updated))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
                     }
@@ -430,6 +432,7 @@ struct Row: View, Equatable {
         lhs.isShowingRTF == rhs.isShowingRTF &&
         lhs.isShowingHTML == rhs.isShowingHTML &&
         lhs.isShowingDate == rhs.isShowingDate &&
+        lhs.isShowingUpdatedDate == rhs.isShowingUpdatedDate &&
         lhs.isShowingFileInfo == rhs.isShowingFileInfo
     }
 }

@@ -915,6 +915,26 @@
         }
       }
     },
+    "Show updated date" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新日時を表示"
+          }
+        }
+      }
+    },
+    "Display the date and time when each item was last updated" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各アイテムを最後に更新した日時を表示します"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

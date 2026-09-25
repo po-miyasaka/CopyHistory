@@ -22,6 +22,7 @@ extension MainView {
                                     isShowingRTF: $isShowingRTF,
                                     isShowingHTML: $isShowingHTML,
                                     isShowingDate: $isShowingDate,
+                                    isShowingUpdatedDate: $isShowingUpdatedDate,
                                     isShowingFileInfo: $isShowingFileInfo,
                                     overlayViewType: $overlayViewType,
                                     onExportCSV: viewModel.exportCSV,

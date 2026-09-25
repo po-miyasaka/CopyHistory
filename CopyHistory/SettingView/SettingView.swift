@@ -15,6 +15,7 @@ struct SettingView: View {
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @Binding var isShowingDate: Bool
+    @Binding var isShowingUpdatedDate: Bool
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
     @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
@@ -38,6 +39,9 @@ struct SettingView: View {
                 Divider()
                 Toggle("Show saved date", isOn: $isShowingDate)
                     .help("Display the date and time when each item was saved")
+                Divider()
+                Toggle("Show updated date", isOn: $isShowingUpdatedDate)
+                    .help("Display the date and time when each item was last updated")
                 Divider()
                 Toggle("Show file type and size", isOn: $isShowingFileInfo)
                     .help("Display the content type (e.g. plain-text, image) and data size for each item")
@@ -130,6 +134,7 @@ struct SettingView_Previews: PreviewProvider {
                     isShowingRTF: binding,
                     isShowingHTML: binding,
                     isShowingDate: binding,
+                    isShowingUpdatedDate: binding,
                     isShowingFileInfo: binding,
                     overlayViewType: bindingOverlay,
                     onExportCSV: {},
