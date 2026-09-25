@@ -18,8 +18,12 @@ extension MainView {
                     shortcutsList()
                 }
                 Spacer()
-                memoButton()
-                favoriteButton()
+                HStack(alignment: .top) {
+                    sortMenu()
+                    memoButton()
+                    reminderFilterButton()
+                    favoriteButton()
+                }
             }
         }
     }
@@ -51,6 +55,7 @@ extension MainView {
                 Text("Select:"); Text("⌘ + ↩")
                 Text("Delete:"); Text("⌘ + ⇧ + d")
                 Text("Star:"); Text("⌘ + o")
+                Text("Reminders:"); Text("⌘ + t")
             }
             Group {
                 Text("Write a memo:"); Text("⌘ + i")
@@ -81,6 +86,52 @@ extension MainView {
 
             if isShowingKeyboardShortcuts {
                 Text("⌘ + p").font(.caption).foregroundColor(.gray).padding(.top, 2)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func sortMenu() -> some View {
+        let isActive = !viewModel.sort.isDefault
+        Menu {
+            Picker("Sort by", selection: $viewModel.sort.field) {
+                ForEach(ItemSort.Field.allCases) { field in
+                    Text(field.title).tag(field)
+                }
+            }
+            .pickerStyle(.inline)
+            Picker("Order", selection: $viewModel.sort.ascending) {
+                Text("Descending").tag(false)
+                Text("Ascending").tag(true)
+            }
+            .pickerStyle(.inline)
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.up.arrow.down")
+                Text(viewModel.sort.label).font(.caption)
+            }
+            .foregroundColor(isActive ? Color.mainAccent : Color.primary)
+        }
+        .menuIndicator(.hidden)
+        .fixedSize()
+    }
+
+    @ViewBuilder
+    func reminderFilterButton() -> some View {
+        VStack(spacing: 0) {
+            Button(action: {
+                withAnimation {
+                    viewModel.isShowingOnlyReminder.toggle()
+                }
+            }, label: {
+                Image(systemName: viewModel.isShowingOnlyReminder ? "clock.fill" : "clock")
+                    .foregroundColor(viewModel.isShowingOnlyReminder ? Color.mainAccent : Color.primary)
+            })
+            .keyboardShortcut("t", modifiers: .command)
+            .help("Show only items with reminders, soonest first")
+
+            if isShowingKeyboardShortcuts {
+                Text("⌘ + t").font(.caption).foregroundColor(.gray).padding(.top, 2)
             }
         }
     }

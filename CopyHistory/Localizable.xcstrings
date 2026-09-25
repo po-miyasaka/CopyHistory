@@ -65,16 +65,6 @@
         }
       }
     },
-    "Add" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "追加"
-          }
-        }
-      }
-    },
     "Cancel" : {
       "localizations" : {
         "ja" : {
@@ -111,26 +101,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CopyHistory ウェブサイト"
-          }
-        }
-      }
-    },
-    "Custom transform: %@ → %@" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カスタム変換: %@ → %@"
-          }
-        }
-      }
-    },
-    "Custom Transforms (Regex)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カスタム変換 (正規表現)"
           }
         }
       }
@@ -331,16 +301,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "セルを縮小:"
-          }
-        }
-      }
-    },
-    "Name" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名前"
           }
         }
       }
@@ -561,6 +521,466 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "キーボードショートカットを表示"
+          }
+        }
+      }
+    },
+    "Saved: %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存: %@"
+          }
+        }
+      }
+    },
+    "Updated: %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新: %@"
+          }
+        }
+      }
+    },
+    "Run a custom JavaScript transform" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム JavaScript 変換を実行"
+          }
+        }
+      }
+    },
+    "The script must define function transform(text)." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スクリプトには function transform(text) を定義してください。"
+          }
+        }
+      }
+    },
+    "transform(text) must return a string." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "transform(text) は文字列を返す必要があります。"
+          }
+        }
+      }
+    },
+    "The script took too long and was stopped." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スクリプトの実行に時間がかかりすぎたため停止しました。"
+          }
+        }
+      }
+    },
+    "Copied!" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーしました"
+          }
+        }
+      }
+    },
+    "Export all data as CSV…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのデータをCSVでエクスポート…"
+          }
+        }
+      }
+    },
+    "Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存したすべてのアイテム（テキスト、メモ、お気に入り、日時）をCSVファイルに保存します。画像などのバイナリデータは含まれません。"
+          }
+        }
+      }
+    },
+    "Failed to export CSV" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVのエクスポートに失敗しました"
+          }
+        }
+      }
+    },
+    "Reset to default" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デフォルトに戻す"
+          }
+        }
+      }
+    },
+    "Copy AI prompt for custom action code generation" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムアクション用コード生成のAIプロンプトコピー"
+          }
+        }
+      }
+    },
+    "Custom Transform Action" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム変換アクション"
+          }
+        }
+      }
+    },
+    "chars" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字"
+          }
+        }
+      }
+    },
+    "Reminder" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダー"
+          }
+        }
+      }
+    },
+    "Reminders:" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダー:"
+          }
+        }
+      }
+    },
+    "Set" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        }
+      }
+    },
+    "Clear" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解除"
+          }
+        }
+      }
+    },
+    "Show only items with reminders, soonest first" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダー付きのアイテムだけを、期限が近い順に表示"
+          }
+        }
+      }
+    },
+    "Notifications are turned off for CopyHistory. Enable them in System Settings to get reminders." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CopyHistoryの通知がオフになっています。リマインダーを受け取るには、システム設定で通知を有効にしてください。"
+          }
+        }
+      }
+    },
+    "Import CSV…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVを取り込み…"
+          }
+        }
+      }
+    },
+    "Add items from a CSV file exported by CopyHistory. Duplicates are skipped and everything is imported as plain text." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CopyHistoryが書き出したCSVファイルからアイテムを追加します。重複はスキップされ、すべてプレーンテキストとして取り込まれます。"
+          }
+        }
+      }
+    },
+    "Failed to import CSV" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVの取り込みに失敗しました"
+          }
+        }
+      }
+    },
+    "Imported %lld items, skipped %lld duplicates or empty rows." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld件を取り込み、重複または空の%lld行をスキップしました。"
+          }
+        }
+      }
+    },
+    "The CSV must have \"name\" and \"text\" columns." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVには「name」列と「text」列が必要です。"
+          }
+        }
+      }
+    },
+    "The CSV is malformed (unclosed quote)." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVの形式が正しくありません（引用符が閉じられていません）。"
+          }
+        }
+      }
+    },
+    "Sort by" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "並び替え"
+          }
+        }
+      }
+    },
+    "Order" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "順序"
+          }
+        }
+      }
+    },
+    "Descending" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "降順"
+          }
+        }
+      }
+    },
+    "Ascending" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "昇順"
+          }
+        }
+      }
+    },
+    "Updated date" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新日時"
+          }
+        }
+      }
+    },
+    "Saved date" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存日時"
+          }
+        }
+      }
+    },
+    "Character count" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字数"
+          }
+        }
+      }
+    },
+    "Size" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サイズ"
+          }
+        }
+      }
+    },
+    "Window width" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウィンドウの幅"
+          }
+        }
+      }
+    },
+    "%@ (%@)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@(%2$@)"
+          }
+        }
+      }
+    },
+    "Save to Desktop…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デスクトップに保存…"
+          }
+        }
+      }
+    },
+    "Failed to save the image" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像の保存に失敗しました"
+          }
+        }
+      }
+    },
+    "The image could not be read." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像を読み込めませんでした。"
+          }
+        }
+      }
+    },
+    "Show updated date" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新日時を表示"
+          }
+        }
+      }
+    },
+    "Display the date and time when each item was last updated" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各アイテムを最後に更新した日時を表示します"
+          }
+        }
+      }
+    },
+    "Action name" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクション名"
+          }
+        }
+      }
+    },
+    "Add custom action" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムアクションを追加"
+          }
+        }
+      }
+    },
+    "Custom Action (Add Text)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムアクション(文字列追加)"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "時刻"
+          }
+        }
+      }
+    },
+    "Open System Settings" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システム設定を開く"
           }
         }
       }

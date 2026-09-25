@@ -22,8 +22,11 @@ extension MainView {
                                     isShowingRTF: $isShowingRTF,
                                     isShowingHTML: $isShowingHTML,
                                     isShowingDate: $isShowingDate,
+                                    isShowingUpdatedDate: $isShowingUpdatedDate,
                                     isShowingFileInfo: $isShowingFileInfo,
-                                    overlayViewType: $overlayViewType
+                                    overlayViewType: $overlayViewType,
+                                    onExportCSV: viewModel.exportCSV,
+                                    onImportCSV: viewModel.importCSV
                         )
                     case .feedback:
                         FeedbackView(overlayViewType: $overlayViewType)

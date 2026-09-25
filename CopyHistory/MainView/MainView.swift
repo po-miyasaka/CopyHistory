@@ -25,7 +25,8 @@ struct MainView: View {
     @AppStorage("isExpanded") var isExpanded: Bool = true
     @AppStorage("isShowingRTF") var isShowingRTF: Bool = false
     @AppStorage("isShowingHTML") var isShowingHTML: Bool = false
-    @AppStorage("isShowingDate") var isShowingDate: Bool = false
+    @AppStorage("isShowingDate") var isShowingDate: Bool = true
+    @AppStorage("isShowingUpdatedDate") var isShowingUpdatedDate: Bool = true
     @AppStorage("isShowingFileInfo") var isShowingFileInfo: Bool = true
 
     @State var itemAction: ItemAction?
@@ -36,6 +37,8 @@ struct MainView: View {
         case select
         case favorite
         case transform(TransformAction)
+        case reminder(Date?)
+        case saveImageToDesktop
     }
 
     struct ItemAction {
@@ -72,6 +75,12 @@ struct MainView: View {
                 NSApplication.shared.deactivate()
             case .favorite:
                 viewModel.toggleFavorite(actionItem.item)
+            case .saveImageToDesktop:
+                // Present the save panel after this view update finishes, like the CSV export button does.
+                let item = actionItem.item
+                DispatchQueue.main.async { viewModel.saveImageToDesktop(item) }
+            case .reminder(let date):
+                viewModel.setReminder(actionItem.item, date: date)
             }
             self.itemAction = nil
         }

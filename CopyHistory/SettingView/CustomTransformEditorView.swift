@@ -1,51 +1,81 @@
 import SwiftUI
+import AppKit
+
+private enum AIPrompt {
+    static let english = """
+    Write a JavaScript function for a text-transform tool.
+
+    Requirements:
+    - Define exactly one function with the signature: function transform(text)
+    - `text` is a string (the copied text). Return the transformed string.
+    - Plain JavaScript (ES2015+) running in JavaScriptCore. No DOM, no Node.js APIs (no require/import), no network or file access, no async/await/Promises.
+    - It must finish quickly (under 2 seconds).
+    - Output only the code, with no explanation.
+
+    What I want the function to do:
+    (describe here)
+    """
+
+    static var localized: String {
+        Bundle.main.preferredLocalizations.first == "ja" ? japanese : english
+    }
+
+    static let japanese = """
+    テキスト変換ツール用の JavaScript 関数を書いてください。
+
+    要件:
+    - シグネチャは function transform(text) の関数を1つだけ定義すること
+    - text は文字列（コピーしたテキスト）。変換後の文字列を return すること
+    - JavaScriptCore で動く素の JavaScript (ES2015+)。DOM や Node.js の API (require/import) は使えず、ネットワークやファイルアクセス、async/await/Promise も使わないこと
+    - 2秒以内に終わること
+    - 説明は不要で、コードだけを出力すること
+
+    やりたい変換:
+    （ここに書く）
+    """
+}
 
 struct CustomTransformEditorView: View {
     @ObservedObject var store = CustomTransformStore.shared
-    @State private var newName = ""
-    @State private var newPattern = ""
-    @State private var newReplacement = ""
+    @State private var isPromptCopied = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Custom Transforms (Regex)").font(.headline)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Custom Transform Action").font(.headline)
 
-            ForEach(store.transforms) { transform in
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(transform.name).font(.callout)
-                        Text("pattern: \(transform.pattern)")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        Text("replacement: \(transform.replacement)")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                    Button(action: {
-                        if let index = store.transforms.firstIndex(where: { $0.id == transform.id }) {
-                            store.remove(at: IndexSet(integer: index))
+            ForEach($store.transforms) { $transform in
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        TextField("Action name", text: $transform.name)
+                            .textFieldStyle(.roundedBorder)
+                        Button(action: { store.remove(id: transform.id) }) {
+                            Image(systemName: "trash").foregroundColor(.secondary)
                         }
-                    }) {
-                        Image(systemName: "trash").foregroundColor(.secondary)
                     }
+                    TextEditor(text: $transform.script)
+                        .font(.system(.caption, design: .monospaced))
+                        .frame(height: 110)
+                        .border(Color.secondary.opacity(0.3))
+                    Button("Reset to default") { store.resetScript(id: transform.id) }
+                        .disabled(transform.script == ScriptTransformRunner.templateScript)
                 }
                 Divider()
             }
 
-            Group {
-                TextField("Name", text: $newName)
-                TextField("Regex Pattern", text: $newPattern)
-                TextField("Replacement ($1, $2...)", text: $newReplacement)
-                Button("Add") {
-                    store.add(CustomTransform(name: newName, pattern: newPattern, replacement: newReplacement))
-                    newName = ""
-                    newPattern = ""
-                    newReplacement = ""
+            HStack {
+                Button("Add custom action", action: store.add)
+                Button("Copy AI prompt for custom action code generation", action: copyPrompt)
+                if isPromptCopied {
+                    Text("Copied!").font(.caption).foregroundColor(.green)
                 }
-                .disabled(newName.isEmpty || newPattern.isEmpty)
             }
-            .textFieldStyle(.roundedBorder)
         }
+    }
+
+    private func copyPrompt() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(AIPrompt.localized, forType: .string)
+        PasteboardService.skipNextPasteboardChange = true
+        isPromptCopied = true
     }
 }

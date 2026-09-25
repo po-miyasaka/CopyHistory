@@ -89,23 +89,19 @@ extension MainView {
                         
                         Row(item: item,
                             favorite: item.favorite,
+                            reminderDate: item.reminderDate,
                             isFocused: index == focusedItemIndex, itemAction: {
                             itemAction = $0
                         },
+                            index: index,
+                            onHoverContent: { focusedItemIndex = $0 },
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML,
                             isShowingDate: $isShowingDate,
+                            isShowingUpdatedDate: $isShowingUpdatedDate,
                             isShowingFileInfo: $isShowingFileInfo)
                         .id(item.dataHash)
-                        
-                        //                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
-                        // -> since Xcode15 LazyVStack got to reuse elements and the performance improved!
-                        .onHover(perform: { hover in
-                            if hover {
-                                focusedItemIndex = index
-                            }
-                        })
                     }
                     
                 }
@@ -146,16 +142,22 @@ extension MainView {
 struct Row: View, Equatable {
     let item: CopiedItem
     let favorite: Bool
+    let reminderDate: Date?
     let isFocused: Bool
+    @State private var isShowingReminderPopover = false
+    @State private var isShowingStatusReminderPopover = false
     @FocusState var memoFocusState: Bool
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @Binding var isShowingDate: Bool
+    @Binding var isShowingUpdatedDate: Bool
     @Binding var isShowingFileInfo: Bool
     @State var memo: String
     @State private var thumbnailImage: NSImage?
     var itemAction: (MainView.ItemAction) -> Void
+    let index: Int
+    var onHoverContent: (Int) -> Void
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -164,6 +166,14 @@ struct Row: View, Equatable {
         return formatter
     }()
 
+    private static let minRowHeight: CGFloat = 44
+    private static let cellVerticalMargin: CGFloat = 8
+
+    /// Collapsed rows keep images within the same height as a one-line text row.
+    private var imageMaxHeight: CGFloat {
+        isExpanded ? 300 : Self.minRowHeight - 16
+    }
+
     private var isImageType: Bool {
         guard let type = item.contentTypeString else { return false }
         return type.contains("image") || type.contains("png") || type.contains("jpeg") || type.contains("tiff") || type.contains("gif") || type.contains("bmp")
@@ -171,21 +181,29 @@ struct Row: View, Equatable {
 
     init(item: CopiedItem,
          favorite: Bool,
+         reminderDate: Date?,
          isFocused: Bool,
          itemAction: @escaping (MainView.ItemAction) -> Void,
+         index: Int,
+         onHoverContent: @escaping (Int) -> Void,
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
          isShowingHTML: Binding<Bool>,
          isShowingDate: Binding<Bool>,
+         isShowingUpdatedDate: Binding<Bool>,
          isShowingFileInfo: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
+        self.reminderDate = reminderDate
         self.isFocused = isFocused
         self.itemAction = itemAction
+        self.index = index
+        self.onHoverContent = onHoverContent
         _isExpanded = isExpanded
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
         _isShowingDate = isShowingDate
+        _isShowingUpdatedDate = isShowingUpdatedDate
         _isShowingFileInfo = isShowingFileInfo
         memo = item.memo ?? ""
     }
@@ -217,10 +235,10 @@ struct Row: View, Equatable {
                                     Group {
                                         if isImageType {
                                             if let thumbnailImage {
-                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: 300)
+                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: imageMaxHeight)
                                             } else {
                                                 ProgressView()
-                                                    .frame(maxHeight: 300)
+                                                    .frame(maxHeight: imageMaxHeight)
                                             }
                                         } else if isShowingRTF, let attributedString = item.attributeString {
                                             Text(AttributedString(attributedString))
@@ -245,21 +263,13 @@ struct Row: View, Equatable {
                                 }
                             }
                         }
+                        .frame(minHeight: Self.minRowHeight)
                     })
-
-                    if isShowingFileInfo || isShowingDate {
-                        VStack(alignment: .trailing) {
-                            if isShowingFileInfo {
-                                Text(item.contentTypeString ?? "").font(.caption)
-                                Text("\(item.binarySizeString)").font(.caption)
-                            }
-                            if isShowingDate, let date = item.updateDate {
-                                Text(Self.dateFormatter.string(from: date))
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
+                    .onHover { hovering in
+                        if hovering { onHoverContent(index) }
                     }
+
+                    statusButtons
 
                     TextField("", text: $memo)
                         .focused($memoFocusState)
@@ -267,26 +277,45 @@ struct Row: View, Equatable {
                             itemAction(.init(item: item, action: .memoEdited(memo)))
                         }).frame(width: 26)
 
-                    Button(action: {
-                        itemAction(.init(item: item, action: .favorite))
-                    }, label: {
-                        Image(systemName: favorite ? "star.fill" : "star")
-                            .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                            .frame(width: 30, height: 44)
-                            .contentShape(RoundedRectangle(cornerRadius: 20))
-                    })
-
-                    Button(action: {
-                        itemAction(.init(item: item, action: .delete))
-                    }, label: {
-                        Image(systemName: "trash.fill").foregroundColor(.secondary)
-                    })
-                }
-
-                if isFocused && !isImageType {
-                    TransformActionsBar(item: item) { transformAction in
-                        itemAction(.init(item: item, action: .transform(transformAction)))
+                    if isShowingFileInfo || isShowingDate || isShowingUpdatedDate {
+                        VStack(alignment: .trailing) {
+                            if isShowingFileInfo {
+                                Text(item.contentTypeString ?? "").font(.caption)
+                                Text("\(item.binarySizeString)").font(.caption)
+                            }
+                            if isShowingDate, let created = item.createdDate ?? item.updateDate {
+                                Text("Saved: \(Self.dateFormatter.string(from: created))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            if isShowingUpdatedDate, let updated = item.updateDate {
+                                Text("Updated: \(Self.dateFormatter.string(from: updated))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.leading, 8)
                     }
+                }
+                .padding(.vertical, Self.cellVerticalMargin)
+
+                if isFocused {
+                    HStack(alignment: .center, spacing: 8) {
+                        actionButtons
+
+                        Group {
+                            if isImageType {
+                                saveImageButton
+                            } else {
+                                TransformActionsBar(item: item) { transformAction in
+                                    itemAction(.init(item: item, action: .transform(transformAction)))
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
                 }
             }
         }
@@ -300,15 +329,110 @@ struct Row: View, Equatable {
         Divider()
     }
 
+    private static let reminderFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("Mdjmm")
+        return formatter
+    }()
+
+    private var reminderColor: Color {
+        guard let reminderDate else { return Color.primary }
+        return reminderDate < Date() ? Color.red : Color.mainAccent
+    }
+
+    /// Favorite and reminder markers stay visible (and clickable) whether or not the row is focused.
+    private var statusButtons: some View {
+        HStack(spacing: 4) {
+            if reminderDate != nil {
+                reminderButton(isPresented: $isShowingStatusReminderPopover)
+            }
+            if favorite {
+                favoriteButton
+            }
+        }
+    }
+
+    private var favoriteButton: some View {
+        Button(action: {
+            itemAction(.init(item: item, action: .favorite))
+        }, label: {
+            Image(systemName: favorite ? "star.fill" : "star")
+                .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                .frame(width: 30, height: 28)
+                .contentShape(Rectangle())
+        })
+    }
+
+    private var saveImageButton: some View {
+        Button(action: {
+            itemAction(.init(item: item, action: .saveImageToDesktop))
+        }, label: {
+            Label("Save to Desktop…", systemImage: "square.and.arrow.down")
+                .font(.caption2)
+                .lineLimit(1)
+        })
+        .buttonStyle(.bordered)
+        .controlSize(.small)
+    }
+
+    private var actionButtons: some View {
+        HStack(spacing: 4) {
+            reminderButton(isPresented: $isShowingReminderPopover)
+
+            favoriteButton
+
+            Button(action: {
+                itemAction(.init(item: item, action: .delete))
+            }, label: {
+                Image(systemName: "trash.fill")
+                    .foregroundColor(.secondary)
+                    .frame(width: 30, height: 28)
+                    .contentShape(Rectangle())
+            })
+        }
+    }
+
+    private func reminderButton(isPresented: Binding<Bool>) -> some View {
+        Button(action: {
+            isPresented.wrappedValue = true
+        }, label: {
+            VStack(spacing: 0) {
+                Image(systemName: reminderDate == nil ? "clock" : "clock.fill")
+                if let reminderDate {
+                    Text(Self.reminderFormatter.string(from: reminderDate)).font(.caption2)
+                }
+            }
+            .foregroundColor(reminderColor)
+            .frame(minWidth: 30, minHeight: 28)
+            .contentShape(Rectangle())
+        })
+        .popover(isPresented: isPresented) {
+            ReminderPopoverView(
+                current: reminderDate,
+                onSet: { date in
+                    isPresented.wrappedValue = false
+                    itemAction(.init(item: item, action: .reminder(date)))
+                },
+                onClear: {
+                    isPresented.wrappedValue = false
+                    itemAction(.init(item: item, action: .reminder(nil)))
+                }
+            )
+        }
+    }
+
     /// This comparation make Row stop unneeded rendering.
     static func == (lhs: Row, rhs: Row) -> Bool {
         return lhs.item.dataHash == rhs.item.dataHash &&
+        lhs.index == rhs.index &&
         lhs.isFocused == rhs.isFocused &&
         lhs.favorite == rhs.favorite &&
+        lhs.reminderDate == rhs.reminderDate &&
         lhs.isExpanded == rhs.isExpanded &&
         lhs.isShowingRTF == rhs.isShowingRTF &&
         lhs.isShowingHTML == rhs.isShowingHTML &&
         lhs.isShowingDate == rhs.isShowingDate &&
+        lhs.isShowingUpdatedDate == rhs.isShowingUpdatedDate &&
         lhs.isShowingFileInfo == rhs.isShowingFileInfo
     }
 }

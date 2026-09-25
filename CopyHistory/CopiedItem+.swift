@@ -6,6 +6,17 @@
 //
 
 import Foundation
+import AppKit
+
+enum ImageSaveError: LocalizedError {
+    case unreadableImage
+
+    var errorDescription: String? {
+        switch self {
+        case .unreadableImage: return String(localized: "The image could not be read.")
+        }
+    }
+}
 
 extension CopiedItem {
     static let formatter: ByteCountFormatter = {
@@ -39,6 +50,15 @@ extension CopiedItem {
         let attributeString = (try? NSAttributedString(data: content, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil))
         htmlStringCached = attributeString
         return attributeString
+    }
+
+    var imagePNGData: Data? {
+        guard let content else { return nil }
+        if contentTypeString?.contains("png") == true { return content }
+        guard let tiff = NSImage(data: content)?.tiffRepresentation,
+              let representation = NSBitmapImageRep(data: tiff)
+        else { return nil }
+        return representation.representation(using: .png, properties: [:])
     }
 
     var fileURL: URL? {

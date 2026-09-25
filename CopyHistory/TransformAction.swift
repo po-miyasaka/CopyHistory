@@ -88,7 +88,7 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "Convert all characters to lowercase"
         case .trimWhitespace: return "Remove leading and trailing whitespace and newlines"
         case .showQRCode: return "Generate a QR code from the text"
-        case .custom(let t): return "Custom transform: \(t.pattern) → \(t.replacement)"
+        case .custom: return "Run a custom JavaScript transform"
         }
     }
 
@@ -103,30 +103,37 @@ enum TransformAction: Identifiable, Hashable {
 struct CustomTransform: Identifiable, Hashable, Codable {
     var id: String = UUID().uuidString
     var name: String
-    var pattern: String
-    var replacement: String
+    var script: String
 }
 
 final class TransformUsageTracker: ObservableObject {
     static let shared = TransformUsageTracker()
-    @Published private(set) var recentActionIDs: [String] = []
 
-    private init() {}
+    private static let userDefaultsKey = "recentTransformActionIDs"
+    private static let maxStoredCount = 50
 
-    func recordUsage(_ action: TransformAction) {
-        recentActionIDs.removeAll { $0 == action.id }
-        recentActionIDs.insert(action.id, at: 0)
+    @Published private(set) var recentActionIDs: [String]
+
+    private init() {
+        recentActionIDs = UserDefaults.standard.stringArray(forKey: Self.userDefaultsKey) ?? []
     }
 
+    func recordUsage(_ action: TransformAction) {
+        var updated = recentActionIDs.filter { $0 != action.id }
+        updated.insert(action.id, at: 0)
+        recentActionIDs = Array(updated.prefix(Self.maxStoredCount))
+        UserDefaults.standard.set(recentActionIDs, forKey: Self.userDefaultsKey)
+    }
+
+    /// Most recently used first; actions never used keep their original order after them.
     func sorted(_ actions: [TransformAction]) -> [TransformAction] {
-        guard !recentActionIDs.isEmpty else { return actions }
-        return actions.sorted { a, b in
-            let indexA = recentActionIDs.firstIndex(of: a.id) ?? Int.max
-            let indexB = recentActionIDs.firstIndex(of: b.id) ?? Int.max
-            if indexA == indexB {
-                return false
+        let rank = Dictionary(recentActionIDs.enumerated().map { ($1, $0) }, uniquingKeysWith: { first, _ in first })
+        return actions.enumerated()
+            .sorted { lhs, rhs in
+                let lhsRank = rank[lhs.element.id] ?? Int.max
+                let rhsRank = rank[rhs.element.id] ?? Int.max
+                return lhsRank == rhsRank ? lhs.offset < rhs.offset : lhsRank < rhsRank
             }
-            return indexA < indexB
-        }
+            .map(\.element)
     }
 }

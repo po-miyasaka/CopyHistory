@@ -11,3 +11,4 @@ extension Color {
     static var mainViewBackground = Color("mainViewBackground")
     static var mainAccent = Color("AccentColor")
 }
+

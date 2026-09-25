@@ -15,11 +15,21 @@ struct SettingView: View {
     @Binding var isShowingRTF: Bool
     @Binding var isShowingHTML: Bool
     @Binding var isShowingDate: Bool
+    @Binding var isShowingUpdatedDate: Bool
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
+    @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
+    let onExportCSV: () -> Void
+    let onImportCSV: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading) {
+        ScrollView {
+            content
+        }
+    }
+
+    private var content: some View {
+        VStack(alignment: .leading, spacing: 12) {
             Group {
                 Toggle("Show keyboard shortcuts", isOn: $isShowingKeyboardShortcuts)
                     .help("Show shortcut key hints on the main screen")
@@ -35,6 +45,9 @@ struct SettingView: View {
                 Divider()
                 Toggle("Show saved date", isOn: $isShowingDate)
                     .help("Display the date and time when each item was saved")
+                Divider()
+                Toggle("Show updated date", isOn: $isShowingUpdatedDate)
+                    .help("Display the date and time when each item was last updated")
                 Divider()
                 Toggle("Show file type and size", isOn: $isShowingFileInfo)
                     .help("Display the content type (e.g. plain-text, image) and data size for each item")
@@ -52,7 +65,26 @@ struct SettingView: View {
 
             Divider()
 
+            HStack {
+                Text("Window width")
+                Spacer()
+                Slider(value: $windowWidth, in: WindowWidth.range, step: 50)
+                    .frame(width: 160)
+                Text("\(Int(windowWidth))").monospacedDigit().frame(width: 40, alignment: .trailing)
+            }
+
+            Divider()
+
             CustomTransformEditorView()
+
+            Divider()
+
+            HStack {
+                Button("Export all data as CSV…", action: onExportCSV)
+                    .help("Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included.")
+                Button("Import CSV…", action: onImportCSV)
+                    .help("Add items from a CSV file exported by CopyHistory. Duplicates are skipped and everything is imported as plain text.")
+            }
 
             Divider()
 
@@ -93,7 +125,7 @@ struct SettingView: View {
             Text("Version: \(versionString)")
                 .padding(.bottom, 16)
 
-        }.padding(8)
+        }.padding(16)
 
     }
 }
@@ -108,8 +140,11 @@ struct SettingView_Previews: PreviewProvider {
                     isShowingRTF: binding,
                     isShowingHTML: binding,
                     isShowingDate: binding,
+                    isShowingUpdatedDate: binding,
                     isShowingFileInfo: binding,
-                    overlayViewType: bindingOverlay
+                    overlayViewType: bindingOverlay,
+                    onExportCSV: {},
+                    onImportCSV: {}
         )
     }
 }

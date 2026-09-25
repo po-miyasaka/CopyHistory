@@ -14,8 +14,8 @@ struct TransformActionsBar: View {
 
     private var sortedActions: [TransformAction] {
         let builtIn = TransformAction.allBuiltIn
-        let custom = customStore.transforms.map { TransformAction.custom($0) }
-        return usageTracker.sorted(builtIn + custom)
+        let custom = customStore.activeTransforms.map { TransformAction.custom($0) }
+        return usageTracker.sorted(custom + builtIn)
     }
 
     var body: some View {
@@ -30,8 +30,6 @@ struct TransformActionsBar: View {
                         }
                     }
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 2)
             }
             .popover(isPresented: $showQRPopover) {
                 if let qrImage {

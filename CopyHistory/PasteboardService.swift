@@ -12,6 +12,7 @@ import SwiftUI
 import Combine
 
 class PasteboardService {
+    static var skipNextPasteboardChange = false
     private var pasteBoard: NSPasteboard { NSPasteboard.general }
     private(set) var latestChangeCount = 0
     private lazy var timer: Timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timerLoop), userInfo: nil, repeats: true)
@@ -65,6 +66,12 @@ class PasteboardService {
         Task {
             if pasteBoard.changeCount == latestChangeCount { return } // If there is no change, do nothing.
 
+            if Self.skipNextPasteboardChange {
+                Self.skipNextPasteboardChange = false
+                latestChangeCount = pasteBoard.changeCount
+                return
+            }
+
             defer { // TODO: when is it called
                 latestChangeCount = pasteBoard.changeCount
             }
@@ -88,8 +95,11 @@ class PasteboardService {
 
                     copiedItem.name = String((str ?? "No Name").prefix(100))
                     copiedItem.binarySize = Int64(data.count)
+                    copiedItem.textLength = Int64(str?.count ?? 0)
                     copiedItem.contentTypeString = type.rawValue
-                    copiedItem.updateDate = Date()
+                    let now = Date()
+                    copiedItem.createdDate = now
+                    copiedItem.updateDate = now
                     copiedItem.dataHash = dataHash
                 }
             }

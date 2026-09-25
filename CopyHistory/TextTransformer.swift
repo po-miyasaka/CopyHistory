@@ -77,9 +77,12 @@ enum TextTransformer {
     }
 
     private static func applyCustom(_ transform: CustomTransform, to input: String) -> String? {
-        guard let regex = try? NSRegularExpression(pattern: transform.pattern)
-        else { return nil }
-        let range = NSRange(input.startIndex..., in: input)
-        return regex.stringByReplacingMatches(in: input, range: range, withTemplate: transform.replacement)
+        switch ScriptTransformRunner.run(script: transform.script, input: input) {
+        case .success(let output):
+            return output
+        case .failure:
+            NSSound.beep()
+            return nil
+        }
     }
 }

@@ -42,6 +42,10 @@ class CoreDataService {
         return .init(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
     }
 
+    func fetch<T: NSManagedObject>(_ request: NSFetchRequest<T>) throws -> [T] {
+        try container.viewContext.fetch(request)
+    }
+
     func create<T: NSManagedObject>(type: T.Type) -> T {
         type.init(context: container.viewContext)
     }
@@ -53,6 +57,15 @@ class CoreDataService {
     func save() {
         try! container.viewContext.save()
 
+    }
+
+    func saveOrRollback() throws {
+        do {
+            try container.viewContext.save()
+        } catch {
+            container.viewContext.rollback()
+            throw error
+        }
     }
 
     func deleteAll(targets: [NSManagedObject]) {
