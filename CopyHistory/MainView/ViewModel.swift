@@ -59,6 +59,25 @@ final class ViewModel: ObservableObject {
     })
 
     private let repository = CopiedItemRepository()
+
+    let aiFilter = AIFilterController(makeJudge: { AIFilterAvailability.makeDefaultJudge() })
+    @Published private(set) var aiPool: [CopiedItem] = []
+
+    static let aiFilterLimitKey = "aiFilterLimit"
+    static let aiFilterLimitDefault = 200
+
+    private var aiFilterLimit: Int {
+        let stored = UserDefaults.standard.integer(forKey: Self.aiFilterLimitKey)
+        return stored > 0 ? stored : Self.aiFilterLimitDefault
+    }
+
+    /// What the list shows: every match of the AI filter while it is on, otherwise the regular list.
+    var visibleItems: [CopiedItem] {
+        guard aiFilter.isActive else { return copiedItems }
+        return aiPool.filter { item in
+            !item.isDeleted && item.managedObjectContext != nil && (item.dataHash.map(aiFilter.isMatch) ?? false)
+        }
+    }
     private var cancellables: [AnyCancellable] = []
 
     private init() {}
@@ -81,13 +100,19 @@ final class ViewModel: ObservableObject {
         .sink {[weak self] (arg0) in
             let (searchText, (isShowingOnlyFavorite, isShowingOnlyMemoed, isShowingOnlyReminder, sort), displayedItemCount) = arg0
             self?.repository.requestCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, isShowingOnlyReminder: isShowingOnlyReminder, sort: sort, limit: displayedItemCount)
+            self?.refreshAIPool()
         }.store(in: &cancellables)
+
+        aiFilter.objectWillChange
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
 
         // TODO: このタスクの使い方
         Task {  [weak self] in
             if let stream = self?.repository.stream {
                 for await copiedItems in stream {
                         self?.copiedItems = copiedItems
+                        self?.refreshAIPool()
                 }
             }
         }
@@ -108,12 +133,59 @@ final class ViewModel: ObservableObject {
         repository.update()
     }
 
+    func applyAIFilter(_ query: String) {
+        guard let pool = fetchAIPool() else { return }
+        aiPool = pool
+        aiFilter.apply(query: query, candidates: pool.compactMap(\.judgeCandidate))
+    }
+
+    func clearAIFilter() {
+        aiFilter.clear()
+        aiPool = []
+    }
+
+    private func refreshAIPool() {
+        guard aiFilter.isActive, let pool = fetchAIPool() else { return }
+        aiPool = pool
+        aiFilter.refresh(candidates: pool.compactMap(\.judgeCandidate))
+    }
+
+    private func fetchAIPool() -> [CopiedItem]? {
+        do {
+            return try repository.fetchTextItems(
+                with: searchText,
+                isShowingOnlyFavorite: isShowingOnlyFavorite,
+                isShowingOnlyMemoed: isShowingOnlyMemoed,
+                isShowingOnlyReminder: isShowingOnlyReminder,
+                sort: sort,
+                limit: aiFilterLimit
+            )
+        } catch {
+            NSLog("Failed to load items for the AI filter: \(error)")
+            return nil
+        }
+    }
+
+    func exportFilteredCSV() {
+        exportCSV(items: visibleItems, baseName: "CopyHistory-filtered")
+    }
+
     func exportCSV() {
         do {
-            let rows = try repository.fetchAllForExport().map(CSVExportRow.init(item:))
+            exportCSV(items: try repository.fetchAllForExport(), baseName: "CopyHistory")
+        } catch {
+            let alert = NSAlert(error: error)
+            alert.messageText = String(localized: "Failed to export CSV")
+            ModalPresenter.run(alert)
+        }
+    }
+
+    private func exportCSV(items: [CopiedItem], baseName: String) {
+        do {
+            let rows = items.map(CSVExportRow.init(item:))
             let panel = NSSavePanel()
             panel.allowedContentTypes = [.commaSeparatedText]
-            panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).csv"
+            panel.nameFieldStringValue = "\(baseName)-\(Self.exportDateFormatter.string(from: Date())).csv"
             NSApp.activate(ignoringOtherApps: true)
             guard ModalPresenter.run(panel) == .OK, let url = panel.url else { return }
             try CSVExporter.makeCSV(rows: rows).write(to: url, atomically: true, encoding: .utf8)

@@ -19,6 +19,7 @@ struct SettingView: View {
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
     @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
+    @AppStorage(ViewModel.aiFilterLimitKey) private var aiFilterLimit: Int = ViewModel.aiFilterLimitDefault
     let onExportCSV: () -> Void
     let onImportCSV: () -> Void
 
@@ -74,6 +75,18 @@ struct SettingView: View {
             }
 
             Divider()
+
+            if AIFilterAvailability.isAvailable {
+                Stepper(value: $aiFilterLimit, in: 50...2000, step: 50) {
+                    HStack {
+                        Text("AI filter: max items to judge")
+                        Spacer()
+                        Text("\(aiFilterLimit)").monospacedDigit()
+                    }
+                }
+
+                Divider()
+            }
 
             CustomTransformEditorView()
 

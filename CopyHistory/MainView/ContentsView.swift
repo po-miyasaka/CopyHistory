@@ -85,7 +85,7 @@ extension MainView {
                     // However Lazy make selecting cell work weird...
                     
                     
-                    ForEach(viewModel.copiedItems.indexed(), id: \.element.dataHash) { index, item in
+                    ForEach(viewModel.visibleItems.indexed(), id: \.element.dataHash) { index, item in
                         
                         Row(item: item,
                             favorite: item.favorite,
@@ -122,9 +122,9 @@ extension MainView {
     }
     
     func scroll(proxy: ScrollViewProxy, direction: Direction) {
-        guard !viewModel.copiedItems.isEmpty else { return }
+        guard !viewModel.visibleItems.isEmpty else { return }
         
-        let itemCount = viewModel.copiedItems.count
+        let itemCount = viewModel.visibleItems.count
         let newIndex: Int
         
         switch direction {
@@ -135,7 +135,7 @@ extension MainView {
         }
         
         focusedItemIndex = newIndex
-        proxy.scrollTo(viewModel.copiedItems[newIndex].dataHash)
+        proxy.scrollTo(viewModel.visibleItems[newIndex].dataHash)
     }
 }
 

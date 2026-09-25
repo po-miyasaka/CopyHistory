@@ -13,8 +13,8 @@ extension MainView {
         Group {
             KeyboardCommandButtons(action: { isFocus = true }, keys: [.init(main: "f", sub: .command), .init(main: "/", sub: .command)])
             KeyboardCommandButtons(action: {
-                if let i = focusedItemIndex, viewModel.copiedItems.endIndex > i {
-                    viewModel.didSelected(viewModel.copiedItems[i])
+                if let i = focusedItemIndex, viewModel.visibleItems.endIndex > i {
+                    viewModel.didSelected(viewModel.visibleItems[i])
                     focusedItemIndex = nil
                     NSApplication.shared.deactivate()
                 }
@@ -22,8 +22,8 @@ extension MainView {
             }, keys: [.init(main: .return, sub: .command)])
 
             KeyboardCommandButtons(action: {
-                if let i = focusedItemIndex, viewModel.copiedItems.endIndex > i {
-                    viewModel.delete(viewModel.copiedItems[i])
+                if let i = focusedItemIndex, viewModel.visibleItems.endIndex > i {
+                    viewModel.delete(viewModel.visibleItems[i])
                 }
 
             }, keys: [.init(main: "d", sub: .command.union(.shift))]).transaction { transaction in
@@ -31,8 +31,8 @@ extension MainView {
             }
 
             KeyboardCommandButtons(action: {
-                if let i = focusedItemIndex, viewModel.copiedItems.endIndex > i {
-                    viewModel.toggleFavorite(viewModel.copiedItems[i])
+                if let i = focusedItemIndex, viewModel.visibleItems.endIndex > i {
+                    viewModel.toggleFavorite(viewModel.visibleItems[i])
                 }
 
             }, keys: [.init(main: "o", sub: .command)])

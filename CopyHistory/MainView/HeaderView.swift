@@ -20,6 +20,15 @@ extension MainView {
                 Spacer()
                 HStack(alignment: .top) {
                     sortMenu()
+                    if AIFilterAvailability.isAvailable {
+                        AIFilterButton(
+                            controller: viewModel.aiFilter,
+                            matchCount: viewModel.visibleItems.count,
+                            onApply: viewModel.applyAIFilter,
+                            onClear: viewModel.clearAIFilter,
+                            onExport: viewModel.exportFilteredCSV
+                        )
+                    }
                     memoButton()
                     reminderFilterButton()
                     favoriteButton()
@@ -38,7 +47,7 @@ extension MainView {
                     focusedItemIndex = nil
                 })
                 .foregroundColor(.primary)
-            Text("\(viewModel.copiedItems.count)")
+            Text("\(viewModel.visibleItems.count)")
                 .font(.caption)
                 .foregroundColor(Color.gray)
         }

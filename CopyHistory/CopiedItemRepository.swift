@@ -83,6 +83,26 @@ class CopiedItemRepository {
         }
     }
 
+    /// Text items for the AI filter: every saved item that matches the current filters, capped by `limit`.
+    func fetchTextItems(
+        with text: String?,
+        isShowingOnlyFavorite: Bool,
+        isShowingOnlyMemoed: Bool,
+        isShowingOnlyReminder: Bool,
+        sort: ItemSort,
+        limit: Int
+    ) throws -> [CopiedItem] {
+        let request = makeCopiedItemsRequest(with: text,
+                                             isShowingOnlyFavorite: isShowingOnlyFavorite,
+                                             isShowingOnlyMemoed: isShowingOnlyMemoed,
+                                             isShowingOnlyReminder: isShowingOnlyReminder,
+                                             sort: sort,
+                                             limit: limit)
+        let hasText = NSPredicate(format: "rawString != nil AND rawString != ''")
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [request.predicate, hasText].compactMap { $0 })
+        return try coreDataService.fetch(request)
+    }
+
     func create() -> CopiedItem {
         coreDataService.create(type: CopiedItem.self)
     }

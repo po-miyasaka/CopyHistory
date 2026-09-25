@@ -52,6 +52,11 @@ extension CopiedItem {
         return attributeString
     }
 
+    var judgeCandidate: JudgeCandidate? {
+        guard let dataHash, let rawString, !rawString.isEmpty else { return nil }
+        return JudgeCandidate(id: dataHash, text: rawString)
+    }
+
     var imagePNGData: Data? {
         guard let content else { return nil }
         if contentTypeString?.contains("png") == true { return content }
