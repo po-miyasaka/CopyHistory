@@ -3,6 +3,17 @@ import AppKit
 import CoreImage
 
 enum TextTransformer {
+    /// The address when the whole text is a single web (http or https) link.
+    static func webURL(from text: String) -> URL? {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !trimmed.contains(where: \.isWhitespace),
+              let url = URL(string: trimmed),
+              let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https",
+              let host = url.host, !host.isEmpty
+        else { return nil }
+        return url
+    }
+
     static func apply(_ action: TransformAction, to input: String) -> String? {
         switch action {
         case .jsonPretty:
@@ -37,8 +48,8 @@ enum TextTransformer {
             return input.trimmingCharacters(in: .whitespacesAndNewlines)
         case .showQRCode:
             return nil
-        case .translate:
-            return nil // asynchronous; handled by the view model
+        case .translate, .openInBrowser:
+            return nil // handled by the view model
         case .custom(let transform):
             return applyCustom(transform, to: input)
         }

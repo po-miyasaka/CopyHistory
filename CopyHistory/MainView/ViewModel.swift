@@ -150,6 +150,12 @@ final class ViewModel: ObservableObject {
             translate(copiedItem)
             return
         }
+        if transform == .openInBrowser {
+            if let url = TextTransformer.webURL(from: copiedItem.rawString ?? "") {
+                NSWorkspace.shared.open(url)
+            }
+            return
+        }
         guard let rawString = copiedItem.rawString,
               let transformed = TextTransformer.apply(transform, to: rawString)
         else { return }
@@ -282,12 +288,23 @@ final class ViewModel: ObservableObject {
                 pasteboardService.applyTransformed(translated)
                 copiedItem.updateDate = Date()
                 repository.update()
-            } catch {
+            } catch let error as TranslationError where error.isAboutTheText {
                 let alert = NSAlert(error: error)
                 alert.messageText = String(localized: "Failed to translate")
                 ModalPresenter.run(alert)
+            } catch {
+                // Not translatable on this Mac: open the web translator with the text ready to paste.
+                NSLog("On-device translation failed, opening the web translator: \(error)")
+                openWebTranslator(for: rawString)
             }
         }
+    }
+
+    private func openWebTranslator(for text: String) {
+        let languages = WebTranslator.languages(for: text)
+        guard let url = WebTranslator.url(for: WebTranslator.preferred, text: text, source: languages.source, target: languages.target) else { return }
+        pasteboardService.applyTransformed(text)
+        NSWorkspace.shared.open(url)
     }
 
     func exportCSV() {

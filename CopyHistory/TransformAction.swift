@@ -15,6 +15,7 @@ enum TransformAction: Identifiable, Hashable {
     case trimWhitespace
     case showQRCode
     case translate
+    case openInBrowser
     case custom(CustomTransform)
 
     var id: String {
@@ -33,6 +34,7 @@ enum TransformAction: Identifiable, Hashable {
         case .trimWhitespace: return "trimWhitespace"
         case .showQRCode: return "showQRCode"
         case .translate: return "translate"
+        case .openInBrowser: return "openInBrowser"
         case .custom(let t): return "custom_\(t.id)"
         }
     }
@@ -53,6 +55,7 @@ enum TransformAction: Identifiable, Hashable {
         case .trimWhitespace: return "Trim"
         case .showQRCode: return "QR"
         case .translate: return String(localized: "Translate")
+        case .openInBrowser: return String(localized: "Open in browser")
         case .custom(let t): return t.name
         }
     }
@@ -73,6 +76,7 @@ enum TransformAction: Identifiable, Hashable {
         case .trimWhitespace: return "scissors"
         case .showQRCode: return "qrcode"
         case .translate: return "globe"
+        case .openInBrowser: return "safari"
         case .custom: return "gearshape"
         }
     }
@@ -93,6 +97,7 @@ enum TransformAction: Identifiable, Hashable {
         case .trimWhitespace: return "Remove leading and trailing whitespace and newlines"
         case .showQRCode: return "Generate a QR code from the text"
         case .translate: return "Translate the text into your language (or English if it is already in your language)"
+        case .openInBrowser: return "Open the link in your browser"
         case .custom: return "Run a custom JavaScript transform"
         }
     }
@@ -104,7 +109,7 @@ enum TransformAction: Identifiable, Hashable {
             .base64Encode, .base64Decode, .uppercase, .lowercase,
             .trimWhitespace, .showQRCode
         ]
-        return TranslationService.isAvailable ? actions + [.translate] : actions
+        return actions + [.translate]
     }
 }
 

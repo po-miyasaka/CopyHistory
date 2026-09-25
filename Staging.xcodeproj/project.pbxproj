@@ -33,6 +33,7 @@
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
 		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
+		E5C0DE00000000000000WA01 /* WebTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000WA02 /* WebTranslator.swift */; };
 		E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000CA02 /* ImageCaptionService.swift */; };
 		E5C0DE00000000000000OA01 /* OCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000OA02 /* OCRService.swift */; };
 		E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000TA02 /* TranslationService.swift */; };
@@ -81,6 +82,7 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000WA02 /* WebTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTranslator.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000CA02 /* ImageCaptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptionService.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000OA02 /* OCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRService.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000TA02 /* TranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationService.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
 				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
+				E5C0DE00000000000000WA02 /* WebTranslator.swift */,
 				E5C0DE00000000000000CA02 /* ImageCaptionService.swift */,
 				E5C0DE00000000000000OA02 /* OCRService.swift */,
 				E5C0DE00000000000000TA02 /* TranslationService.swift */,
@@ -284,6 +287,7 @@
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
 				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
+				E5C0DE00000000000000WA01 /* WebTranslator.swift in Sources */,
 				E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */,
 				E5C0DE00000000000000OA01 /* OCRService.swift in Sources */,
 				E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */,

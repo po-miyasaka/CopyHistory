@@ -12,10 +12,16 @@ struct TransformActionsBar: View {
         item.rawString != nil && !(item.rawString?.isEmpty ?? true)
     }
 
+    private var isWebLink: Bool {
+        TextTransformer.webURL(from: item.rawString ?? "") != nil
+    }
+
     private var sortedActions: [TransformAction] {
         let builtIn = TransformAction.allBuiltIn
         let custom = customStore.activeTransforms.map { TransformAction.custom($0) }
-        return usageTracker.sorted(custom + builtIn)
+        // A link gets "Open in browser" first; using an action still moves it to the front.
+        let leading: [TransformAction] = isWebLink ? [.openInBrowser] : []
+        return usageTracker.sorted(leading + custom + builtIn)
     }
 
     var body: some View {

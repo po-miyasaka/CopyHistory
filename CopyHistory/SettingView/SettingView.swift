@@ -19,6 +19,7 @@ struct SettingView: View {
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
     @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
+    @AppStorage(WebTranslator.settingKey) private var webTranslator: String = WebTranslator.Service.deepL.rawValue
     @AppStorage(ViewModel.aiFilterLimitKey) private var aiFilterLimit: Int = ViewModel.aiFilterLimitDefault
     let onExportCSV: () -> Void
     let onImportCSV: () -> Void
@@ -72,6 +73,21 @@ struct SettingView: View {
                 Slider(value: $windowWidth, in: WindowWidth.range, step: 50)
                     .frame(width: 160)
                 Text("\(Int(windowWidth))").monospacedDigit().frame(width: 40, alignment: .trailing)
+            }
+
+            Divider()
+
+            HStack {
+                Text("Web translator (when this Mac can't translate)")
+                Spacer()
+                Picker("", selection: $webTranslator) {
+                    ForEach(WebTranslator.Service.allCases) { service in
+                        Text(service.title).tag(service.rawValue)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(width: 210)
             }
 
             Divider()

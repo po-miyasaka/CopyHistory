@@ -9,6 +9,14 @@ enum TranslationError: LocalizedError {
     case unsupportedPair(source: String, target: String)
     case languageNotInstalled(source: String, target: String)
 
+    /// Errors a web translator cannot help with: the text itself is the problem.
+    var isAboutTheText: Bool {
+        switch self {
+        case .languageNotDetected, .alreadyInYourLanguage: return true
+        default: return false
+        }
+    }
+
     var errorDescription: String? {
         switch self {
         case .unavailable:
