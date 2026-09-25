@@ -93,7 +93,8 @@ extension MainView {
                             isFocused: index == focusedItemIndex, itemAction: {
                             itemAction = $0
                         },
-                            onHoverContent: { focusedItemIndex = index },
+                            index: index,
+                            onHoverContent: { focusedItemIndex = $0 },
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML,
@@ -152,7 +153,8 @@ struct Row: View, Equatable {
     @State var memo: String
     @State private var thumbnailImage: NSImage?
     var itemAction: (MainView.ItemAction) -> Void
-    var onHoverContent: () -> Void
+    let index: Int
+    var onHoverContent: (Int) -> Void
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -178,7 +180,8 @@ struct Row: View, Equatable {
          reminderDate: Date?,
          isFocused: Bool,
          itemAction: @escaping (MainView.ItemAction) -> Void,
-         onHoverContent: @escaping () -> Void,
+         index: Int,
+         onHoverContent: @escaping (Int) -> Void,
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
          isShowingHTML: Binding<Bool>,
@@ -189,6 +192,7 @@ struct Row: View, Equatable {
         self.reminderDate = reminderDate
         self.isFocused = isFocused
         self.itemAction = itemAction
+        self.index = index
         self.onHoverContent = onHoverContent
         _isExpanded = isExpanded
         _isShowingRTF = isShowingRTF
@@ -256,7 +260,7 @@ struct Row: View, Equatable {
                         .frame(minHeight: Self.minRowHeight)
                     })
                     .onHover { hovering in
-                        if hovering { onHoverContent() }
+                        if hovering { onHoverContent(index) }
                     }
 
                     if isShowingFileInfo || isShowingDate {
@@ -416,6 +420,7 @@ struct Row: View, Equatable {
     /// This comparation make Row stop unneeded rendering.
     static func == (lhs: Row, rhs: Row) -> Bool {
         return lhs.item.dataHash == rhs.item.dataHash &&
+        lhs.index == rhs.index &&
         lhs.isFocused == rhs.isFocused &&
         lhs.favorite == rhs.favorite &&
         lhs.reminderDate == rhs.reminderDate &&
