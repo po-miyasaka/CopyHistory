@@ -152,6 +152,32 @@ final class ViewModel: ObservableObject {
         scheduleReminder(dataHash: dataHash, body: reminderBody(for: copiedItem), date: date, reportsFailure: true)
     }
 
+    func saveImageToDesktop(_ copiedItem: CopiedItem) {
+        do {
+            guard let png = copiedItem.imagePNGData else { throw ImageSaveError.unreadableImage }
+            guard let desktop = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else {
+                throw ImageSaveError.desktopNotFound
+            }
+            try png.write(to: availableImageURL(in: desktop), options: .atomic)
+            NSSound(named: "Glass")?.play()
+        } catch {
+            let alert = NSAlert(error: error)
+            alert.messageText = String(localized: "Failed to save the image")
+            alert.runModal()
+        }
+    }
+
+    private func availableImageURL(in directory: URL) -> URL {
+        let base = "CopyHistory-\(Self.exportDateFormatter.string(from: Date()))"
+        var url = directory.appendingPathComponent("\(base).png")
+        var suffix = 2
+        while FileManager.default.fileExists(atPath: url.path) {
+            url = directory.appendingPathComponent("\(base)-\(suffix).png")
+            suffix += 1
+        }
+        return url
+    }
+
     func delete(_ copiedItem: CopiedItem) {
         if let dataHash = copiedItem.dataHash {
             ReminderService.cancel(ids: [dataHash])

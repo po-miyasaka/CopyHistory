@@ -297,6 +297,23 @@ struct Row: View, Equatable {
                     })
                 }
 
+                if isFocused && isImageType {
+                    HStack {
+                        Button(action: {
+                            itemAction(.init(item: item, action: .saveImageToDesktop))
+                        }, label: {
+                            Label("Save to Desktop", systemImage: "square.and.arrow.down")
+                                .font(.caption2)
+                                .lineLimit(1)
+                        })
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                }
+
                 if isFocused && !isImageType {
                     TransformActionsBar(item: item) { transformAction in
                         itemAction(.init(item: item, action: .transform(transformAction)))

@@ -37,6 +37,7 @@ struct MainView: View {
         case favorite
         case transform(TransformAction)
         case reminder(Date?)
+        case saveImageToDesktop
     }
 
     struct ItemAction {
@@ -73,6 +74,8 @@ struct MainView: View {
                 NSApplication.shared.deactivate()
             case .favorite:
                 viewModel.toggleFavorite(actionItem.item)
+            case .saveImageToDesktop:
+                viewModel.saveImageToDesktop(actionItem.item)
             case .reminder(let date):
                 viewModel.setReminder(actionItem.item, date: date)
             }
