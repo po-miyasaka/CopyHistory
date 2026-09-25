@@ -268,15 +268,15 @@ struct Row: View, Equatable {
                         if hovering { onHoverContent(index) }
                     }
 
+                    if !isFocused {
+                        statusButtons
+                    }
+
                     TextField("", text: $memo)
                         .focused($memoFocusState)
                         .onSubmit({
                             itemAction(.init(item: item, action: .memoEdited(memo)))
                         }).frame(width: 26)
-
-                    if !isFocused {
-                        statusButtons
-                    }
 
                     if isShowingFileInfo || isShowingDate || isShowingUpdatedDate {
                         VStack(alignment: .trailing) {
@@ -295,6 +295,7 @@ struct Row: View, Equatable {
                                     .foregroundColor(.secondary)
                             }
                         }
+                        .padding(.leading, 8)
                     }
                 }
                 .padding(.vertical, Self.cellVerticalMargin)
