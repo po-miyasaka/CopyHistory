@@ -1045,16 +1045,6 @@
         }
       }
     },
-    "Couldn't judge %lld items" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld件を判定できませんでした"
-          }
-        }
-      }
-    },
     "Export as CSV…" : {
       "localizations" : {
         "ja" : {
@@ -1191,6 +1181,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AI絞り込み: 取得する最大件数"
+          }
+        }
+      }
+    },
+    "Couldn't judge %lld items (shown anyway)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld件を判定できませんでした（そのまま表示しています）"
+          }
+        }
+      }
+    },
+    "The on-device model is not available." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内のモデルを利用できません。"
           }
         }
       }

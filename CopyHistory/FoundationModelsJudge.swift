@@ -35,25 +35,28 @@ struct FoundationModelsJudge: ItemJudge {
         """
 
     func judge(criterion: String, candidates: [JudgeCandidate]) async throws -> JudgeOutcome {
-        try await withThrowingTaskGroup(of: (String, Bool?).self) { group in
+        try await withThrowingTaskGroup(of: (String, Result<Bool, Error>).self) { group in
             for candidate in candidates {
                 group.addTask { (candidate.id, try await verdict(for: candidate, criterion: criterion)) }
             }
             var matched = Set<String>()
             var failed = Set<String>()
-            for try await (id, verdict) in group {
-                switch verdict {
-                case true: matched.insert(id)
-                case false: break
-                case nil: failed.insert(id)
+            var reason: String?
+            for try await (id, result) in group {
+                switch result {
+                case .success(true): matched.insert(id)
+                case .success(false): break
+                case .failure(let error):
+                    failed.insert(id)
+                    reason = error.localizedDescription
                 }
             }
-            return JudgeOutcome(matchedIDs: matched, failedIDs: failed)
+            return JudgeOutcome(matchedIDs: matched, failedIDs: failed, failureReason: reason)
         }
     }
 
-    /// Nil when this one text could not be judged; cancellation is passed on.
-    private func verdict(for candidate: JudgeCandidate, criterion: String) async throws -> Bool? {
+    /// A failure for this one text is returned as a result; cancellation is thrown.
+    private func verdict(for candidate: JudgeCandidate, criterion: String) async throws -> Result<Bool, Error> {
         // A fresh session per text keeps earlier texts out of the context window.
         let session = LanguageModelSession(instructions: Self.instructions)
         do {
@@ -67,12 +70,12 @@ struct FoundationModelsJudge: ItemJudge {
                     """,
                 generating: Verdict.self
             )
-            return response.content.matches
+            return .success(response.content.matches)
         } catch is CancellationError {
             throw CancellationError()
         } catch {
             NSLog("AI filter could not judge an item: \(error)")
-            return nil
+            return .failure(error)
         }
     }
 
