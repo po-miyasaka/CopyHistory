@@ -18,6 +18,15 @@ final class ViewModel: ObservableObject {
     @Published var isShowingOnlyFavorite: Bool = false
     @Published var isShowingOnlyMemoed: Bool = false
     @Published var isShowingOnlyReminder: Bool = false
+    @Published var sort: ItemSort = {
+        UserDefaults.standard.data(forKey: "itemSort")
+            .flatMap { try? JSONDecoder().decode(ItemSort.self, from: $0) } ?? ItemSort()
+    }() {
+        didSet {
+            guard let data = try? JSONEncoder().encode(sort) else { return }
+            UserDefaults.standard.set(data, forKey: "itemSort")
+        }
+    }
     @Published private(set) var copiedItems: [CopiedItem] = []
     @Published private(set) var displayedItemCount: Int = {
         let value = UserDefaults.standard.integer(forKey: "displayedItemCount")
@@ -62,15 +71,16 @@ final class ViewModel: ObservableObject {
 
     func setup() {
         _ = pasteboardService // Todo: 内部のTimerを稼働させる必要がありイニシャライズを行う必要があるが、selfをキャプチャしたクロージャを渡している関係でlazyにしてあるため一度参照している且つが設計を見直す。
-        let filters = Publishers.CombineLatest3($isShowingOnlyFavorite, $isShowingOnlyMemoed, $isShowingOnlyReminder)
+        repository.backfillMissingAttributes()
+        let filters = Publishers.CombineLatest4($isShowingOnlyFavorite, $isShowingOnlyMemoed, $isShowingOnlyReminder, $sort)
         Publishers.CombineLatest3(
             $searchText.debounce(for: 0.3, scheduler: DispatchQueue.main).eraseToAnyPublisher(), // TODO: How should Scheduler be set to improve performance.
             filters.eraseToAnyPublisher(),
             $displayedItemCount.debounce(for: 0.5, scheduler: DispatchQueue.main).eraseToAnyPublisher()
         )
         .sink {[weak self] (arg0) in
-            let (searchText, (isShowingOnlyFavorite, isShowingOnlyMemoed, isShowingOnlyReminder), displayedItemCount) = arg0
-            self?.repository.requestCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, isShowingOnlyReminder: isShowingOnlyReminder, limit: displayedItemCount)
+            let (searchText, (isShowingOnlyFavorite, isShowingOnlyMemoed, isShowingOnlyReminder, sort), displayedItemCount) = arg0
+            self?.repository.requestCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, isShowingOnlyReminder: isShowingOnlyReminder, sort: sort, limit: displayedItemCount)
         }.store(in: &cancellables)
 
         // TODO: このタスクの使い方
@@ -203,6 +213,7 @@ final class ViewModel: ObservableObject {
             item.content = data
             item.name = row.name.isEmpty ? String(row.text.prefix(100)) : row.name
             item.binarySize = Int64(data.count)
+            item.textLength = Int64(row.text.count)
             item.contentTypeString = NSPasteboard.PasteboardType.string.rawValue
             item.dataHash = dataHash
             item.favorite = row.isFavorite

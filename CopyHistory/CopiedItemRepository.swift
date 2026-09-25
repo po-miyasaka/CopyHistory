@@ -45,6 +45,7 @@ class CopiedItemRepository {
         isShowingOnlyFavorite: Bool = false,
         isShowingOnlyMemoed: Bool = false,
         isShowingOnlyReminder: Bool = false,
+        sort: ItemSort = ItemSort(),
         limit: Int? = nil
     ) {
         request(
@@ -52,6 +53,7 @@ class CopiedItemRepository {
                                          isShowingOnlyFavorite: isShowingOnlyFavorite,
                                          isShowingOnlyMemoed: isShowingOnlyMemoed,
                                          isShowingOnlyReminder: isShowingOnlyReminder,
+                                         sort: sort,
                                          limit: limit)
         )
     }
@@ -62,6 +64,23 @@ class CopiedItemRepository {
         fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "memo", "name", "rawString", "reminderDate", "updateDate"]
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updateDate", ascending: false)]
         return try coreDataService.fetch(fetchRequest)
+    }
+
+    /// Fills attributes added after the first release for items saved before them.
+    func backfillMissingAttributes() {
+        let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
+        fetchRequest.predicate = NSPredicate(format: "createdDate == nil OR (textLength == 0 AND rawString != nil AND rawString != '')")
+        do {
+            let items = try coreDataService.fetch(fetchRequest)
+            guard !items.isEmpty else { return }
+            items.forEach { item in
+                if item.createdDate == nil { item.createdDate = item.updateDate }
+                if item.textLength == 0 { item.textLength = Int64(item.rawString?.count ?? 0) }
+            }
+            coreDataService.save()
+        } catch {
+            NSLog("Failed to backfill item attributes: \(error)")
+        }
     }
 
     func create() -> CopiedItem {
@@ -110,10 +129,10 @@ class CopiedItemRepository {
 
     }
 
-    private func makeCopiedItemsRequest(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, isShowingOnlyReminder: Bool = false, limit: Int? = nil) -> NSFetchRequest<CopiedItem> {
+    private func makeCopiedItemsRequest(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, isShowingOnlyReminder: Bool = false, sort: ItemSort = ItemSort(), limit: Int? = nil) -> NSFetchRequest<CopiedItem> {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
         fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "dataHash", "favorite", "memo", "name", "rawString", "reminderDate", "updateDate"]
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "dataHash", "favorite", "memo", "name", "rawString", "reminderDate", "textLength", "updateDate"]
 
         var favoritePredicate: NSPredicate?
         if isShowingOnlyFavorite {
@@ -141,9 +160,7 @@ class CopiedItemRepository {
         if isShowingOnlyReminder {
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "reminderDate", ascending: true)]
         } else {
-            var updateDateSort = SortDescriptor<CopiedItem>(\.updateDate)
-            updateDateSort.order = .reverse
-            fetchRequest.sortDescriptors = [NSSortDescriptor(updateDateSort)]
+            fetchRequest.sortDescriptors = sort.sortDescriptors
         }
         return fetchRequest
     }

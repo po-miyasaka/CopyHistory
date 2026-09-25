@@ -17,6 +17,7 @@ struct SettingView: View {
     @Binding var isShowingDate: Bool
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
+    @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
     let onExportCSV: () -> Void
     let onImportCSV: () -> Void
 
@@ -50,6 +51,16 @@ struct SettingView: View {
                 }
                 Spacer()
                 TextField("", text: $displayedCount).frame(width: 50)
+            }
+
+            Divider()
+
+            HStack {
+                Text("Window width")
+                Spacer()
+                Slider(value: $windowWidth, in: WindowWidth.range, step: 50)
+                    .frame(width: 160)
+                Text("\(Int(windowWidth))").monospacedDigit().frame(width: 40, alignment: .trailing)
             }
 
             Divider()

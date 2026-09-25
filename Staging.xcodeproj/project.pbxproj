@@ -33,6 +33,7 @@
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
 		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
+		E5C0DE00000000000000FA31 /* ItemSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000FA32 /* ItemSort.swift */; };
 		E5C0DE00000000000000FA21 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000FA22 /* Reminder.swift */; };
 		E5C0DE00000000000000FA11 /* CSVImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000FA12 /* CSVImporter.swift */; };
 		D5F00001AAAA000100000004 /* TransformActionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000004 /* TransformActionsBar.swift */; };
@@ -62,6 +63,7 @@
 		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		D5A5573E29DC2EA400FF69C7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
+		E5C0DE0000000000000000E2 /* Model6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model6.xcdatamodel; sourceTree = "<group>"; };
 		E5C0DE0000000000000000E1 /* Model5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model5.xcdatamodel; sourceTree = "<group>"; };
 		D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model4.xcdatamodel; sourceTree = "<group>"; };
 		D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model3.xcdatamodel; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000FA32 /* ItemSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSort.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000FA22 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000FA12 /* CSVImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVImporter.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000004 /* TransformActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformActionsBar.swift; sourceTree = "<group>"; };
@@ -121,6 +124,7 @@
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
 				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
+				E5C0DE00000000000000FA32 /* ItemSort.swift */,
 				E5C0DE00000000000000FA22 /* Reminder.swift */,
 				E5C0DE00000000000000FA12 /* CSVImporter.swift */,
 				D5F00001CCCC000000000001 /* Localizable.xcstrings */,
@@ -260,6 +264,7 @@
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
 				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
+				E5C0DE00000000000000FA31 /* ItemSort.swift in Sources */,
 				E5C0DE00000000000000FA21 /* Reminder.swift in Sources */,
 				E5C0DE00000000000000FA11 /* CSVImporter.swift in Sources */,
 				D5F00001AAAA000100000004 /* TransformActionsBar.swift in Sources */,
@@ -497,13 +502,14 @@
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				E5C0DE0000000000000000E2 /* Model6.xcdatamodel */,
 				E5C0DE0000000000000000E1 /* Model5.xcdatamodel */,
 				D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */,
 				D5A5574529DCAEA900FF69C7 /* Model3.xcdatamodel */,
 				CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */,
 				CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */,
 			);
-			currentVersion = E5C0DE0000000000000000E1 /* Model5.xcdatamodel */;
+			currentVersion = E5C0DE0000000000000000E2 /* Model6.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

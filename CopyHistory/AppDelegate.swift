@@ -121,6 +121,10 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: MainView())
         self.popover = popover
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak popover] _ in
+            guard let popover, popover.contentSize != windowSize else { return }
+            popover.contentSize = windowSize
+        }
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         popover.delegate = self
         image.size = CGSize(width: 18, height: 18)
@@ -168,12 +172,18 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
 
 let widthKey = "windowSizeWidth"
 let heightKey = "windowSizeHeight"
+
+enum WindowWidth {
+    static let key = "windowWidth"
+    static let defaultValue: Double = 500
+    static let range: ClosedRange<Double> = 400...1000
+}
+
 var windowSize: NSSize {
-    //    let height = CGFloat(UserDefaults.standard.object(forKey: heightKey) as? CGFloat ?? NSScreen.main?.frame.height ?? 800)
-    //    let width = CGFloat(UserDefaults.standard.object(forKey: widthKey) as? CGFloat ?? 500)
-    let height =  CGFloat(NSScreen.main?.frame.height ?? 800)
-    let width = CGFloat(500)
-    return NSSize(width: width, height: height)
+    let height = CGFloat(NSScreen.main?.frame.height ?? 800)
+    let stored = UserDefaults.standard.object(forKey: WindowWidth.key) as? Double ?? WindowWidth.defaultValue
+    let width = min(max(stored, WindowWidth.range.lowerBound), WindowWidth.range.upperBound)
+    return NSSize(width: CGFloat(width), height: height)
 }
 
 func save(windowSize size: NSSize = NSSize(width: 500, height: NSScreen.main?.frame.height ?? 800)) {

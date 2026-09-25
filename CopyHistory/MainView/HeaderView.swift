@@ -18,6 +18,7 @@ extension MainView {
                     shortcutsList()
                 }
                 Spacer()
+                sortMenu()
                 memoButton()
                 reminderFilterButton()
                 favoriteButton()
@@ -85,6 +86,29 @@ extension MainView {
                 Text("⌘ + p").font(.caption).foregroundColor(.gray).padding(.top, 2)
             }
         }
+    }
+
+    @ViewBuilder
+    func sortMenu() -> some View {
+        Menu {
+            Picker("Sort by", selection: $viewModel.sort.field) {
+                ForEach(ItemSort.Field.allCases) { field in
+                    Text(field.title).tag(field)
+                }
+            }
+            .pickerStyle(.inline)
+            Picker("Order", selection: $viewModel.sort.ascending) {
+                Text("Descending").tag(false)
+                Text("Ascending").tag(true)
+            }
+            .pickerStyle(.inline)
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .fixedSize()
+        .help("Sort items (ignored while showing only reminders)")
     }
 
     @ViewBuilder

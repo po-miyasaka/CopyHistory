@@ -95,6 +95,7 @@ class PasteboardService {
 
                     copiedItem.name = String((str ?? "No Name").prefix(100))
                     copiedItem.binarySize = Int64(data.count)
+                    copiedItem.textLength = Int64(str?.count ?? 0)
                     copiedItem.contentTypeString = type.rawValue
                     let now = Date()
                     copiedItem.createdDate = now
