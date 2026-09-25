@@ -165,7 +165,7 @@ struct Row: View, Equatable {
 
     /// Collapsed rows keep images within the same height as a one-line text row.
     private var imageMaxHeight: CGFloat {
-        isExpanded || isFocused ? 300 : Self.minRowHeight - 16
+        isExpanded ? 300 : Self.minRowHeight - 16
     }
 
     private var isImageType: Bool {
