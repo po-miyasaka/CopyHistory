@@ -18,10 +18,12 @@ extension MainView {
                     shortcutsList()
                 }
                 Spacer()
-                sortMenu()
-                memoButton()
-                reminderFilterButton()
-                favoriteButton()
+                HStack(alignment: .top) {
+                    sortMenu()
+                    memoButton()
+                    reminderFilterButton()
+                    favoriteButton()
+                }
             }
         }
     }
