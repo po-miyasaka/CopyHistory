@@ -344,7 +344,7 @@ struct Row: View, Equatable {
     private var statusButtons: some View {
         HStack(spacing: 4) {
             if reminderDate != nil {
-                reminderButton(isPresented: $isShowingStatusReminderPopover)
+                reminderButton(isPresented: $isShowingStatusReminderPopover, showsDate: true)
             }
             if favorite {
                 favoriteButton
@@ -377,8 +377,6 @@ struct Row: View, Equatable {
 
     private var actionButtons: some View {
         HStack(spacing: 4) {
-            reminderButton(isPresented: $isShowingReminderPopover)
-
             favoriteButton
 
             Button(action: {
@@ -389,16 +387,18 @@ struct Row: View, Equatable {
                     .frame(width: 30, height: 28)
                     .contentShape(Rectangle())
             })
+
+            reminderButton(isPresented: $isShowingReminderPopover, showsDate: false)
         }
     }
 
-    private func reminderButton(isPresented: Binding<Bool>) -> some View {
+    private func reminderButton(isPresented: Binding<Bool>, showsDate: Bool) -> some View {
         Button(action: {
             isPresented.wrappedValue = true
         }, label: {
             VStack(spacing: 0) {
                 Image(systemName: reminderDate == nil ? "clock" : "clock.fill")
-                if let reminderDate {
+                if showsDate, let reminderDate {
                     Text(Self.reminderFormatter.string(from: reminderDate)).font(.caption2)
                 }
             }
