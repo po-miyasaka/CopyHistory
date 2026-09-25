@@ -955,6 +955,16 @@
         }
       }
     },
+    "Custom Action (Add Text)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムアクション(文字列追加)"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

@@ -6,7 +6,8 @@ final class CustomTransformStore: ObservableObject {
 
     private static let listKey = "customTransformActions"
     private static let legacyScriptKey = "customTransformScript"
-    private static let defaultName = "Custom"
+    private static let fallbackName = "Custom"
+    private static var sampleName: String { String(localized: "Custom Action (Add Text)") }
     private static let defaultID = "custom"
 
     @Published var transforms: [CustomTransform] {
@@ -19,7 +20,7 @@ final class CustomTransformStore: ObservableObject {
             .filter { !$0.script.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
             .map { transform in
                 let hasName = !transform.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                return CustomTransform(id: transform.id, name: hasName ? transform.name : Self.defaultName, script: transform.script)
+                return CustomTransform(id: transform.id, name: hasName ? transform.name : Self.fallbackName, script: transform.script)
             }
     }
 
@@ -28,7 +29,7 @@ final class CustomTransformStore: ObservableObject {
     }
 
     func add() {
-        transforms = transforms + [CustomTransform(name: Self.defaultName, script: ScriptTransformRunner.templateScript)]
+        transforms = transforms + [CustomTransform(name: Self.sampleName, script: ScriptTransformRunner.templateScript)]
     }
 
     func remove(id: String) {
@@ -51,7 +52,8 @@ final class CustomTransformStore: ObservableObject {
         }
         // Earlier builds kept a single script; carry it over as the first action.
         let script = defaults.string(forKey: legacyScriptKey) ?? ScriptTransformRunner.templateScript
-        return [CustomTransform(id: defaultID, name: defaultName, script: script)]
+        let name = script == ScriptTransformRunner.templateScript ? sampleName : fallbackName
+        return [CustomTransform(id: defaultID, name: name, script: script)]
     }
 
     private func save() {
