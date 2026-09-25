@@ -40,17 +40,30 @@ struct CustomTransformEditorView: View {
     @State private var isPromptCopied = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Custom Transform Action").font(.headline)
 
-            TextEditor(text: $store.script)
-                .font(.system(.caption, design: .monospaced))
-                .frame(height: 110)
-                .border(Color.secondary.opacity(0.3))
+            ForEach($store.transforms) { $transform in
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        TextField("Action name", text: $transform.name)
+                            .textFieldStyle(.roundedBorder)
+                        Button(action: { store.remove(id: transform.id) }) {
+                            Image(systemName: "trash").foregroundColor(.secondary)
+                        }
+                    }
+                    TextEditor(text: $transform.script)
+                        .font(.system(.caption, design: .monospaced))
+                        .frame(height: 110)
+                        .border(Color.secondary.opacity(0.3))
+                    Button("Reset to default") { store.resetScript(id: transform.id) }
+                        .disabled(transform.script == ScriptTransformRunner.templateScript)
+                }
+                Divider()
+            }
 
             HStack {
-                Button("Reset to default", action: store.resetToDefault)
-                    .disabled(store.script == ScriptTransformRunner.templateScript)
+                Button("Add action", action: store.add)
                 Button("Copy prompt for AI code generation", action: copyPrompt)
                 if isPromptCopied {
                     Text("Copied!").font(.caption).foregroundColor(.green)

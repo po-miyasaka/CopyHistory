@@ -935,6 +935,26 @@
         }
       }
     },
+    "Action name" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクション名"
+          }
+        }
+      }
+    },
+    "Add action" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクションを追加"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

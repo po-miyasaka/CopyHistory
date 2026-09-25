@@ -14,7 +14,7 @@ struct TransformActionsBar: View {
 
     private var sortedActions: [TransformAction] {
         let builtIn = TransformAction.allBuiltIn
-        let custom = customStore.transforms.map { TransformAction.custom($0) }
+        let custom = customStore.activeTransforms.map { TransformAction.custom($0) }
         return usageTracker.sorted(custom + builtIn)
     }
 
