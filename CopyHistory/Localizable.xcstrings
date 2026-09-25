@@ -545,16 +545,6 @@
         }
       }
     },
-    "Custom Transforms (JavaScript)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カスタム変換 (JavaScript)"
-          }
-        }
-      }
-    },
     "Run a custom JavaScript transform" : {
       "localizations" : {
         "ja" : {
@@ -651,6 +641,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "コード生成用AIプロンプトをコピー"
+          }
+        }
+      }
+    },
+    "Custom Transform Action" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム変換アクション"
+          }
+        }
+      }
+    },
+    "chars" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字"
           }
         }
       }

@@ -41,7 +41,7 @@ struct CustomTransformEditorView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Custom Transforms (JavaScript)").font(.headline)
+            Text("Custom Transform Action").font(.headline)
 
             TextEditor(text: $store.script)
                 .font(.system(.caption, design: .monospaced))

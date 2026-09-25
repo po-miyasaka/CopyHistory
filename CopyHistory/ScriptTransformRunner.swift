@@ -26,12 +26,14 @@ enum ScriptTransformError: LocalizedError, Equatable {
 enum ScriptTransformRunner {
     static let timeout: TimeInterval = 2
 
-    static let templateScript = """
-    function transform(text) {
-      const count = [...text].length;
-      return text + " (" + count + "文字)";
+    static var templateScript: String {
+        """
+        function transform(text) {
+          const count = [...text].length;
+          return text + " (" + count + "\(String(localized: "chars")))";
+        }
+        """
     }
-    """
 
     static func run(script: String, input: String) -> Result<String, ScriptTransformError> {
         let outcome = ResultBox()
