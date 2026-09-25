@@ -213,74 +213,71 @@ struct Row: View, Equatable {
 
             VStack(spacing: 0) {
                 HStack {
-                    // Only the text and metadata area focuses the row; the buttons on the right do not.
-                    HStack {
-                        Button(action: {
-                            itemAction(.init(item: item, action: .select))
-                        }, label: {
+                    Button(action: {
+                        itemAction(.init(item: item, action: .select))
+                    }, label: {
 
-                            ZStack {
-                                Color.mainViewBackground.opacity(0.1)
+                        ZStack {
+                            Color.mainViewBackground.opacity(0.1)
 
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Group {
-                                            if isImageType {
-                                                if let thumbnailImage {
-                                                    Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: imageMaxHeight)
-                                                } else {
-                                                    ProgressView()
-                                                        .frame(maxHeight: imageMaxHeight)
-                                                }
-                                            } else if isShowingRTF, let attributedString = item.attributeString {
-                                                Text(AttributedString(attributedString))
-
-                                            } else if isShowingHTML, let attributedString = item.htmlString {
-                                                Text(AttributedString(attributedString))
-                                            } else if let url = item.fileURL {
-                                                FileImageView(url: url)
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Group {
+                                        if isImageType {
+                                            if let thumbnailImage {
+                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: imageMaxHeight)
                                             } else {
-                                                Text(item.name ?? "No Name").font(.callout)
+                                                ProgressView()
+                                                    .frame(maxHeight: imageMaxHeight)
                                             }
-                                        }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
+                                        } else if isShowingRTF, let attributedString = item.attributeString {
+                                            Text(AttributedString(attributedString))
 
-                                        Spacer()
-                                    }
-                                    if !memo.isEmpty {
-                                        Text(memo)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .lineLimit(1)
-                                            .padding(.bottom, 4)
-                                    }
-                                }
-                            }
-                            .frame(minHeight: Self.minRowHeight)
-                        })
+                                        } else if isShowingHTML, let attributedString = item.htmlString {
+                                            Text(AttributedString(attributedString))
+                                        } else if let url = item.fileURL {
+                                            FileImageView(url: url)
+                                        } else {
+                                            Text(item.name ?? "No Name").font(.callout)
+                                        }
+                                    }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
 
-                        if isShowingFileInfo || isShowingDate {
-                            VStack(alignment: .trailing) {
-                                if isShowingFileInfo {
-                                    Text(item.contentTypeString ?? "").font(.caption)
-                                    Text("\(item.binarySizeString)").font(.caption)
+                                    Spacer()
                                 }
-                                if isShowingDate {
-                                    if let created = item.createdDate ?? item.updateDate {
-                                        Text("Saved: \(Self.dateFormatter.string(from: created))")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    if let updated = item.updateDate {
-                                        Text("Updated: \(Self.dateFormatter.string(from: updated))")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
+                                if !memo.isEmpty {
+                                    Text(memo)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                        .lineLimit(1)
+                                        .padding(.bottom, 4)
                                 }
                             }
                         }
-                    }
+                        .frame(minHeight: Self.minRowHeight)
+                    })
                     .onHover { hovering in
                         if hovering { onHoverContent() }
+                    }
+
+                    if isShowingFileInfo || isShowingDate {
+                        VStack(alignment: .trailing) {
+                            if isShowingFileInfo {
+                                Text(item.contentTypeString ?? "").font(.caption)
+                                Text("\(item.binarySizeString)").font(.caption)
+                            }
+                            if isShowingDate {
+                                if let created = item.createdDate ?? item.updateDate {
+                                    Text("Saved: \(Self.dateFormatter.string(from: created))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                if let updated = item.updateDate {
+                                    Text("Updated: \(Self.dateFormatter.string(from: updated))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
                     }
 
                     TextField("", text: $memo)
