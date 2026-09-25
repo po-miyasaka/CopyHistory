@@ -164,6 +164,7 @@ struct Row: View, Equatable {
     }()
 
     private static let minRowHeight: CGFloat = 44
+    private static let cellVerticalMargin: CGFloat = 8
 
     /// Collapsed rows keep images within the same height as a one-line text row.
     private var imageMaxHeight: CGFloat {
@@ -294,6 +295,7 @@ struct Row: View, Equatable {
                         statusIndicators
                     }
                 }
+                .padding(.vertical, Self.cellVerticalMargin)
 
                 if isFocused {
                     HStack(alignment: .top, spacing: 8) {
