@@ -810,7 +810,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "降順（多い・新しい順）"
+            "value" : "降順"
           }
         }
       }
@@ -820,7 +820,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "昇順（少ない・古い順）"
+            "value" : "昇順"
           }
         }
       }
