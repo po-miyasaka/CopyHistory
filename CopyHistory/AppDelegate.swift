@@ -7,6 +7,7 @@
 
 import Cocoa
 import SwiftUI
+import UserNotifications
 
 @main
 struct MainApp: App {
@@ -19,13 +20,19 @@ struct MainApp: App {
     }
 }
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     private var statusBar: StatusBarController?
 
     func applicationDidFinishLaunching(_: Notification) {
+        UNUserNotificationCenter.current().delegate = self
         statusBar = .init()
         disableUnneededWindow()
         registerGlobalShortcut()
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        [.banner, .sound]
     }
 
     private func registerGlobalShortcut() {

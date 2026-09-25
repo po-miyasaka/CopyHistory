@@ -44,12 +44,14 @@ class CopiedItemRepository {
         with text: String? = nil,
         isShowingOnlyFavorite: Bool = false,
         isShowingOnlyMemoed: Bool = false,
+        isShowingOnlyReminder: Bool = false,
         limit: Int? = nil
     ) {
         request(
             with: makeCopiedItemsRequest(with: text,
                                          isShowingOnlyFavorite: isShowingOnlyFavorite,
                                          isShowingOnlyMemoed: isShowingOnlyMemoed,
+                                         isShowingOnlyReminder: isShowingOnlyReminder,
                                          limit: limit)
         )
     }
@@ -57,7 +59,7 @@ class CopiedItemRepository {
     /// Every saved item (favorites included), newest first, without the binary payload.
     func fetchAllForExport() throws -> [CopiedItem] {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
-        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "memo", "name", "rawString", "updateDate"]
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "favorite", "memo", "name", "rawString", "reminderDate", "updateDate"]
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "updateDate", ascending: false)]
         return try coreDataService.fetch(fetchRequest)
     }
@@ -95,6 +97,7 @@ class CopiedItemRepository {
             fetchedResultController.delegate = delegate
         } else {
             fetchedResultController.fetchRequest.predicate = request.predicate
+            fetchedResultController.fetchRequest.sortDescriptors = request.sortDescriptors
         }
 
         do {
@@ -107,10 +110,10 @@ class CopiedItemRepository {
 
     }
 
-    private func makeCopiedItemsRequest(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, limit: Int? = nil) -> NSFetchRequest<CopiedItem> {
+    private func makeCopiedItemsRequest(with text: String? = nil, isShowingOnlyFavorite: Bool = false, isShowingOnlyMemoed: Bool = false, isShowingOnlyReminder: Bool = false, limit: Int? = nil) -> NSFetchRequest<CopiedItem> {
         let fetchRequest = NSFetchRequest<CopiedItem>(entityName: CopiedItem.className())
         fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "dataHash", "favorite", "memo", "name", "rawString", "updateDate"]
+        fetchRequest.propertiesToFetch = ["binarySize", "contentTypeString", "createdDate", "dataHash", "favorite", "memo", "name", "rawString", "reminderDate", "updateDate"]
 
         var favoritePredicate: NSPredicate?
         if isShowingOnlyFavorite {
@@ -120,20 +123,28 @@ class CopiedItemRepository {
         if isShowingOnlyMemoed {
             memoedPredicate = NSPredicate(format: "NOT (memo == %@ OR memo == nil OR memo == '')")
         }
+        var reminderPredicate: NSPredicate?
+        if isShowingOnlyReminder {
+            reminderPredicate = NSPredicate(format: "reminderDate != nil")
+        }
         var textPredicate: NSPredicate?
         if let text = text, !text.isEmpty {
             textPredicate = NSPredicate(format: "contentTypeString Contains[c] %@ OR rawString Contains[c] %@ OR name Contains[c] %@ OR memo Contains[c] %@", arguments: getVaList([text, text, text, text]))
         }
 
-        let predicate: NSPredicate? = NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, favoritePredicate, memoedPredicate].compactMap { $0 })
+        let predicate: NSPredicate? = NSCompoundPredicate(andPredicateWithSubpredicates: [textPredicate, favoritePredicate, memoedPredicate, reminderPredicate].compactMap { $0 })
         fetchRequest.predicate = predicate
 
         if let limit {
             fetchRequest.fetchLimit = limit
         }
-        var updateDateSort = SortDescriptor<CopiedItem>(\.updateDate)
-        updateDateSort.order = .reverse
-        fetchRequest.sortDescriptors = [NSSortDescriptor(updateDateSort)]
+        if isShowingOnlyReminder {
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "reminderDate", ascending: true)]
+        } else {
+            var updateDateSort = SortDescriptor<CopiedItem>(\.updateDate)
+            updateDateSort.order = .reverse
+            fetchRequest.sortDescriptors = [NSSortDescriptor(updateDateSort)]
+        }
         return fetchRequest
     }
 

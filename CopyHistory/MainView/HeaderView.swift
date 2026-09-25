@@ -19,6 +19,7 @@ extension MainView {
                 }
                 Spacer()
                 memoButton()
+                reminderFilterButton()
                 favoriteButton()
             }
         }
@@ -51,6 +52,7 @@ extension MainView {
                 Text("Select:"); Text("⌘ + ↩")
                 Text("Delete:"); Text("⌘ + ⇧ + d")
                 Text("Star:"); Text("⌘ + o")
+                Text("Reminders:"); Text("⌘ + t")
             }
             Group {
                 Text("Write a memo:"); Text("⌘ + i")
@@ -81,6 +83,26 @@ extension MainView {
 
             if isShowingKeyboardShortcuts {
                 Text("⌘ + p").font(.caption).foregroundColor(.gray).padding(.top, 2)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func reminderFilterButton() -> some View {
+        VStack(spacing: 0) {
+            Button(action: {
+                withAnimation {
+                    viewModel.isShowingOnlyReminder.toggle()
+                }
+            }, label: {
+                Image(systemName: viewModel.isShowingOnlyReminder ? "clock.fill" : "clock")
+                    .foregroundColor(viewModel.isShowingOnlyReminder ? Color.mainAccent : Color.primary)
+            })
+            .keyboardShortcut("t", modifiers: .command)
+            .help("Show only items with reminders, soonest first")
+
+            if isShowingKeyboardShortcuts {
+                Text("⌘ + t").font(.caption).foregroundColor(.gray).padding(.top, 2)
             }
         }
     }

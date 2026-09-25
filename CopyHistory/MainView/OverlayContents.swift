@@ -24,7 +24,8 @@ extension MainView {
                                     isShowingDate: $isShowingDate,
                                     isShowingFileInfo: $isShowingFileInfo,
                                     overlayViewType: $overlayViewType,
-                                    onExportCSV: viewModel.exportCSV
+                                    onExportCSV: viewModel.exportCSV,
+                                    onImportCSV: viewModel.importCSV
                         )
                     case .feedback:
                         FeedbackView(overlayViewType: $overlayViewType)

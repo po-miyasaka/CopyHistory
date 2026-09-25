@@ -89,6 +89,7 @@ extension MainView {
                         
                         Row(item: item,
                             favorite: item.favorite,
+                            reminderDate: item.reminderDate,
                             isFocused: index == focusedItemIndex, itemAction: {
                             itemAction = $0
                         },
@@ -146,7 +147,9 @@ extension MainView {
 struct Row: View, Equatable {
     let item: CopiedItem
     let favorite: Bool
+    let reminderDate: Date?
     let isFocused: Bool
+    @State private var isShowingReminderPopover = false
     @FocusState var memoFocusState: Bool
     @Binding var isExpanded: Bool // to render realtime, using @Binding
     @Binding var isShowingRTF: Bool
@@ -171,6 +174,7 @@ struct Row: View, Equatable {
 
     init(item: CopiedItem,
          favorite: Bool,
+         reminderDate: Date?,
          isFocused: Bool,
          itemAction: @escaping (MainView.ItemAction) -> Void,
          isExpanded: Binding<Bool>,
@@ -180,6 +184,7 @@ struct Row: View, Equatable {
          isShowingFileInfo: Binding<Bool>) {
         self.item = item
         self.favorite = favorite
+        self.reminderDate = reminderDate
         self.isFocused = isFocused
         self.itemAction = itemAction
         _isExpanded = isExpanded
@@ -274,6 +279,8 @@ struct Row: View, Equatable {
                             itemAction(.init(item: item, action: .memoEdited(memo)))
                         }).frame(width: 26)
 
+                    reminderButton()
+
                     Button(action: {
                         itemAction(.init(item: item, action: .favorite))
                     }, label: {
@@ -307,11 +314,48 @@ struct Row: View, Equatable {
         Divider()
     }
 
+    private static let reminderFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("Mdjmm")
+        return formatter
+    }()
+
+    private func reminderButton() -> some View {
+        let isOverdue = reminderDate.map { $0 < Date() } ?? false
+        return Button(action: {
+            isShowingReminderPopover = true
+        }, label: {
+            VStack(spacing: 0) {
+                Image(systemName: reminderDate == nil ? "clock" : "clock.fill")
+                if let reminderDate {
+                    Text(Self.reminderFormatter.string(from: reminderDate)).font(.caption2)
+                }
+            }
+            .foregroundColor(reminderDate == nil ? Color.primary : (isOverdue ? Color.red : Color.mainAccent))
+            .frame(minWidth: 30, minHeight: 44)
+            .contentShape(Rectangle())
+        })
+        .popover(isPresented: $isShowingReminderPopover) {
+            ReminderPopoverView(
+                current: reminderDate,
+                onSet: { date in
+                    isShowingReminderPopover = false
+                    itemAction(.init(item: item, action: .reminder(date)))
+                },
+                onClear: {
+                    isShowingReminderPopover = false
+                    itemAction(.init(item: item, action: .reminder(nil)))
+                }
+            )
+        }
+    }
+
     /// This comparation make Row stop unneeded rendering.
     static func == (lhs: Row, rhs: Row) -> Bool {
         return lhs.item.dataHash == rhs.item.dataHash &&
         lhs.isFocused == rhs.isFocused &&
         lhs.favorite == rhs.favorite &&
+        lhs.reminderDate == rhs.reminderDate &&
         lhs.isExpanded == rhs.isExpanded &&
         lhs.isShowingRTF == rhs.isShowingRTF &&
         lhs.isShowingHTML == rhs.isShowingHTML &&

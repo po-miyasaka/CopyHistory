@@ -18,9 +18,10 @@ struct SettingView: View {
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
     let onExportCSV: () -> Void
+    let onImportCSV: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 12) {
             Group {
                 Toggle("Show keyboard shortcuts", isOn: $isShowingKeyboardShortcuts)
                     .help("Show shortcut key hints on the main screen")
@@ -57,8 +58,12 @@ struct SettingView: View {
 
             Divider()
 
-            Button("Export all data as CSV…", action: onExportCSV)
-                .help("Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included.")
+            HStack {
+                Button("Export all data as CSV…", action: onExportCSV)
+                    .help("Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included.")
+                Button("Import CSV…", action: onImportCSV)
+                    .help("Add items from a CSV file exported by CopyHistory. Duplicates are skipped and everything is imported as plain text.")
+            }
 
             Divider()
 
@@ -99,7 +104,7 @@ struct SettingView: View {
             Text("Version: \(versionString)")
                 .padding(.bottom, 16)
 
-        }.padding(8)
+        }.padding(16)
 
     }
 }
@@ -116,7 +121,8 @@ struct SettingView_Previews: PreviewProvider {
                     isShowingDate: binding,
                     isShowingFileInfo: binding,
                     overlayViewType: bindingOverlay,
-                    onExportCSV: {}
+                    onExportCSV: {},
+                    onImportCSV: {}
         )
     }
 }

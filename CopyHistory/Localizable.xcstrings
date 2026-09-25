@@ -665,6 +665,126 @@
         }
       }
     },
+    "Reminder" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダー"
+          }
+        }
+      }
+    },
+    "Reminders:" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダー:"
+          }
+        }
+      }
+    },
+    "Set" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        }
+      }
+    },
+    "Clear" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解除"
+          }
+        }
+      }
+    },
+    "Show only items with reminders, soonest first" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダー付きのアイテムだけを、期限が近い順に表示"
+          }
+        }
+      }
+    },
+    "Notifications are turned off for CopyHistory. Enable them in System Settings to get reminders." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CopyHistoryの通知がオフになっています。リマインダーを受け取るには、システム設定で通知を有効にしてください。"
+          }
+        }
+      }
+    },
+    "Import CSV…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVを取り込み…"
+          }
+        }
+      }
+    },
+    "Add items from a CSV file exported by CopyHistory. Duplicates are skipped and everything is imported as plain text." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CopyHistoryが書き出したCSVファイルからアイテムを追加します。重複はスキップされ、すべてプレーンテキストとして取り込まれます。"
+          }
+        }
+      }
+    },
+    "Failed to import CSV" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVの取り込みに失敗しました"
+          }
+        }
+      }
+    },
+    "Imported %lld items, skipped %lld duplicates or empty rows." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld件を取り込み、重複または空の%lld行をスキップしました。"
+          }
+        }
+      }
+    },
+    "The CSV must have \"name\" and \"text\" columns." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVには「name」列と「text」列が必要です。"
+          }
+        }
+      }
+    },
+    "The CSV is malformed (unclosed quote)." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVの形式が正しくありません（引用符が閉じられていません）。"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {
