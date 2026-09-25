@@ -43,29 +43,26 @@ struct CustomTransformEditorView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Custom Transforms (JavaScript)").font(.headline)
 
-            promptButton()
-
             TextEditor(text: $store.script)
                 .font(.system(.caption, design: .monospaced))
                 .frame(height: 110)
                 .border(Color.secondary.opacity(0.3))
 
-            Button("Reset to default", action: store.resetToDefault)
-                .disabled(store.script == ScriptTransformRunner.templateScript)
+            HStack {
+                Button("Reset to default", action: store.resetToDefault)
+                    .disabled(store.script == ScriptTransformRunner.templateScript)
+                Button("Copy prompt for AI code generation", action: copyPrompt)
+                if isPromptCopied {
+                    Text("Copied!").font(.caption).foregroundColor(.green)
+                }
+            }
         }
     }
 
-    private func promptButton() -> some View {
-        Button("Copy prompt for AI code generation") {
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(AIPrompt.localized, forType: .string)
-            PasteboardService.skipNextPasteboardChange = true
-            isPromptCopied = true
-        }
-        .overlay(alignment: .trailing) {
-            if isPromptCopied {
-                Text("Copied!").font(.caption2).foregroundColor(.green).offset(x: 48)
-            }
-        }
+    private func copyPrompt() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(AIPrompt.localized, forType: .string)
+        PasteboardService.skipNextPasteboardChange = true
+        isPromptCopied = true
     }
 }
