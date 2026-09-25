@@ -115,7 +115,7 @@ final class ViewModel: ObservableObject {
             panel.allowedContentTypes = [.commaSeparatedText]
             panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).csv"
             NSApp.activate(ignoringOtherApps: true)
-            guard panel.runModal() == .OK, let url = panel.url else { return }
+            guard FilePanelPin.run(panel) == .OK, let url = panel.url else { return }
             try CSVExporter.makeCSV(rows: rows).write(to: url, atomically: true, encoding: .utf8)
         } catch {
             let alert = NSAlert(error: error)
@@ -160,7 +160,7 @@ final class ViewModel: ObservableObject {
             panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).png"
             panel.directoryURL = Self.realDesktopURL
             NSApp.activate(ignoringOtherApps: true)
-            guard panel.runModal() == .OK, let url = panel.url else { return }
+            guard FilePanelPin.run(panel) == .OK, let url = panel.url else { return }
             try png.write(to: url, options: .atomic)
         } catch {
             let alert = NSAlert(error: error)
@@ -208,7 +208,7 @@ final class ViewModel: ObservableObject {
         panel.allowedContentTypes = [.commaSeparatedText]
         panel.allowsMultipleSelection = false
         NSApp.activate(ignoringOtherApps: true)
-        guard panel.runModal() == .OK, let url = panel.url else { return }
+        guard FilePanelPin.run(panel) == .OK, let url = panel.url else { return }
 
         do {
             let rows = try CSVImporter.parse(String(contentsOf: url, encoding: .utf8)).get()

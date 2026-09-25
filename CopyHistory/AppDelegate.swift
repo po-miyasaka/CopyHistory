@@ -159,7 +159,12 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         NSApplication.shared.unhide(nil)
     }
 
+    func popoverShouldClose(_: NSPopover) -> Bool {
+        !FilePanelPin.isPinned
+    }
+
     func popoverDidClose(_: Notification) {
+        guard !FilePanelPin.isPinned else { return }
         NSApplication.shared.hide(nil) // this code make previous app activate back.
 
     }
@@ -168,6 +173,19 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         true
     }
 
+}
+
+/// While a file panel is open the popover must stay put; otherwise clicking the panel closes the popover
+/// and hides the whole app, panel included.
+enum FilePanelPin {
+    static var isPinned = false
+
+    @MainActor
+    static func run(_ panel: NSSavePanel) -> NSApplication.ModalResponse {
+        isPinned = true
+        defer { isPinned = false }
+        return panel.runModal()
+    }
 }
 
 let widthKey = "windowSizeWidth"
