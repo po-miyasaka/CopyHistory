@@ -301,7 +301,7 @@ struct Row: View, Equatable {
                 .padding(.vertical, Self.cellVerticalMargin)
 
                 if isFocused {
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .center, spacing: 8) {
                         actionButtons
 
                         Group {
