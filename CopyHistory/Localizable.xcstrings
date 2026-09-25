@@ -1085,6 +1085,86 @@
         }
       }
     },
+    "Translate" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳"
+          }
+        }
+      }
+    },
+    "Translate the text into your language (or English if it is already in your language)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストを自分の言語に翻訳します（すでに自分の言語なら、英語に翻訳します）"
+          }
+        }
+      }
+    },
+    "Failed to translate" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳に失敗しました"
+          }
+        }
+      }
+    },
+    "Translation needs a newer version of macOS." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳には、より新しいバージョンの macOS が必要です。"
+          }
+        }
+      }
+    },
+    "The language of this text could not be detected." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このテキストの言語を判別できませんでした。"
+          }
+        }
+      }
+    },
+    "This text is already in your language." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このテキストは、すでに、あなたの言語です。"
+          }
+        }
+      }
+    },
+    "Translating from %@ to %@ is not supported." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@から%2$@への翻訳には対応していません。"
+          }
+        }
+      }
+    },
+    "The language data for %@ to %@ is not installed. Download it in System Settings > General > Language & Region > Translation Languages." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@から%2$@への言語データが、インストールされていません。システム設定 > 一般 > 言語と地域 > 翻訳言語 で、ダウンロードしてください。"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

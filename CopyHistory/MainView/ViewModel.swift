@@ -125,6 +125,10 @@ final class ViewModel: ObservableObject {
     }
 
     func didSelectWithTransform(_ copiedItem: CopiedItem, transform: TransformAction) {
+        if transform == .translate {
+            translate(copiedItem)
+            return
+        }
         guard let rawString = copiedItem.rawString,
               let transformed = TextTransformer.apply(transform, to: rawString)
         else { return }
@@ -168,6 +172,22 @@ final class ViewModel: ObservableObject {
 
     func exportFilteredCSV() {
         exportCSV(items: visibleItems, baseName: "CopyHistory-filtered")
+    }
+
+    private func translate(_ copiedItem: CopiedItem) {
+        guard let rawString = copiedItem.rawString, !rawString.isEmpty else { return }
+        Task {
+            do {
+                let translated = try await TranslationService.translate(rawString)
+                pasteboardService.applyTransformed(translated)
+                copiedItem.updateDate = Date()
+                repository.update()
+            } catch {
+                let alert = NSAlert(error: error)
+                alert.messageText = String(localized: "Failed to translate")
+                ModalPresenter.run(alert)
+            }
+        }
     }
 
     func exportCSV() {

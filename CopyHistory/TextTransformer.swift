@@ -37,6 +37,8 @@ enum TextTransformer {
             return input.trimmingCharacters(in: .whitespacesAndNewlines)
         case .showQRCode:
             return nil
+        case .translate:
+            return nil // asynchronous; handled by the view model
         case .custom(let transform):
             return applyCustom(transform, to: input)
         }

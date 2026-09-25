@@ -33,6 +33,7 @@
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
 		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
+		E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000TA02 /* TranslationService.swift */; };
 		E5C0DE00000000000000AA21 /* AIFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA22 /* AIFilterView.swift */; };
 		E5C0DE00000000000000AA11 /* FoundationModelsJudge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA12 /* FoundationModelsJudge.swift */; };
 		E5C0DE00000000000000AA01 /* AIFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA02 /* AIFilterController.swift */; };
@@ -76,6 +77,7 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000TA02 /* TranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationService.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000AA22 /* AIFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFilterView.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000AA12 /* FoundationModelsJudge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelsJudge.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000AA02 /* AIFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFilterController.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
 				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
+				E5C0DE00000000000000TA02 /* TranslationService.swift */,
 				E5C0DE00000000000000AA22 /* AIFilterView.swift */,
 				E5C0DE00000000000000AA12 /* FoundationModelsJudge.swift */,
 				E5C0DE00000000000000AA02 /* AIFilterController.swift */,
@@ -273,6 +276,7 @@
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
 				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
+				E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */,
 				E5C0DE00000000000000AA21 /* AIFilterView.swift in Sources */,
 				E5C0DE00000000000000AA11 /* FoundationModelsJudge.swift in Sources */,
 				E5C0DE00000000000000AA01 /* AIFilterController.swift in Sources */,
