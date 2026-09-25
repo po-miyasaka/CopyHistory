@@ -30,7 +30,8 @@ final class AIFilterController: ObservableObject {
         let total: Int
     }
 
-    static let batchSize = 4
+    /// Items judged at the same time. The on-device model stops getting faster beyond about 8 in parallel.
+    static let batchSize = 8
 
     @Published private(set) var query = ""
     @Published private(set) var limit = Int.max
