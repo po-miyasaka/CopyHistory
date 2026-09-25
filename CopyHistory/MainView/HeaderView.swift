@@ -90,6 +90,7 @@ extension MainView {
 
     @ViewBuilder
     func sortMenu() -> some View {
+        let isActive = !viewModel.sort.isDefault
         Menu {
             Picker("Sort by", selection: $viewModel.sort.field) {
                 ForEach(ItemSort.Field.allCases) { field in
@@ -103,12 +104,14 @@ extension MainView {
             }
             .pickerStyle(.inline)
         } label: {
-            Image(systemName: "arrow.up.arrow.down")
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.up.arrow.down")
+                Text(viewModel.sort.label).font(.caption)
+            }
+            .foregroundColor(isActive ? Color.mainAccent : Color.primary)
         }
-        .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
         .fixedSize()
-        .help("Sort items (ignored while showing only reminders)")
     }
 
     @ViewBuilder

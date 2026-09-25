@@ -19,6 +19,15 @@ struct ItemSort: Equatable, Codable {
             }
         }
 
+        var name: String {
+            switch self {
+            case .updated: return String(localized: "Updated date")
+            case .saved: return String(localized: "Saved date")
+            case .length: return String(localized: "Character count")
+            case .size: return String(localized: "Size")
+            }
+        }
+
         fileprivate var key: String {
             switch self {
             case .updated: return "updateDate"
@@ -31,6 +40,13 @@ struct ItemSort: Equatable, Codable {
 
     var field: Field = .updated
     var ascending = false
+
+    var isDefault: Bool { self == ItemSort() }
+
+    var label: String {
+        let order = ascending ? String(localized: "Ascending") : String(localized: "Descending")
+        return String(localized: "\(field.name) (\(order))")
+    }
 
     var sortDescriptors: [NSSortDescriptor] {
         var descriptors = [NSSortDescriptor(key: field.key, ascending: ascending)]

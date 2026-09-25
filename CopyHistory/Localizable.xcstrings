@@ -865,22 +865,22 @@
         }
       }
     },
-    "Sort items (ignored while showing only reminders)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "並び替え（リマインダーのみ表示中は期限順になります）"
-          }
-        }
-      }
-    },
     "Window width" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ウィンドウの幅"
+          }
+        }
+      }
+    },
+    "%@ (%@)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@(%2$@)"
           }
         }
       }
