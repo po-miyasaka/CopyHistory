@@ -280,6 +280,7 @@ struct Row: View, Equatable {
                         }).frame(width: 26)
 
                     reminderButton()
+                        .visible(isFocused || reminderDate != nil)
 
                     Button(action: {
                         itemAction(.init(item: item, action: .favorite))
@@ -289,12 +290,14 @@ struct Row: View, Equatable {
                             .frame(width: 30, height: 44)
                             .contentShape(RoundedRectangle(cornerRadius: 20))
                     })
+                    .visible(isFocused || favorite)
 
                     Button(action: {
                         itemAction(.init(item: item, action: .delete))
                     }, label: {
                         Image(systemName: "trash.fill").foregroundColor(.secondary)
                     })
+                    .visible(isFocused)
                 }
 
                 if isFocused && isImageType {
