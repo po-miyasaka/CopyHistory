@@ -294,7 +294,7 @@ struct Row: View, Equatable {
                         }).frame(width: 26)
 
                     if !isFocused {
-                        statusIndicators
+                        statusButtons
                     }
                 }
                 .padding(.vertical, Self.cellVerticalMargin)
@@ -340,20 +340,27 @@ struct Row: View, Equatable {
         return reminderDate < Date() ? Color.red : Color.mainAccent
     }
 
-    /// Read-only markers shown while the row is not focused, so favorites and reminders stay visible.
-    private var statusIndicators: some View {
-        HStack(spacing: 6) {
-            if let reminderDate {
-                HStack(spacing: 2) {
-                    Image(systemName: "clock.fill")
-                    Text(Self.reminderFormatter.string(from: reminderDate)).font(.caption2)
-                }
-                .foregroundColor(reminderColor)
+    /// Favorite and reminder stay visible (and clickable) while the row is not focused.
+    private var statusButtons: some View {
+        HStack(spacing: 4) {
+            if reminderDate != nil {
+                reminderButton()
             }
             if favorite {
-                Image(systemName: "star.fill").foregroundColor(Color.mainAccent)
+                favoriteButton
             }
         }
+    }
+
+    private var favoriteButton: some View {
+        Button(action: {
+            itemAction(.init(item: item, action: .favorite))
+        }, label: {
+            Image(systemName: favorite ? "star.fill" : "star")
+                .foregroundColor(favorite ? Color.mainAccent : Color.primary)
+                .frame(width: 30, height: 28)
+                .contentShape(Rectangle())
+        })
     }
 
     private var saveImageButton: some View {
@@ -372,14 +379,7 @@ struct Row: View, Equatable {
         HStack(spacing: 4) {
             reminderButton()
 
-            Button(action: {
-                itemAction(.init(item: item, action: .favorite))
-            }, label: {
-                Image(systemName: favorite ? "star.fill" : "star")
-                    .foregroundColor(favorite ? Color.mainAccent : Color.primary)
-                    .frame(width: 30, height: 28)
-                    .contentShape(Rectangle())
-            })
+            favoriteButton
 
             Button(action: {
                 itemAction(.init(item: item, action: .delete))
