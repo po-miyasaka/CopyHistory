@@ -1165,6 +1165,26 @@
         }
       }
     },
+    "Copy text in image" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像内の文字列をコピー"
+          }
+        }
+      }
+    },
+    "No text was found in the image." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像の中に文字が見つかりませんでした。"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

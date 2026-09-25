@@ -305,7 +305,10 @@ struct Row: View, Equatable {
 
                         Group {
                             if isImageType {
-                                saveImageButton
+                                HStack(spacing: 4) {
+                                    copyImageTextButton
+                                    saveImageButton
+                                }
                             } else {
                                 TransformActionsBar(item: item) { transformAction in
                                     itemAction(.init(item: item, action: .transform(transformAction)))
@@ -361,6 +364,18 @@ struct Row: View, Equatable {
                 .frame(width: 30, height: 28)
                 .contentShape(Rectangle())
         })
+    }
+
+    private var copyImageTextButton: some View {
+        Button(action: {
+            itemAction(.init(item: item, action: .copyImageText))
+        }, label: {
+            Label("Copy text in image", systemImage: "text.viewfinder")
+                .font(.caption2)
+                .lineLimit(1)
+        })
+        .buttonStyle(.bordered)
+        .controlSize(.small)
     }
 
     private var saveImageButton: some View {

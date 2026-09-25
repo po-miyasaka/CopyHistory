@@ -39,6 +39,7 @@ struct MainView: View {
         case transform(TransformAction)
         case reminder(Date?)
         case saveImageToDesktop
+        case copyImageText
     }
 
     struct ItemAction {
@@ -75,6 +76,10 @@ struct MainView: View {
                 NSApplication.shared.deactivate()
             case .favorite:
                 viewModel.toggleFavorite(actionItem.item)
+            case .copyImageText:
+                focusedItemIndex = nil
+                viewModel.copyImageText(actionItem.item)
+                NSApplication.shared.deactivate()
             case .saveImageToDesktop:
                 // Present the save panel after this view update finishes, like the CSV export button does.
                 let item = actionItem.item

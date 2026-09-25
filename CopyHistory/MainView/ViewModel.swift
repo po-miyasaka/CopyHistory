@@ -60,6 +60,9 @@ final class ViewModel: ObservableObject {
 
     private let repository = CopiedItemRepository()
 
+    private var ocrTask: Task<Void, Never>?
+    private var ocrRerunRequested = false
+
     let aiFilter = AIFilterController(makeJudge: { AIFilterAvailability.makeDefaultJudge() })
     @Published private(set) var aiPool: [CopiedItem] = []
 
@@ -107,12 +110,15 @@ final class ViewModel: ObservableObject {
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
+        indexImages()
+
         // TODO: このタスクの使い方
         Task {  [weak self] in
             if let stream = self?.repository.stream {
                 for await copiedItems in stream {
                         self?.copiedItems = copiedItems
                         self?.refreshAIPool()
+                        self?.indexImages()
                 }
             }
         }
@@ -135,6 +141,50 @@ final class ViewModel: ObservableObject {
         pasteboardService.applyTransformed(transformed)
         copiedItem.updateDate = Date()
         repository.update()
+    }
+
+    /// Reads the text of images that have not been read yet, one at a time in the background, so it can be searched.
+    private func indexImages() {
+        guard ocrTask == nil else {
+            ocrRerunRequested = true
+            return
+        }
+        ocrTask = Task(priority: .utility) { [weak self] in
+            while let self, !Task.isCancelled, let item = self.repository.nextImageNeedingOCR() {
+                var text: String?
+                if let data = item.content {
+                    text = await OCRService.recognizeText(in: data)
+                }
+                // An empty string marks the image as read, so it is not read again.
+                item.ocrText = text ?? ""
+                self.repository.update()
+            }
+            self?.ocrTask = nil
+            if self?.ocrRerunRequested == true {
+                self?.ocrRerunRequested = false
+                self?.indexImages()
+            }
+        }
+    }
+
+    func copyImageText(_ copiedItem: CopiedItem) {
+        Task {
+            var text = copiedItem.ocrText
+            if text == nil, let data = copiedItem.content {
+                text = await OCRService.recognizeText(in: data) ?? ""
+                copiedItem.ocrText = text
+                repository.update()
+            }
+            guard let text, !text.isEmpty else {
+                let alert = NSAlert()
+                alert.messageText = String(localized: "No text was found in the image.")
+                ModalPresenter.run(alert)
+                return
+            }
+            pasteboardService.applyTransformed(text)
+            copiedItem.updateDate = Date()
+            repository.update()
+        }
     }
 
     func applyAIFilter(_ query: String) {

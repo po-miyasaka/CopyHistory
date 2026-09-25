@@ -52,6 +52,11 @@ extension CopiedItem {
         return attributeString
     }
 
+    var isImage: Bool {
+        guard let type = contentTypeString else { return false }
+        return type.contains("image") || type.contains("png") || type.contains("jpeg") || type.contains("tiff") || type.contains("gif") || type.contains("bmp")
+    }
+
     var judgeCandidate: JudgeCandidate? {
         guard let dataHash, let rawString, !rawString.isEmpty else { return nil }
         return JudgeCandidate(id: dataHash, text: rawString)
