@@ -231,7 +231,12 @@ final class ViewModel: ObservableObject {
     }
 
     func exportFilteredCSV() {
-        exportCSV(items: visibleItems, baseName: "CopyHistory-filtered")
+        let rows = visibleItems.map { item -> CSVExportRow in
+            var row = CSVExportRow(item: item)
+            row.isUnjudged = item.dataHash.map(aiFilter.isUncertain) ?? false
+            return row
+        }
+        exportCSV(rows: rows, includesUnjudged: true, baseName: "CopyHistory-filtered")
     }
 
     private func translate(_ copiedItem: CopiedItem) {
@@ -252,7 +257,7 @@ final class ViewModel: ObservableObject {
 
     func exportCSV() {
         do {
-            exportCSV(items: try repository.fetchAllForExport(), baseName: "CopyHistory")
+            exportCSV(rows: try repository.fetchAllForExport().map(CSVExportRow.init(item:)), includesUnjudged: false, baseName: "CopyHistory")
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to export CSV")
@@ -260,15 +265,14 @@ final class ViewModel: ObservableObject {
         }
     }
 
-    private func exportCSV(items: [CopiedItem], baseName: String) {
+    private func exportCSV(rows: [CSVExportRow], includesUnjudged: Bool, baseName: String) {
         do {
-            let rows = items.map(CSVExportRow.init(item:))
             let panel = NSSavePanel()
             panel.allowedContentTypes = [.commaSeparatedText]
             panel.nameFieldStringValue = "\(baseName)-\(Self.exportDateFormatter.string(from: Date())).csv"
             NSApp.activate(ignoringOtherApps: true)
             guard ModalPresenter.run(panel) == .OK, let url = panel.url else { return }
-            try CSVExporter.makeCSV(rows: rows).write(to: url, atomically: true, encoding: .utf8)
+            try CSVExporter.makeCSV(rows: rows, includesUnjudged: includesUnjudged).write(to: url, atomically: true, encoding: .utf8)
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to export CSV")
