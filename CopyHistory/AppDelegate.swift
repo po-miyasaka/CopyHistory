@@ -121,6 +121,11 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: MainView())
         self.popover = popover
+        FilePanelPin.suspendPopover = { [weak self] in
+            guard let self, self.popover?.isShown == true else { return {} }
+            self.popover?.close()
+            return { [weak self] in self?.show() }
+        }
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak popover] _ in
             guard let popover, popover.contentSize != windowSize else { return }
             popover.contentSize = windowSize
@@ -175,15 +180,22 @@ private final class StatusBarController: NSObject, NSPopoverDelegate {
 
 }
 
-/// While a file panel is open the popover must stay put; otherwise clicking the panel closes the popover
-/// and hides the whole app, panel included.
+/// File panels and the popover fight over the front: an open popover covers the panel, and closing it the
+/// usual way hides the whole app. So the popover is closed on purpose while a panel is up, without hiding the
+/// app, and shown again once the panel is dismissed.
 enum FilePanelPin {
     static var isPinned = false
+    /// Closes the popover if it is showing and returns a closure that shows it again.
+    static var suspendPopover: (() -> () -> Void)?
 
     @MainActor
     static func run(_ panel: NSSavePanel) -> NSApplication.ModalResponse {
         isPinned = true
-        defer { isPinned = false }
+        let resume = suspendPopover?() ?? {}
+        defer {
+            isPinned = false
+            resume()
+        }
         return panel.runModal()
     }
 }
