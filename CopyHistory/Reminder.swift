@@ -48,9 +48,11 @@ struct ReminderPopoverView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Reminder").font(.headline)
-            DatePicker("", selection: $date, in: Date()..., displayedComponents: [.date, .hourAndMinute])
+            DatePicker("", selection: $date, in: Date()..., displayedComponents: [.date])
                 .datePickerStyle(.graphical)
                 .labelsHidden()
+            DatePicker("Time", selection: $date, displayedComponents: [.hourAndMinute])
+                .datePickerStyle(.field)
             HStack {
                 if hasReminder {
                     Button("Clear", action: onClear)
@@ -58,6 +60,7 @@ struct ReminderPopoverView: View {
                 Spacer()
                 Button("Set") { onSet(date) }
                     .keyboardShortcut(.defaultAction)
+                    .disabled(date <= Date())
             }
         }
         .padding(16)
