@@ -56,9 +56,45 @@ final class ViewModel: ObservableObject {
         self?.repository.getItem(hash: $0)
     }, saveItem: { [weak self] in
         self?.repository.update()
+    }, didCreateItem: { [weak self] item in
+        self?.describeNewImage(item)
     })
 
     private let repository = CopiedItemRepository()
+
+    private var captionQueue: [String] = []
+    private var captionTask: Task<Void, Never>?
+    private var ocrTask: Task<Void, Never>?
+    private var ocrRerunRequested = false
+
+    let aiFilter = AIFilterController(makeJudge: { AIFilterAvailability.makeDefaultJudge() })
+    @Published private(set) var aiPool: [CopiedItem] = []
+
+    /// Whether the AI filter also shows the items it could not judge.
+    @Published var aiShowsUnjudged: Bool = UserDefaults.standard.object(forKey: "aiFilterShowsUnjudged") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(aiShowsUnjudged, forKey: "aiFilterShowsUnjudged")
+            aiFilter.setIncludesUncertain(aiShowsUnjudged, limit: aiFilterLimit)
+        }
+    }
+
+    /// How many matches the AI filter returns at most; judging stops once this many are found.
+    static let aiFilterLimitKey = "aiFilterResultLimit"
+    static let aiFilterLimitDefault = 50
+
+    private var aiFilterLimit: Int {
+        let stored = UserDefaults.standard.integer(forKey: Self.aiFilterLimitKey)
+        return stored > 0 ? stored : Self.aiFilterLimitDefault
+    }
+
+    /// What the list shows: every match of the AI filter while it is on, otherwise the regular list.
+    var visibleItems: [CopiedItem] {
+        guard aiFilter.isActive else { return copiedItems }
+        let matches = aiPool.filter { item in
+            !item.isDeleted && item.managedObjectContext != nil && (item.dataHash.map(aiFilter.isMatch) ?? false)
+        }
+        return Array(matches.prefix(aiFilter.limit))
+    }
     private var cancellables: [AnyCancellable] = []
 
     private init() {}
@@ -81,13 +117,23 @@ final class ViewModel: ObservableObject {
         .sink {[weak self] (arg0) in
             let (searchText, (isShowingOnlyFavorite, isShowingOnlyMemoed, isShowingOnlyReminder, sort), displayedItemCount) = arg0
             self?.repository.requestCopiedItems(with: searchText, isShowingOnlyFavorite: isShowingOnlyFavorite, isShowingOnlyMemoed: isShowingOnlyMemoed, isShowingOnlyReminder: isShowingOnlyReminder, sort: sort, limit: displayedItemCount)
+            self?.refreshAIPool()
         }.store(in: &cancellables)
+
+        aiFilter.objectWillChange
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+
+        aiFilter.setIncludesUncertain(aiShowsUnjudged, limit: aiFilterLimit)
+        indexImages()
 
         // TODO: このタスクの使い方
         Task {  [weak self] in
             if let stream = self?.repository.stream {
                 for await copiedItems in stream {
                         self?.copiedItems = copiedItems
+                        self?.refreshAIPool()
+                        self?.indexImages()
                 }
             }
         }
@@ -100,6 +146,16 @@ final class ViewModel: ObservableObject {
     }
 
     func didSelectWithTransform(_ copiedItem: CopiedItem, transform: TransformAction) {
+        if transform == .translate {
+            translate(copiedItem)
+            return
+        }
+        if transform == .openInBrowser {
+            if let url = TextTransformer.webURL(from: copiedItem.rawString ?? "") {
+                NSWorkspace.shared.open(url)
+            }
+            return
+        }
         guard let rawString = copiedItem.rawString,
               let transformed = TextTransformer.apply(transform, to: rawString)
         else { return }
@@ -108,15 +164,170 @@ final class ViewModel: ObservableObject {
         repository.update()
     }
 
+    /// Describes a newly copied image (Japanese and English) so it can be found by what it shows.
+    /// Only new images are described; a declined image just gets no description.
+    private func describeNewImage(_ item: CopiedItem) {
+        guard item.isImage, ImageCaptionService.isAvailable, let hash = item.dataHash else { return }
+        captionQueue.append(hash)
+        guard captionTask == nil else { return }
+        captionTask = Task(priority: .utility) { [weak self] in
+            while let self, !Task.isCancelled, !self.captionQueue.isEmpty {
+                let hash = self.captionQueue.removeFirst()
+                guard let item = self.repository.getItem(hash: hash), item.imageCaption == nil, let data = item.content else { continue }
+                let caption = await ImageCaptionService.describe(data)
+                // An empty string marks the image as handled so it is never described again.
+                item.imageCaption = caption ?? ""
+                self.repository.update()
+            }
+            self?.captionTask = nil
+        }
+    }
+
+    /// Reads the text of images that have not been read yet, one at a time in the background, so it can be searched.
+    private func indexImages() {
+        guard ocrTask == nil else {
+            ocrRerunRequested = true
+            return
+        }
+        ocrTask = Task(priority: .utility) { [weak self] in
+            while let self, !Task.isCancelled, let item = self.repository.nextImageNeedingOCR() {
+                var text: String?
+                if let data = item.content {
+                    text = await OCRService.recognizeText(in: data)
+                }
+                // An empty string marks the image as read, so it is not read again.
+                item.ocrText = text ?? ""
+                self.repository.update()
+            }
+            self?.ocrTask = nil
+            if self?.ocrRerunRequested == true {
+                self?.ocrRerunRequested = false
+                self?.indexImages()
+            }
+        }
+    }
+
+    /// Copies the text found in the image, followed by "describing: <what the image shows>".
+    /// Missing text or description is produced on the spot, so images saved earlier work too.
+    func copyImageText(_ copiedItem: CopiedItem) {
+        Task {
+            var recognized = copiedItem.ocrText
+            if recognized == nil, let data = copiedItem.content {
+                recognized = await OCRService.recognizeText(in: data) ?? ""
+                copiedItem.ocrText = recognized
+                repository.update()
+            }
+            var described = copiedItem.imageCaption
+            if described == nil, ImageCaptionService.isAvailable, let data = copiedItem.content {
+                described = await ImageCaptionService.describe(data) ?? ""
+                copiedItem.imageCaption = described
+                repository.update()
+            }
+            let caption = described.flatMap { ImageCaptionService.caption(in: $0, japanese: ImageCaptionService.prefersJapanese) }
+            let parts = [recognized, caption.map { "describing: \($0)" }]
+                .compactMap { $0 }
+                .filter { !$0.isEmpty }
+            guard !parts.isEmpty else {
+                let alert = NSAlert()
+                alert.messageText = String(localized: "No text was found in the image.")
+                ModalPresenter.run(alert)
+                return
+            }
+            pasteboardService.applyTransformed(parts.joined(separator: "\n"))
+            copiedItem.updateDate = Date()
+            repository.update()
+        }
+    }
+
+    func applyAIFilter(_ query: String) {
+        guard let pool = fetchAIPool() else { return }
+        aiPool = pool
+        aiFilter.apply(query: query, candidates: pool.compactMap(\.judgeCandidate), limit: aiFilterLimit)
+    }
+
+    func clearAIFilter() {
+        aiFilter.clear()
+        aiPool = []
+    }
+
+    private func refreshAIPool() {
+        guard aiFilter.isActive, let pool = fetchAIPool() else { return }
+        aiPool = pool
+        aiFilter.refresh(candidates: pool.compactMap(\.judgeCandidate), limit: aiFilterLimit)
+    }
+
+    private func fetchAIPool() -> [CopiedItem]? {
+        do {
+            return try repository.fetchTextItems(
+                with: searchText,
+                isShowingOnlyFavorite: isShowingOnlyFavorite,
+                isShowingOnlyMemoed: isShowingOnlyMemoed,
+                isShowingOnlyReminder: isShowingOnlyReminder,
+                sort: sort
+            )
+        } catch {
+            NSLog("Failed to load items for the AI filter: \(error)")
+            return nil
+        }
+    }
+
+    func exportFilteredCSV() {
+        let rows = visibleItems.map { item -> CSVExportRow in
+            var row = CSVExportRow(item: item)
+            row.isUnjudged = item.dataHash.map(aiFilter.isUncertain) ?? false
+            return row
+        }
+        exportCSV(rows: rows, includesUnjudged: true, baseName: "CopyHistory-filtered")
+    }
+
+    /// Opens the web translator with the text, and puts the on-device translation on the clipboard
+    /// (or the original text when this Mac cannot translate it, so it can be pasted).
+    private func translate(_ copiedItem: CopiedItem) {
+        guard let rawString = copiedItem.rawString, !rawString.isEmpty else { return }
+
+        let languages = WebTranslator.languages(for: rawString)
+        if let source = languages.source, source == languages.target {
+            let alert = NSAlert()
+            alert.messageText = String(localized: "Failed to translate")
+            alert.informativeText = String(localized: "This text is already in your language.")
+            ModalPresenter.run(alert)
+            return
+        }
+        if let url = WebTranslator.url(for: WebTranslator.preferred, text: rawString, source: languages.source, target: languages.target) {
+            NSWorkspace.shared.open(url)
+        }
+
+        Task {
+            do {
+                let translated = try await TranslationService.translate(rawString)
+                pasteboardService.applyTransformed(translated)
+            } catch {
+                NSLog("On-device translation failed, the web translator is open instead: \(error)")
+                pasteboardService.applyTransformed(rawString)
+            }
+            copiedItem.updateDate = Date()
+            repository.update()
+        }
+    }
+
     func exportCSV() {
         do {
-            let rows = try repository.fetchAllForExport().map(CSVExportRow.init(item:))
+            exportCSV(rows: try repository.fetchAllForExport().map(CSVExportRow.init(item:)), includesUnjudged: false, baseName: "CopyHistory")
+        } catch {
+            let alert = NSAlert(error: error)
+            alert.messageText = String(localized: "Failed to export CSV")
+            ModalPresenter.run(alert)
+        }
+    }
+
+    private func exportCSV(rows: [CSVExportRow], includesUnjudged: Bool, baseName: String) {
+        do {
             let panel = NSSavePanel()
             panel.allowedContentTypes = [.commaSeparatedText]
-            panel.nameFieldStringValue = "CopyHistory-\(Self.exportDateFormatter.string(from: Date())).csv"
+            panel.nameFieldStringValue = "\(baseName)-\(Self.exportDateFormatter.string(from: Date())).csv"
             NSApp.activate(ignoringOtherApps: true)
             guard ModalPresenter.run(panel) == .OK, let url = panel.url else { return }
-            try CSVExporter.makeCSV(rows: rows).write(to: url, atomically: true, encoding: .utf8)
+            try CSVExporter.makeCSV(rows: rows, includesUnjudged: includesUnjudged).write(to: url, atomically: true, encoding: .utf8)
         } catch {
             let alert = NSAlert(error: error)
             alert.messageText = String(localized: "Failed to export CSV")

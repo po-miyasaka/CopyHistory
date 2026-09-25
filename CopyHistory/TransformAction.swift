@@ -14,6 +14,8 @@ enum TransformAction: Identifiable, Hashable {
     case lowercase
     case trimWhitespace
     case showQRCode
+    case translate
+    case openInBrowser
     case custom(CustomTransform)
 
     var id: String {
@@ -31,6 +33,8 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "lowercase"
         case .trimWhitespace: return "trimWhitespace"
         case .showQRCode: return "showQRCode"
+        case .translate: return "translate"
+        case .openInBrowser: return "openInBrowser"
         case .custom(let t): return "custom_\(t.id)"
         }
     }
@@ -50,6 +54,8 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "abc"
         case .trimWhitespace: return "Trim"
         case .showQRCode: return "QR"
+        case .translate: return String(localized: "Translate")
+        case .openInBrowser: return String(localized: "Open in browser")
         case .custom(let t): return t.name
         }
     }
@@ -69,6 +75,8 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "textformat.size.smaller"
         case .trimWhitespace: return "scissors"
         case .showQRCode: return "qrcode"
+        case .translate: return "globe"
+        case .openInBrowser: return "safari"
         case .custom: return "gearshape"
         }
     }
@@ -88,15 +96,20 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "Convert all characters to lowercase"
         case .trimWhitespace: return "Remove leading and trailing whitespace and newlines"
         case .showQRCode: return "Generate a QR code from the text"
+        case .translate: return "Translate the text into your language (or English if it is already in your language) and open the web translator"
+        case .openInBrowser: return "Open the link in your browser"
         case .custom: return "Run a custom JavaScript transform"
         }
     }
 
     static var allBuiltIn: [TransformAction] {
-        [.jsonPretty, .wrapJapaneseBrackets, .wrapDoubleQuotes,
-         .numberCommaFormat, .escapeNewlines, .urlEncode, .urlDecode,
-         .base64Encode, .base64Decode, .uppercase, .lowercase,
-         .trimWhitespace, .showQRCode]
+        let actions: [TransformAction] = [
+            .jsonPretty, .wrapJapaneseBrackets, .wrapDoubleQuotes,
+            .numberCommaFormat, .escapeNewlines, .urlEncode, .urlDecode,
+            .base64Encode, .base64Decode, .uppercase, .lowercase,
+            .trimWhitespace, .showQRCode
+        ]
+        return actions + [.translate]
     }
 }
 

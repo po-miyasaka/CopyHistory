@@ -19,6 +19,8 @@ struct SettingView: View {
     @Binding var isShowingFileInfo: Bool
     @Binding var overlayViewType: MainView.OverlayViewType?
     @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
+    @AppStorage(WebTranslator.settingKey) private var webTranslator: String = WebTranslator.Service.deepL.rawValue
+    @AppStorage(ViewModel.aiFilterLimitKey) private var aiFilterLimit: Int = ViewModel.aiFilterLimitDefault
     let onExportCSV: () -> Void
     let onImportCSV: () -> Void
 
@@ -74,6 +76,33 @@ struct SettingView: View {
             }
 
             Divider()
+
+            HStack {
+                Text("Web translator")
+                Spacer()
+                Picker("", selection: $webTranslator) {
+                    ForEach(WebTranslator.Service.allCases) { service in
+                        Text(service.title).tag(service.rawValue)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(width: 210)
+            }
+
+            Divider()
+
+            if AIFilterAvailability.isAvailable {
+                Stepper(value: $aiFilterLimit, in: 10...500, step: 10) {
+                    HStack {
+                        Text("AI filter: max results")
+                        Spacer()
+                        Text("\(aiFilterLimit)").monospacedDigit()
+                    }
+                }
+
+                Divider()
+            }
 
             CustomTransformEditorView()
 

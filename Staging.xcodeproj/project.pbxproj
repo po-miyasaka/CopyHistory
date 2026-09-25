@@ -33,6 +33,14 @@
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
 		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
+		E5C0DE00000000000000VA01 /* TranslationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000VA02 /* TranslationPreview.swift */; };
+		E5C0DE00000000000000WA01 /* WebTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000WA02 /* WebTranslator.swift */; };
+		E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000CA02 /* ImageCaptionService.swift */; };
+		E5C0DE00000000000000OA01 /* OCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000OA02 /* OCRService.swift */; };
+		E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000TA02 /* TranslationService.swift */; };
+		E5C0DE00000000000000AA21 /* AIFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA22 /* AIFilterView.swift */; };
+		E5C0DE00000000000000AA11 /* FoundationModelsJudge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA12 /* FoundationModelsJudge.swift */; };
+		E5C0DE00000000000000AA01 /* AIFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000AA02 /* AIFilterController.swift */; };
 		E5C0DE00000000000000FA31 /* ItemSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000FA32 /* ItemSort.swift */; };
 		E5C0DE00000000000000FA21 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000FA22 /* Reminder.swift */; };
 		E5C0DE00000000000000FA11 /* CSVImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000FA12 /* CSVImporter.swift */; };
@@ -63,6 +71,8 @@
 		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		D5A5573E29DC2EA400FF69C7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
+		E5C0DE0000000000000000E4 /* Model8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model8.xcdatamodel; sourceTree = "<group>"; };
+		E5C0DE0000000000000000E3 /* Model7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model7.xcdatamodel; sourceTree = "<group>"; };
 		E5C0DE0000000000000000E2 /* Model6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model6.xcdatamodel; sourceTree = "<group>"; };
 		E5C0DE0000000000000000E1 /* Model5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model5.xcdatamodel; sourceTree = "<group>"; };
 		D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model4.xcdatamodel; sourceTree = "<group>"; };
@@ -73,6 +83,14 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000VA02 /* TranslationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationPreview.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000WA02 /* WebTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTranslator.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000CA02 /* ImageCaptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptionService.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000OA02 /* OCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRService.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000TA02 /* TranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationService.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000AA22 /* AIFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFilterView.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000AA12 /* FoundationModelsJudge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelsJudge.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000AA02 /* AIFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFilterController.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000FA32 /* ItemSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSort.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000FA22 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000FA12 /* CSVImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVImporter.swift; sourceTree = "<group>"; };
@@ -124,6 +142,14 @@
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
 				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
+				E5C0DE00000000000000VA02 /* TranslationPreview.swift */,
+				E5C0DE00000000000000WA02 /* WebTranslator.swift */,
+				E5C0DE00000000000000CA02 /* ImageCaptionService.swift */,
+				E5C0DE00000000000000OA02 /* OCRService.swift */,
+				E5C0DE00000000000000TA02 /* TranslationService.swift */,
+				E5C0DE00000000000000AA22 /* AIFilterView.swift */,
+				E5C0DE00000000000000AA12 /* FoundationModelsJudge.swift */,
+				E5C0DE00000000000000AA02 /* AIFilterController.swift */,
 				E5C0DE00000000000000FA32 /* ItemSort.swift */,
 				E5C0DE00000000000000FA22 /* Reminder.swift */,
 				E5C0DE00000000000000FA12 /* CSVImporter.swift */,
@@ -264,6 +290,14 @@
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
 				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
+				E5C0DE00000000000000VA01 /* TranslationPreview.swift in Sources */,
+				E5C0DE00000000000000WA01 /* WebTranslator.swift in Sources */,
+				E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */,
+				E5C0DE00000000000000OA01 /* OCRService.swift in Sources */,
+				E5C0DE00000000000000TA01 /* TranslationService.swift in Sources */,
+				E5C0DE00000000000000AA21 /* AIFilterView.swift in Sources */,
+				E5C0DE00000000000000AA11 /* FoundationModelsJudge.swift in Sources */,
+				E5C0DE00000000000000AA01 /* AIFilterController.swift in Sources */,
 				E5C0DE00000000000000FA31 /* ItemSort.swift in Sources */,
 				E5C0DE00000000000000FA21 /* Reminder.swift in Sources */,
 				E5C0DE00000000000000FA11 /* CSVImporter.swift in Sources */,
@@ -401,7 +435,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -416,7 +450,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 3.0.1;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.staging";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -433,7 +467,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopyHistory/CopyHistory.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H6UU7923NK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -448,7 +482,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 3.0.1;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.po-miyasaka.CopyHistory.staging";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -502,6 +536,8 @@
 		CEA8AD352874CAA7003B6035 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				E5C0DE0000000000000000E4 /* Model8.xcdatamodel */,
+				E5C0DE0000000000000000E3 /* Model7.xcdatamodel */,
 				E5C0DE0000000000000000E2 /* Model6.xcdatamodel */,
 				E5C0DE0000000000000000E1 /* Model5.xcdatamodel */,
 				D5A5574529DCAEA900FF69C8 /* Model4.xcdatamodel */,
@@ -509,7 +545,7 @@
 				CE666B7D2881DE1C003BA0F7 /* Model2.xcdatamodel */,
 				CEA8AD362874CAA7003B6035 /* Model.xcdatamodel */,
 			);
-			currentVersion = E5C0DE0000000000000000E2 /* Model6.xcdatamodel */;
+			currentVersion = E5C0DE0000000000000000E4 /* Model8.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

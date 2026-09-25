@@ -985,6 +985,316 @@
         }
       }
     },
+    "Filter with on-device AI" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内のAIで絞り込み"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止"
+          }
+        }
+      }
+    },
+    "Apply" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "適用"
+          }
+        }
+      }
+    },
+    "Describe what to show (e.g. food)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示したい内容（例: 食べ物）"
+          }
+        }
+      }
+    },
+    "Stopped · %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止 · %lld件"
+          }
+        }
+      }
+    },
+    "Done · %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了 · %lld件"
+          }
+        }
+      }
+    },
+    "Export as CSV…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSVで書き出し…"
+          }
+        }
+      }
+    },
+    "Translate" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳"
+          }
+        }
+      }
+    },
+    "Failed to translate" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳に失敗しました"
+          }
+        }
+      }
+    },
+    "Translation needs a newer version of macOS." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳には、より新しいバージョンの macOS が必要です。"
+          }
+        }
+      }
+    },
+    "The language of this text could not be detected." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このテキストの言語を判別できませんでした。"
+          }
+        }
+      }
+    },
+    "This text is already in your language." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このテキストは、すでに、あなたの言語です。"
+          }
+        }
+      }
+    },
+    "Translating from %@ to %@ is not supported." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@から%2$@への翻訳には対応していません。"
+          }
+        }
+      }
+    },
+    "The language data for %@ to %@ is not installed. Download it in System Settings > General > Language & Region > Translation Languages." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@から%2$@への言語データが、インストールされていません。システム設定 > 一般 > 言語と地域 > 翻訳言語 で、ダウンロードしてください。"
+          }
+        }
+      }
+    },
+    "Copy text in image" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像内の文字列をコピー"
+          }
+        }
+      }
+    },
+    "No text was found in the image." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像の中に文字が見つかりませんでした。"
+          }
+        }
+      }
+    },
+    "Checked %lld/%lld · Found %lld/%lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定 %1$lld/%2$lld · 該当 %3$lld/%4$lld"
+          }
+        }
+      }
+    },
+    "Reached the limit · %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上限に達しました · %lld件"
+          }
+        }
+      }
+    },
+    "AI filter: max results" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI絞り込み: 取得する最大件数"
+          }
+        }
+      }
+    },
+    "Couldn't judge %lld items (shown anyway)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld件を判定できませんでした（そのまま表示しています）"
+          }
+        }
+      }
+    },
+    "The on-device model is not available." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内のモデルを利用できません。"
+          }
+        }
+      }
+    },
+    "AI Filter" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIフィルター"
+          }
+        }
+      }
+    },
+    "Couldn't judge" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定できませんでした"
+          }
+        }
+      }
+    },
+    "Show items that couldn't be judged" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定できなかったものも表示"
+          }
+        }
+      }
+    },
+    "Open in browser" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ブラウザで開く"
+          }
+        }
+      }
+    },
+    "Open the link in your browser" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リンクをブラウザで開きます"
+          }
+        }
+      }
+    },
+    "Translating…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻訳中…"
+          }
+        }
+      }
+    },
+    "Can't translate on this Mac. Clicking opens %@ in your browser." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac では翻訳できません。クリックすると、ブラウザで%@を開きます。"
+          }
+        }
+      }
+    },
+    "Web translator" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウェブ翻訳"
+          }
+        }
+      }
+    },
+    "Translate the text into your language (or English if it is already in your language) and open the web translator" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキストを自分の言語に翻訳して、ウェブ翻訳も開きます（すでに自分の言語なら、英語に翻訳します）"
+          }
+        }
+      }
+    },
+    "Click to copy this and open %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリックで、これをコピーして、%@を開きます"
+          }
+        }
+      }
+    },
     "Show saved date" : {
       "localizations" : {
         "ja" : {

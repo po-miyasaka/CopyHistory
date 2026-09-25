@@ -10,6 +10,10 @@ struct CSVExportRow: Equatable {
     let createdDate: Date?
     let updateDate: Date?
     let reminderDate: Date?
+    let ocrText: String
+    var imageCaption: String = ""
+    /// Only written by the AI filter export: true when the model could not judge the item.
+    var isUnjudged = false
 }
 
 extension CSVExportRow {
@@ -23,22 +27,28 @@ extension CSVExportRow {
             binarySize: item.binarySize,
             createdDate: item.createdDate,
             updateDate: item.updateDate,
-            reminderDate: item.reminderDate
+            reminderDate: item.reminderDate,
+            ocrText: item.ocrText ?? "",
+            imageCaption: item.imageCaption ?? ""
         )
     }
 }
 
 enum CSVExporter {
-    static let header = ["name", "content_type", "text", "memo", "favorite", "size_bytes", "saved_at", "updated_at", "reminder_at"]
+    static let header = ["name", "content_type", "text", "memo", "favorite", "size_bytes", "saved_at", "updated_at", "reminder_at", "ocr_text", "image_caption"]
 
     /// RFC 4180 CSV with a UTF-8 BOM so spreadsheet apps detect the encoding.
-    static func makeCSV(rows: [CSVExportRow], timeZone: TimeZone = .current) -> String {
+    static let unjudgedHeader = "could_not_judge"
+    static let unjudgedMark = "×"
+
+    /// With `includesUnjudged`, an extra last column holds × for items the AI filter could not judge and stays empty otherwise.
+    static func makeCSV(rows: [CSVExportRow], includesUnjudged: Bool = false, timeZone: TimeZone = .current) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = timeZone
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
-        let lines = [header] + rows.map { row in
+        let lines = [header + (includesUnjudged ? [unjudgedHeader] : [])] + rows.map { row in
             [
                 row.name,
                 row.contentType,
@@ -48,8 +58,10 @@ enum CSVExporter {
                 String(row.binarySize),
                 row.createdDate.map(formatter.string(from:)) ?? "",
                 row.updateDate.map(formatter.string(from:)) ?? "",
-                row.reminderDate.map(formatter.string(from:)) ?? ""
-            ]
+                row.reminderDate.map(formatter.string(from:)) ?? "",
+                row.ocrText,
+                row.imageCaption
+            ] + (includesUnjudged ? [row.isUnjudged ? unjudgedMark : ""] : [])
         }
         return "\u{FEFF}" + lines.map { $0.map(escape).joined(separator: ",") }.joined(separator: "\r\n") + "\r\n"
     }
