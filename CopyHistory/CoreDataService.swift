@@ -59,6 +59,15 @@ class CoreDataService {
 
     }
 
+    func saveOrRollback() throws {
+        do {
+            try container.viewContext.save()
+        } catch {
+            container.viewContext.rollback()
+            throw error
+        }
+    }
+
     func deleteAll(targets: [NSManagedObject]) {
         targets.forEach {
             container.viewContext.delete($0)

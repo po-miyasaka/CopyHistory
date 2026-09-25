@@ -77,9 +77,9 @@ class CopiedItemRepository {
                 if item.createdDate == nil { item.createdDate = item.updateDate }
                 if item.textLength == 0 { item.textLength = Int64(item.rawString?.count ?? 0) }
             }
-            coreDataService.save()
+            try coreDataService.saveOrRollback()
         } catch {
-            NSLog("Failed to backfill item attributes: \(error)")
+            NSLog("Failed to backfill item attributes: \(error) \((error as NSError).userInfo)")
         }
     }
 
