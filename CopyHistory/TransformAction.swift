@@ -88,7 +88,7 @@ enum TransformAction: Identifiable, Hashable {
         case .lowercase: return "Convert all characters to lowercase"
         case .trimWhitespace: return "Remove leading and trailing whitespace and newlines"
         case .showQRCode: return "Generate a QR code from the text"
-        case .custom(let t): return "Custom transform: \(t.pattern) → \(t.replacement)"
+        case .custom: return "Run a custom JavaScript transform"
         }
     }
 
@@ -103,8 +103,7 @@ enum TransformAction: Identifiable, Hashable {
 struct CustomTransform: Identifiable, Hashable, Codable {
     var id: String = UUID().uuidString
     var name: String
-    var pattern: String
-    var replacement: String
+    var script: String
 }
 
 final class TransformUsageTracker: ObservableObject {

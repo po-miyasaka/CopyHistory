@@ -115,26 +115,6 @@
         }
       }
     },
-    "Custom transform: %@ → %@" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カスタム変換: %@ → %@"
-          }
-        }
-      }
-    },
-    "Custom Transforms (Regex)" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カスタム変換 (正規表現)"
-          }
-        }
-      }
-    },
     "Decode Base64 text back to original text" : {
       "localizations" : {
         "ja" : {
@@ -581,6 +561,136 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更新: %@"
+          }
+        }
+      }
+    },
+    "Custom Transforms (JavaScript)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム変換 (JavaScript)"
+          }
+        }
+      }
+    },
+    "Run a custom JavaScript transform" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム JavaScript 変換を実行"
+          }
+        }
+      }
+    },
+    "The script must define function transform(text)." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スクリプトには function transform(text) を定義してください。"
+          }
+        }
+      }
+    },
+    "transform(text) must return a string." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "transform(text) は文字列を返す必要があります。"
+          }
+        }
+      }
+    },
+    "The script took too long and was stopped." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スクリプトの実行に時間がかかりすぎたため停止しました。"
+          }
+        }
+      }
+    },
+    "Script (define function transform(text))" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スクリプト (function transform(text) を定義)"
+          }
+        }
+      }
+    },
+    "Test input" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テスト入力"
+          }
+        }
+      }
+    },
+    "Test" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テスト"
+          }
+        }
+      }
+    },
+    "Result:" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結果:"
+          }
+        }
+      }
+    },
+    "Copy AI prompt (English)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI用プロンプトをコピー (英語)"
+          }
+        }
+      }
+    },
+    "Copy AI prompt (Japanese)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI用プロンプトをコピー (日本語)"
+          }
+        }
+      }
+    },
+    "Copied!" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーしました"
+          }
+        }
+      }
+    },
+    "Ask an AI to write the script: copy a prompt, add what you want, and paste the code below." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIにスクリプトを書いてもらえます。プロンプトをコピーし、やりたいことを追記して、出てきたコードを下に貼り付けてください。"
           }
         }
       }

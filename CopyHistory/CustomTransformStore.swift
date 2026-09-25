@@ -4,7 +4,7 @@ import Combine
 final class CustomTransformStore: ObservableObject {
     static let shared = CustomTransformStore()
 
-    private static let userDefaultsKey = "customTransforms"
+    private static let userDefaultsKey = "customScriptTransforms"
 
     @Published var transforms: [CustomTransform] = [] {
         didSet { save() }
