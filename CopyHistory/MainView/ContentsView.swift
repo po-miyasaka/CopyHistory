@@ -93,20 +93,13 @@ extension MainView {
                             isFocused: index == focusedItemIndex, itemAction: {
                             itemAction = $0
                         },
+                            onHoverContent: { focusedItemIndex = index },
                             isExpanded: $isExpanded,
                             isShowingRTF: $isShowingRTF,
                             isShowingHTML: $isShowingHTML,
                             isShowingDate: $isShowingDate,
                             isShowingFileInfo: $isShowingFileInfo)
                         .id(item.dataHash)
-                        
-                        //                           Althoulgh this code enable selecting by hover, I commented it out because of not good UI Performances and experience.
-                        // -> since Xcode15 LazyVStack got to reuse elements and the performance improved!
-                        .onHover(perform: { hover in
-                            if hover {
-                                focusedItemIndex = index
-                            }
-                        })
                     }
                     
                 }
@@ -159,6 +152,7 @@ struct Row: View, Equatable {
     @State var memo: String
     @State private var thumbnailImage: NSImage?
     var itemAction: (MainView.ItemAction) -> Void
+    var onHoverContent: () -> Void
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -184,6 +178,7 @@ struct Row: View, Equatable {
          reminderDate: Date?,
          isFocused: Bool,
          itemAction: @escaping (MainView.ItemAction) -> Void,
+         onHoverContent: @escaping () -> Void,
          isExpanded: Binding<Bool>,
          isShowingRTF: Binding<Bool>,
          isShowingHTML: Binding<Bool>,
@@ -194,6 +189,7 @@ struct Row: View, Equatable {
         self.reminderDate = reminderDate
         self.isFocused = isFocused
         self.itemAction = itemAction
+        self.onHoverContent = onHoverContent
         _isExpanded = isExpanded
         _isShowingRTF = isShowingRTF
         _isShowingHTML = isShowingHTML
@@ -217,68 +213,74 @@ struct Row: View, Equatable {
 
             VStack(spacing: 0) {
                 HStack {
-                    Button(action: {
-                        itemAction(.init(item: item, action: .select))
-                    }, label: {
+                    // Only the text and metadata area focuses the row; the buttons on the right do not.
+                    HStack {
+                        Button(action: {
+                            itemAction(.init(item: item, action: .select))
+                        }, label: {
 
-                        ZStack {
-                            Color.mainViewBackground.opacity(0.1)
+                            ZStack {
+                                Color.mainViewBackground.opacity(0.1)
 
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Group {
-                                        if isImageType {
-                                            if let thumbnailImage {
-                                                Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: imageMaxHeight)
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Group {
+                                            if isImageType {
+                                                if let thumbnailImage {
+                                                    Image(nsImage: thumbnailImage).resizable().scaledToFit().frame(maxHeight: imageMaxHeight)
+                                                } else {
+                                                    ProgressView()
+                                                        .frame(maxHeight: imageMaxHeight)
+                                                }
+                                            } else if isShowingRTF, let attributedString = item.attributeString {
+                                                Text(AttributedString(attributedString))
+
+                                            } else if isShowingHTML, let attributedString = item.htmlString {
+                                                Text(AttributedString(attributedString))
+                                            } else if let url = item.fileURL {
+                                                FileImageView(url: url)
                                             } else {
-                                                ProgressView()
-                                                    .frame(maxHeight: imageMaxHeight)
+                                                Text(item.name ?? "No Name").font(.callout)
                                             }
-                                        } else if isShowingRTF, let attributedString = item.attributeString {
-                                            Text(AttributedString(attributedString))
+                                        }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
 
-                                        } else if isShowingHTML, let attributedString = item.htmlString {
-                                            Text(AttributedString(attributedString))
-                                        } else if let url = item.fileURL {
-                                            FileImageView(url: url)
-                                        } else {
-                                            Text(item.name ?? "No Name").font(.callout)
-                                        }
-                                    }.padding(.vertical, memo.isEmpty ? 8 : 4).lineLimit(isExpanded ? 20 : 1)
-
-                                    Spacer()
+                                        Spacer()
+                                    }
+                                    if !memo.isEmpty {
+                                        Text(memo)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .lineLimit(1)
+                                            .padding(.bottom, 4)
+                                    }
                                 }
-                                if !memo.isEmpty {
-                                    Text(memo)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .lineLimit(1)
-                                        .padding(.bottom, 4)
+                            }
+                            .frame(minHeight: Self.minRowHeight)
+                        })
+
+                        if isShowingFileInfo || isShowingDate {
+                            VStack(alignment: .trailing) {
+                                if isShowingFileInfo {
+                                    Text(item.contentTypeString ?? "").font(.caption)
+                                    Text("\(item.binarySizeString)").font(.caption)
+                                }
+                                if isShowingDate {
+                                    if let created = item.createdDate ?? item.updateDate {
+                                        Text("Saved: \(Self.dateFormatter.string(from: created))")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    if let updated = item.updateDate {
+                                        Text("Updated: \(Self.dateFormatter.string(from: updated))")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
                             }
                         }
-                        .frame(minHeight: Self.minRowHeight)
-                    })
-
-                    if isShowingFileInfo || isShowingDate {
-                        VStack(alignment: .trailing) {
-                            if isShowingFileInfo {
-                                Text(item.contentTypeString ?? "").font(.caption)
-                                Text("\(item.binarySizeString)").font(.caption)
-                            }
-                            if isShowingDate {
-                                if let created = item.createdDate ?? item.updateDate {
-                                    Text("Saved: \(Self.dateFormatter.string(from: created))")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                if let updated = item.updateDate {
-                                    Text("Updated: \(Self.dateFormatter.string(from: updated))")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        }
+                    }
+                    .onHover { hovering in
+                        if hovering { onHoverContent() }
                     }
 
                     TextField("", text: $memo)
