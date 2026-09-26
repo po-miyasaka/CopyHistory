@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D5F00001CCCC000100000001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D5F00001CCCC000000000001 /* Localizable.xcstrings */; };
+		E5C0DE00000000000000I002 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000I001 /* InfoPlist.xcstrings */; };
 		CE11282428774314008144F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE11282328774314008144F8 /* AppDelegate.swift */; };
 		CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE480E1E288296F0006AD7D6 /* Model1-2.xcmappingmodel */; };
 		CEA8AD082874C8E1003B6035 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA8AD072874C8E1003B6035 /* MainView.swift */; };
@@ -33,6 +34,7 @@
 		D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F00001AAAA000000000003 /* CustomTransformStore.swift */; };
 		E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */; };
 		E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE0000000000000000C2 /* CSVExporter.swift */; };
+		E5C0DE00000000000000L001 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000L002 /* AppLanguage.swift */; };
 		E5C0DE00000000000000VA01 /* TranslationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000VA02 /* TranslationPreview.swift */; };
 		E5C0DE00000000000000WA01 /* WebTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000WA02 /* WebTranslator.swift */; };
 		E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000CA02 /* ImageCaptionService.swift */; };
@@ -83,6 +85,7 @@
 		D5F00001AAAA000000000003 /* CustomTransformStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformStore.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTransformRunner.swift; sourceTree = "<group>"; };
 		E5C0DE0000000000000000C2 /* CSVExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVExporter.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000L002 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000VA02 /* TranslationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationPreview.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000WA02 /* WebTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTranslator.swift; sourceTree = "<group>"; };
 		E5C0DE00000000000000CA02 /* ImageCaptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptionService.swift; sourceTree = "<group>"; };
@@ -97,6 +100,7 @@
 		D5F00001AAAA000000000004 /* TransformActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformActionsBar.swift; sourceTree = "<group>"; };
 		D5F00001AAAA000000000005 /* CustomTransformEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransformEditorView.swift; sourceTree = "<group>"; };
 		D5F00001CCCC000000000001 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		E5C0DE00000000000000I001 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +146,7 @@
 				D5F00001AAAA000000000003 /* CustomTransformStore.swift */,
 				E5C0DE0000000000000000A2 /* ScriptTransformRunner.swift */,
 				E5C0DE0000000000000000C2 /* CSVExporter.swift */,
+				E5C0DE00000000000000L002 /* AppLanguage.swift */,
 				E5C0DE00000000000000VA02 /* TranslationPreview.swift */,
 				E5C0DE00000000000000WA02 /* WebTranslator.swift */,
 				E5C0DE00000000000000CA02 /* ImageCaptionService.swift */,
@@ -154,6 +159,7 @@
 				E5C0DE00000000000000FA22 /* Reminder.swift */,
 				E5C0DE00000000000000FA12 /* CSVImporter.swift */,
 				D5F00001CCCC000000000001 /* Localizable.xcstrings */,
+				E5C0DE00000000000000I001 /* InfoPlist.xcstrings */,
 				D5A5573729DC1A4F00FF69C7 /* MainView */,
 				D5092C1629E12E1C0075A1D9 /* SettingView */,
 				CEA8AD092874C8E3003B6035 /* IconAssets.xcassets */,
@@ -258,6 +264,7 @@
 				CEA8AD0A2874C8E3003B6035 /* IconAssets.xcassets in Resources */,
 				D5181C5D2A40C39100BCBBC7 /* CommonAssets.xcassets in Resources */,
 				D5F00001CCCC000100000001 /* Localizable.xcstrings in Resources */,
+				E5C0DE00000000000000I002 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +297,7 @@
 				D5F00001AAAA000100000003 /* CustomTransformStore.swift in Sources */,
 				E5C0DE0000000000000000A1 /* ScriptTransformRunner.swift in Sources */,
 				E5C0DE0000000000000000C1 /* CSVExporter.swift in Sources */,
+				E5C0DE00000000000000L001 /* AppLanguage.swift in Sources */,
 				E5C0DE00000000000000VA01 /* TranslationPreview.swift in Sources */,
 				E5C0DE00000000000000WA01 /* WebTranslator.swift in Sources */,
 				E5C0DE00000000000000CA01 /* ImageCaptionService.swift in Sources */,

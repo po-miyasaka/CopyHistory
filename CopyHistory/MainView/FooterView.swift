@@ -36,7 +36,7 @@ extension MainView {
             Button(action: {
                 NSApplication.shared.terminate(nil)
             }, label: {
-                Text("Quit CopyHistory")
+                Text("Quit Copy History")
             })
 
         }

@@ -5,7 +5,7 @@ enum ReminderError: LocalizedError {
     case notificationsDenied
 
     var errorDescription: String? {
-        String(localized: "Notifications are turned off for CopyHistory. Enable them in System Settings to get reminders.")
+        String(localized: "Notifications are turned off for Copy History. Enable them in System Settings to get reminders.")
     }
 }
 

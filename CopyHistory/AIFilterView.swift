@@ -25,23 +25,13 @@ struct AIFilterButton: View {
                     controller: controller,
                     showsUnjudged: $showsUnjudged,
                     matchCount: matchCount,
-                    onApply: { query in
-                        isPresented = false
-                        onApply(query)
-                    },
+                    onApply: onApply,
                     onClear: {
                         isPresented = false
                         onClear()
                     },
                     onExport: onExport
                 )
-            }
-
-            if controller.progress != nil {
-                Button(action: controller.stop) {
-                    Image(systemName: "stop.circle.fill").foregroundColor(.red)
-                }
-                .help("Stop")
             }
         }
     }
@@ -94,20 +84,6 @@ private struct AIFilterPopover: View {
                 Text(statusText)
                     .font(.caption)
                     .foregroundColor(.secondary)
-            }
-
-            if controller.failedCount > 0 {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Couldn't judge \(controller.failedCount) items (shown anyway)")
-                        .font(.caption)
-                        .foregroundColor(.red)
-                    if let reason = controller.lastFailureReason {
-                        Text(reason)
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                            .lineLimit(3)
-                    }
-                }
             }
 
             Toggle("Show items that couldn't be judged", isOn: $showsUnjudged)
