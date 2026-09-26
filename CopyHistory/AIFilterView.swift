@@ -25,23 +25,13 @@ struct AIFilterButton: View {
                     controller: controller,
                     showsUnjudged: $showsUnjudged,
                     matchCount: matchCount,
-                    onApply: { query in
-                        isPresented = false
-                        onApply(query)
-                    },
+                    onApply: onApply,
                     onClear: {
                         isPresented = false
                         onClear()
                     },
                     onExport: onExport
                 )
-            }
-
-            if controller.progress != nil {
-                Button(action: controller.stop) {
-                    Image(systemName: "stop.circle.fill").foregroundColor(.red)
-                }
-                .help("Stop")
             }
         }
     }
