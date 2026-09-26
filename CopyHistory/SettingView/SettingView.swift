@@ -20,6 +20,8 @@ struct SettingView: View {
     @Binding var overlayViewType: MainView.OverlayViewType?
     @AppStorage(WindowWidth.key) private var windowWidth: Double = WindowWidth.defaultValue
     @AppStorage(WebTranslator.settingKey) private var webTranslator: String = WebTranslator.Service.deepL.rawValue
+    @State private var languageInUse = AppLanguage.stored()
+    @State private var chosenLanguage = AppLanguage.stored()
     @AppStorage(ViewModel.aiFilterLimitKey) private var aiFilterLimit: Int = ViewModel.aiFilterLimitDefault
     let onExportCSV: () -> Void
     let onImportCSV: () -> Void
@@ -63,6 +65,28 @@ struct SettingView: View {
                 }
                 Spacer()
                 TextField("", text: $displayedCount).frame(width: 50)
+            }
+
+            Divider()
+
+            HStack {
+                Text("Language")
+                Spacer()
+                Picker("", selection: $chosenLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(language.title).tag(language)
+                    }
+                }
+                .labelsHidden()
+                .frame(width: 180)
+                .onChange(of: chosenLanguage) { $0.save() }
+            }
+            if chosenLanguage != languageInUse {
+                HStack {
+                    Text("Restart to apply the new language.").font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                    Button("Restart now", action: AppLanguage.relaunch)
+                }
             }
 
             Divider()
