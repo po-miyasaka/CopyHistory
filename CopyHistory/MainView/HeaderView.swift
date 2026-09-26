@@ -18,7 +18,8 @@ extension MainView {
                     shortcutsList()
                 }
                 Spacer()
-                HStack(alignment: .top) {
+                // Three rows, each with the width of its own: long labels (other languages, a running AI filter) are never cut off.
+                VStack(alignment: .trailing, spacing: 8) {
                     sortMenu()
                     if AIFilterAvailability.isAvailable {
                         AIFilterButton(
@@ -30,9 +31,11 @@ extension MainView {
                             onExport: viewModel.exportFilteredCSV
                         )
                     }
-                    memoButton()
-                    reminderFilterButton()
-                    favoriteButton()
+                    HStack(alignment: .top) {
+                        memoButton()
+                        reminderFilterButton()
+                        favoriteButton()
+                    }
                 }
             }
         }
