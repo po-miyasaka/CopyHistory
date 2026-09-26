@@ -218,8 +218,8 @@ let heightKey = "windowSizeHeight"
 
 enum WindowWidth {
     static let key = "windowWidth"
-    static let defaultValue: Double = 500
-    static let range: ClosedRange<Double> = 400...1000
+    static let defaultValue: Double = 600
+    static let range: ClosedRange<Double> = 600...1000
 }
 
 var windowSize: NSSize {
