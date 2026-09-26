@@ -787,42 +787,42 @@
         }
       }
     },
-    "Add items from a CSV file exported by CopyHistory. Duplicates are skipped and everything is imported as plain text." : {
+    "Add items from a CSV file exported by Copy History. Duplicates are skipped and everything is imported as plain text." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistoryが書き出したCSVファイルからアイテムを追加します。重複はスキップされ、すべてプレーンテキストとして取り込まれます。"
+            "value" : "コピペ履歴が書き出したCSVファイルからアイテムを追加します。重複はスキップされ、すべてプレーンテキストとして取り込まれます。"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Añade elementos desde un archivo CSV exportado por CopyHistory. Los duplicados se omiten y todo se importa como texto sin formato."
+            "value" : "Añade elementos desde un archivo CSV exportado por Historial del Portapapeles. Los duplicados se omiten y todo se importa como texto sin formato."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajoute des éléments depuis un fichier CSV exporté par CopyHistory. Les doublons sont ignorés et tout est importé en texte brut."
+            "value" : "Ajoute des éléments depuis un fichier CSV exporté par Historique Presse-papiers. Les doublons sont ignorés et tout est importé en texte brut."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory에서 내보낸 CSV 파일에서 항목을 추가합니다. 중복 항목은 건너뛰고 모든 항목을 일반 텍스트로 가져옵니다."
+            "value" : "복사 기록에서 내보낸 CSV 파일에서 항목을 추가합니다. 중복 항목은 건너뛰고 모든 항목을 일반 텍스트로 가져옵니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "从 CopyHistory 导出的 CSV 文件添加项目。将跳过重复项，所有内容都会以纯文本导入。"
+            "value" : "从复制历史导出的 CSV 文件添加项目。将跳过重复项，所有内容都会以纯文本导入。"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fügt Elemente aus einer von CopyHistory exportierten CSV-Datei hinzu. Duplikate werden übersprungen und alles wird als reiner Text importiert."
+            "value" : "Fügt Elemente aus einer von Zwischenablage-Verlauf exportierten CSV-Datei hinzu. Duplikate werden übersprungen und alles wird als reiner Text importiert."
           }
         }
       }
@@ -1467,42 +1467,42 @@
         }
       }
     },
-    "CopyHistory Website" : {
+    "Copy History Website" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory ウェブサイト"
+            "value" : "コピペ履歴 ウェブサイト"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sitio web de CopyHistory"
+            "value" : "Sitio web de Historial del Portapapeles"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Site web de CopyHistory"
+            "value" : "Site web d'Historique Presse-papiers"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory 웹사이트"
+            "value" : "복사 기록 웹사이트"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory 网站"
+            "value" : "复制历史网站"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory-Website"
+            "value" : "Zwischenablage-Verlauf-Website"
           }
         }
       }
@@ -3067,42 +3067,42 @@
         }
       }
     },
-    "Notifications are turned off for CopyHistory. Enable them in System Settings to get reminders." : {
+    "Notifications are turned off for Copy History. Enable them in System Settings to get reminders." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistoryの通知がオフになっています。リマインダーを受け取るには、システム設定で通知を有効にしてください。"
+            "value" : "コピペ履歴の通知がオフになっています。リマインダーを受け取るには、システム設定で通知を有効にしてください。"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las notificaciones de CopyHistory están desactivadas. Actívalas en Ajustes del Sistema para recibir recordatorios."
+            "value" : "Las notificaciones de Historial del Portapapeles están desactivadas. Actívalas en Ajustes del Sistema para recibir recordatorios."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les notifications sont désactivées pour CopyHistory. Activez-les dans Réglages Système pour recevoir des rappels."
+            "value" : "Les notifications sont désactivées pour Historique Presse-papiers. Activez-les dans Réglages Système pour recevoir des rappels."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory 알림이 꺼져 있습니다. 미리 알림을 받으려면 시스템 설정에서 알림을 켜세요."
+            "value" : "복사 기록 알림이 꺼져 있습니다. 미리 알림을 받으려면 시스템 설정에서 알림을 켜세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory 的通知已关闭。请在系统设置中启用通知以接收提醒。"
+            "value" : "复制历史的通知已关闭。请在系统设置中启用通知以接收提醒。"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Benachrichtigungen für CopyHistory sind deaktiviert. Aktiviere sie in den Systemeinstellungen, um Erinnerungen zu erhalten."
+            "value" : "Benachrichtigungen für Zwischenablage-Verlauf sind deaktiviert. Aktiviere sie in den Systemeinstellungen, um Erinnerungen zu erhalten."
           }
         }
       }
@@ -3348,82 +3348,82 @@
         }
       }
     },
-    "Quit CopyHistory" : {
+    "Quit Copy History" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistoryを終了"
+            "value" : "コピペ履歴を終了"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salir de CopyHistory"
+            "value" : "Salir de Historial del Portapapeles"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quitter CopyHistory"
+            "value" : "Quitter Historique Presse-papiers"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory 종료"
+            "value" : "복사 기록 종료"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "退出 CopyHistory"
+            "value" : "退出复制历史"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory beenden"
+            "value" : "Zwischenablage-Verlauf beenden"
           }
         }
       }
     },
-    "Rate CopyHistory✨" : {
+    "Rate Copy History✨" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistoryを評価する✨"
+            "value" : "コピペ履歴を評価する✨"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Calificar CopyHistory✨"
+            "value" : "Calificar Historial del Portapapeles✨"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Noter CopyHistory✨"
+            "value" : "Noter Historique Presse-papiers✨"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory 평가하기✨"
+            "value" : "복사 기록 평가하기✨"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "评价 CopyHistory✨"
+            "value" : "评价复制历史✨"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CopyHistory bewerten✨"
+            "value" : "Zwischenablage-Verlauf bewerten✨"
           }
         }
       }

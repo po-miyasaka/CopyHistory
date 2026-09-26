@@ -136,7 +136,7 @@ struct SettingView: View {
                 Button("Export all data as CSV…", action: onExportCSV)
                     .help("Save every saved item (text, memo, favorite, dates) to a CSV file. Images and other binary data are not included.")
                 Button("Import CSV…", action: onImportCSV)
-                    .help("Add items from a CSV file exported by CopyHistory. Duplicates are skipped and everything is imported as plain text.")
+                    .help("Add items from a CSV file exported by Copy History. Duplicates are skipped and everything is imported as plain text.")
             }
 
             Divider()
@@ -158,13 +158,13 @@ struct SettingView: View {
                         NSWorkspace.shared.open(url)
                     }
                 }, label: {
-                    Text("CopyHistory Website")
+                    Text("Copy History Website")
                 })
 
                 Button(action: {
                     SKStoreReviewController.requestReview()
                 }, label: {
-                    Text("Rate CopyHistory✨")
+                    Text("Rate Copy History✨")
                 })
 
                 Button(action: {
