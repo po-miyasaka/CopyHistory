@@ -86,12 +86,6 @@ private struct AIFilterPopover: View {
                     .foregroundColor(.secondary)
             }
 
-            if controller.failedCount > 0 {
-                Text("Couldn't judge \(controller.failedCount) items (shown anyway)")
-                    .font(.caption)
-                    .foregroundColor(.red)
-            }
-
             Toggle("Show items that couldn't be judged", isOn: $showsUnjudged)
                 .font(.caption)
 
