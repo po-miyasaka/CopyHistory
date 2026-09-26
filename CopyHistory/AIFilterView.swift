@@ -87,17 +87,9 @@ private struct AIFilterPopover: View {
             }
 
             if controller.failedCount > 0 {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Couldn't judge \(controller.failedCount) items (shown anyway)")
-                        .font(.caption)
-                        .foregroundColor(.red)
-                    if let reason = controller.lastFailureReason {
-                        Text(reason)
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                            .lineLimit(3)
-                    }
-                }
+                Text("Couldn't judge \(controller.failedCount) items (shown anyway)")
+                    .font(.caption)
+                    .foregroundColor(.red)
             }
 
             Toggle("Show items that couldn't be judged", isOn: $showsUnjudged)
