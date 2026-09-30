@@ -6270,6 +6270,52 @@
           }
         }
       }
+    },
+    "This is taking a while. Clipboard sharing with a Handoff device or a device simulator may be slow to respond." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み取りに時間がかかっています。Handoff先の端末やデバイスシミュレータとのクリップボード共有が遅れている可能性があります。"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is taking a while. Clipboard sharing with a Handoff device or a device simulator may be slow to respond."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das dauert länger als erwartet. Die Freigabe der Zwischenablage mit einem Handoff-Gerät oder einem Gerätesimulator reagiert möglicherweise langsam."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto está tardando más de lo normal. Es posible que la sincronización del portapapeles con un dispositivo Handoff o un simulador esté respondiendo con lentitud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cela prend plus de temps que prévu. Le partage du presse-papiers avec un appareil Handoff ou un simulateur d'appareil met peut-être du temps à répondre."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "읽어오는 데 시간이 걸리고 있어요. Handoff 기기나 기기 시뮬레이터와의 클립보드 공유 응답이 느릴 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "读取用时较长。可能是与 Handoff 设备或设备模拟器之间的剪贴板共享响应较慢。"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

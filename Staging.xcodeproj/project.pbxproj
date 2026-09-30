@@ -26,6 +26,7 @@
 		D57833892A40DAC000AF12F0 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57833882A40DAC000AF12F0 /* FeedbackView.swift */; };
 		D5A5573929DC1C0200FF69C7 /* ContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573829DC1C0200FF69C7 /* ContentsView.swift */; };
 		D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */; };
+		E5C0DE00000000000000N002 /* SlowPasteboardReadBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C0DE00000000000000N001 /* SlowPasteboardReadBanner.swift */; };
 		D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573C29DC20A600FF69C7 /* FooterView.swift */; };
 		D5A5573F29DC2EA400FF69C7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5573E29DC2EA400FF69C7 /* Extensions.swift */; };
 		D5A5574129DC343100FF69C7 /* ShortcutButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */; };
@@ -70,6 +71,7 @@
 		D57833882A40DAC000AF12F0 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		D5A5573829DC1C0200FF69C7 /* ContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsView.swift; sourceTree = "<group>"; };
 		D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		E5C0DE00000000000000N001 /* SlowPasteboardReadBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlowPasteboardReadBanner.swift; sourceTree = "<group>"; };
 		D5A5573C29DC20A600FF69C7 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		D5A5573E29DC2EA400FF69C7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutButtons.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				D51104952A9A41CA00D38CC3 /* OverlayContents.swift */,
 				D511049F2A9B0B6300D38CC3 /* ViewModel.swift */,
 				D5A5573A29DC1F8100FF69C7 /* HeaderView.swift */,
+				E5C0DE00000000000000N001 /* SlowPasteboardReadBanner.swift */,
 				D5A5573829DC1C0200FF69C7 /* ContentsView.swift */,
 				D5A5573C29DC20A600FF69C7 /* FooterView.swift */,
 				D5A5574029DC343100FF69C7 /* ShortcutButtons.swift */,
@@ -291,6 +294,7 @@
 				D5A5573D29DC20A600FF69C7 /* FooterView.swift in Sources */,
 				CE480E1F288296F0006AD7D6 /* Model1-2.xcmappingmodel in Sources */,
 				D5A5573B29DC1F8100FF69C7 /* HeaderView.swift in Sources */,
+				E5C0DE00000000000000N002 /* SlowPasteboardReadBanner.swift in Sources */,
 				D5092C1829E12E340075A1D9 /* SettingView.swift in Sources */,
 				D5F00001AAAA000100000001 /* TransformAction.swift in Sources */,
 				D5F00001AAAA000100000002 /* TextTransformer.swift in Sources */,
