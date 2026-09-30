@@ -18,6 +18,7 @@ final class ViewModel: ObservableObject {
     @Published var isShowingOnlyFavorite: Bool = false
     @Published var isShowingOnlyMemoed: Bool = false
     @Published var isShowingOnlyReminder: Bool = false
+    @Published private(set) var isPasteboardReadSlow: Bool = false
     @Published var sort: ItemSort = {
         UserDefaults.standard.data(forKey: "itemSort")
             .flatMap { try? JSONDecoder().decode(ItemSort.self, from: $0) } ?? ItemSort()
@@ -58,6 +59,8 @@ final class ViewModel: ObservableObject {
         self?.repository.update()
     }, didCreateItem: { [weak self] item in
         self?.describeNewImage(item)
+    }, onSlowReadChanged: { [weak self] isSlow in
+        self?.isPasteboardReadSlow = isSlow
     })
 
     private let repository = CopiedItemRepository()

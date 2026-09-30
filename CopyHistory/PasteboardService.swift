@@ -18,11 +18,14 @@ class PasteboardService {
     private lazy var timer: Timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timerLoop), userInfo: nil, repeats: true)
     private let pasteboardQueue = DispatchQueue(label: "jp.po-miyasaka.CopyHistory.pasteboard", qos: .utility)
     private var isPolling = false
+    /// How long a single read may run before we tell the UI it is taking unusually long (a slow Handoff/simulator clipboard hand-off, for example).
+    private static let slowReadThreshold: TimeInterval = 5.0
 
     private var createCopiedItem: (() -> CopiedItem?)
     private var getItem: ((String) -> CopiedItem?)
     private var saveItem: (() -> Void)
     private var didCreateItem: ((CopiedItem) -> Void)
+    private var onSlowReadChanged: ((Bool) -> Void)
 
     private struct PasteboardSnapshot {
         let data: Data
@@ -43,23 +46,27 @@ class PasteboardService {
     private init(createCopiedItem: @escaping () -> CopiedItem?,
                  getItem: @escaping (String) -> CopiedItem?,
                  saveItem: @escaping () -> Void,
-                 didCreateItem: @escaping (CopiedItem) -> Void) {
+                 didCreateItem: @escaping (CopiedItem) -> Void,
+                 onSlowReadChanged: @escaping (Bool) -> Void) {
         self.createCopiedItem = createCopiedItem
         self.getItem = getItem
         self.saveItem = saveItem
         self.didCreateItem = didCreateItem
+        self.onSlowReadChanged = onSlowReadChanged
     }
 
     static func build(
         createCopiedItem: @escaping () -> CopiedItem?,
         getItem: @escaping (String) -> CopiedItem?,
         saveItem: @escaping () -> Void,
-        didCreateItem: @escaping (CopiedItem) -> Void = { _ in }) -> PasteboardService {
+        didCreateItem: @escaping (CopiedItem) -> Void = { _ in },
+        onSlowReadChanged: @escaping (Bool) -> Void = { _ in }) -> PasteboardService {
             let pasteboardService = PasteboardService(
                 createCopiedItem: createCopiedItem,
                 getItem: getItem,
                 saveItem: saveItem,
-                didCreateItem: didCreateItem)
+                didCreateItem: didCreateItem,
+                onSlowReadChanged: onSlowReadChanged)
             pasteboardService.timer.fire()
             return pasteboardService
         }
@@ -95,9 +102,20 @@ class PasteboardService {
                 Self.skipNextPasteboardChange = false
             }
 
+            // Flips to true only if the read is still running after `slowReadThreshold`; both closures below run on
+            // the main queue, so this shared box needs no extra synchronization.
+            var didNotifySlowRead = false
+            let slowReadNotice = DispatchWorkItem { [weak self] in
+                didNotifySlowRead = true
+                self?.onSlowReadChanged(true)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.slowReadThreshold, execute: slowReadNotice)
+
             pasteboardQueue.async { [weak self] in
                 let result = Self.readPasteboard(previousChangeCount: previousChangeCount, skipsChange: skipsChange)
                 DispatchQueue.main.async { [weak self] in
+                    slowReadNotice.cancel()
+                    if didNotifySlowRead { self?.onSlowReadChanged(false) }
                     self?.isPolling = false
                     self?.apply(result)
                 }

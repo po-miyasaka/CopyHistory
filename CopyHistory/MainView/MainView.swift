@@ -50,6 +50,9 @@ struct MainView: View {
 
     var body: some View {
         VStack {
+            if viewModel.isPasteboardReadSlow {
+                SlowPasteboardReadBanner().padding(.top, 8).padding(.horizontal, 8)
+            }
             Header().padding(.top, 16).padding(.horizontal, 8)
             Divider()
             ContentsView()
